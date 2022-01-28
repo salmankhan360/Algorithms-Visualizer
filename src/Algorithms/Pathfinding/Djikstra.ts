@@ -1,13 +1,13 @@
 import { finished } from "stream";
 import { NodeType } from "../../Types";
-
+import { getNeighbours, getAllNodes } from "../../Utils/Pathfinding";
 export default function djikstra(
   tree: NodeType[][],
   start: NodeType,
   finish: NodeType
 ) {
   start.distance = 1;
-  const unvisited = allNodes(tree);
+  const unvisited = getAllNodes(tree);
   const visitedInOrder: NodeType[] = [];
 
   while (unvisited.length) {
@@ -29,13 +29,7 @@ function updateUnvisitedNodes(
   tree: NodeType[][]
 ) {
   if (!closest) return;
-  const { x, y } = closest;
-  const neighbours = [];
-  tree[x - 1]?.[y] && neighbours.push(tree[x - 1][y]);
-  tree[x + 1]?.[y] && neighbours.push(tree[x + 1][y]);
-  tree[x][y - 1] && neighbours.push(tree[x][y - 1]);
-  tree[x][y + 1] && neighbours.push(tree[x][y + 1]);
-
+  const neighbours = getNeighbours(tree, closest);
   neighbours.forEach((n) => {
     if (!n.isVisited) {
       n.previousNode = closest;
@@ -46,10 +40,4 @@ function updateUnvisitedNodes(
 
 function sortNodes(nodes: NodeType[]) {
   nodes.sort((a, b) => a.distance - b.distance);
-}
-
-function allNodes(tree: NodeType[][]) {
-  const nodes: NodeType[] = [];
-  tree.forEach((c) => c.forEach((n) => nodes.push(n)));
-  return nodes;
 }

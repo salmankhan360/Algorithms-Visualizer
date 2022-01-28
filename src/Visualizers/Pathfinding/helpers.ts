@@ -25,6 +25,7 @@ export function constructNodes(
         x: i,
         y: j,
         distance: Infinity,
+        heuristics: Infinity,
         isVisited: false,
         isWall: false,
         isPath: false,

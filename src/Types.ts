@@ -7,6 +7,7 @@ export interface NodeType {
   x: number;
   y: number;
   distance: number;
+  heuristics: number;
   isVisited: boolean;
   isStart: boolean;
   isFinish: boolean;
