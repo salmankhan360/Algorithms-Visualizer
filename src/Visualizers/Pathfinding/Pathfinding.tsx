@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Node from "./Node";
 import { constructNodes, visualize, resetAllNodes } from "./helpers";
-import djikstra from "../../Algorithms/Pathfinding/Djikstra";
+import { djikstra, aStar } from "../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../Types";
 import { table } from "console";
 
@@ -28,7 +28,6 @@ export default function Pathfinding(props: Props) {
 
   const onFinish = () => {
     setIsSearching(false);
-    // setTree(constructNodes(rows, columns, coordinates));
   };
 
   const handleStart = () => {
@@ -40,7 +39,7 @@ export default function Pathfinding(props: Props) {
     const start = tree[sX][sY];
     const finish = tree[fX][fY];
 
-    const visitedInOrder = djikstra(tree, start, finish);
+    const visitedInOrder = aStar(tree, start, finish);
     if (!visitedInOrder) return;
 
     resetAllNodes(tree);
