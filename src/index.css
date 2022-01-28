@@ -16,6 +16,9 @@
 .searching {
   background-color: rgb(11, 210, 245);
 }
+.path {
+  background-color: rgb(229, 245, 11);
+}
 .pathfindingContainer {
   padding-top: 100px;
   max-width: 900px;
