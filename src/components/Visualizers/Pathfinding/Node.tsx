@@ -1,5 +1,5 @@
 import React from "react";
-import { NodeType } from "../../Types";
+import { NodeType } from "../../../Types";
 
 const colors = {
   start: "#9e381f",
@@ -10,19 +10,11 @@ const colors = {
 
 interface Props extends NodeType {
   handleNodeClick: (x: number, y: number) => void;
+  isClicked: boolean;
 }
 
 export default function Node(props: Props) {
-  const {
-    x,
-    y,
-    isStart,
-    isFinish,
-    isWall,
-    isPath,
-    searching,
-    handleNodeClick,
-  } = props;
+  const { x, y, isStart, isFinish, isWall, isClicked, handleNodeClick } = props;
 
   const nodeState = isStart
     ? "start"
@@ -37,10 +29,11 @@ export default function Node(props: Props) {
       className="box"
       id={`${x}-${y}`}
       style={{ backgroundColor: colors[nodeState] }}
-      onClick={() => handleNodeClick(x, y)}
-      onMouseDown={() => handleNodeClick(x, y)}
+      // onClick={() => handleNodeClick(x, y)}
       onMouseUp={() => handleNodeClick(x, y)}
-      onMouseEnter={() => handleNodeClick(x, y)}
+      onMouseDown={() => handleNodeClick(x, y)}
+      onMouseOver={() => isClicked && handleNodeClick(x, y)}
+      // onMouseEnter={() => handleNodeClick(x, y)}
     ></div>
   );
 }
