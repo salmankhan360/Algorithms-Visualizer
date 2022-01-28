@@ -6,9 +6,12 @@ export interface CoordinatesType {
 export interface NodeType {
   x: number;
   y: number;
+  distance: number;
+  isVisited: boolean;
   isStart: boolean;
   isFinish: boolean;
   isWall: boolean;
   isPath: boolean;
   searching: boolean;
+  previousNode?: NodeType;
 }

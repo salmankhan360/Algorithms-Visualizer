@@ -24,6 +24,8 @@ export function constructNodes(
       const emptyNode = {
         x: i,
         y: j,
+        distance: Infinity,
+        isVisited: false,
         isWall: false,
         isPath: false,
         isStart: false,

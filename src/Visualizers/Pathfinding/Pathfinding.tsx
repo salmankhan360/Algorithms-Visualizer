@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import Node from "./Node";
 import { constructNodes } from "./helpers";
+import djikstra from "../../Algorithms/Pathfinding/Djikstra";
 import { NodeType, CoordinatesType } from "../../Types";
+import { table } from "console";
 
 interface Props {
   columns: number;
@@ -18,14 +20,21 @@ export default function Pathfinding(props: Props) {
     constructNodes(rows, columns, coordinates)
   );
   const handleStart = () => {
-    for (let i = 0; i < tree.length; i++) {
-      for (let j = 0; j < tree[i].length; j++) {
-        setTimeout(() => {
-          const nodeTag: any = document.getElementById(`${i}-${j}`);
-          nodeTag.classList.add("searching");
-        }, j * 100 + i * 100);
-      }
-    }
+    // for (let i = 0; i < tree.length; i++) {
+    const {
+      start: { x: sX, y: sY },
+      finish: { x: fX, y: fY },
+    } = coordinates;
+
+    const start = tree[sX][sY];
+    const finish = tree[fX][fY];
+
+    djikstra(tree, start, finish);
+    // setTimeout(() => {
+    //   const nodeTag: any = document.getElementById(`${i}-${j}`);
+    //   nodeTag.classList.add("searching");
+    // });
+    // }
   };
 
   const handleNodeClick = (x: number, y: number) => {
