@@ -40,3 +40,57 @@ export function constructNodes(
   locateCoordinates(table, coordinates);
   return table;
 }
+
+export function visualize(
+  visitedInOrder: NodeType[],
+  speed: number,
+  onFinish: () => void
+) {
+  visitedInOrder.forEach((node, i) => {
+    const { x, y } = node;
+    setTimeout(() => {
+      const nodeTag: any = document.getElementById(`${x}-${y}`);
+      nodeTag.classList.add("searching");
+    }, i * speed);
+  });
+
+  setTimeout(
+    () =>
+      visualizePath(
+        visitedInOrder[visitedInOrder.length - 1],
+        speed * 10,
+        onFinish
+      ),
+    speed * visitedInOrder.length
+  );
+}
+
+function visualizePath(
+  closestNode: NodeType,
+  speed: number,
+  onFinish: () => void,
+  i = 0
+) {
+  if (!closestNode.previousNode) {
+    setTimeout(() => onFinish(), speed * i);
+    return;
+  }
+  const { previousNode } = closestNode;
+  const { x, y } = previousNode;
+  setTimeout(() => {
+    const pathNode = document.getElementById(`${x}-${y}`);
+    pathNode?.classList.add("path");
+  }, i * speed);
+  visualizePath(previousNode, speed, onFinish, i + 1);
+}
+
+export function resetAllNodes(tree: NodeType[][]) {
+  tree.forEach((col) =>
+    col.forEach((node) => {
+      const { x, y } = node;
+      const nodeTag = document.getElementById(`${x}-${y}`);
+      nodeTag?.classList.remove("searching");
+      nodeTag?.classList.remove("path");
+    })
+  );
+}

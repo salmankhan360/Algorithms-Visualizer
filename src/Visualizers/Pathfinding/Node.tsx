@@ -38,6 +38,9 @@ export default function Node(props: Props) {
       id={`${x}-${y}`}
       style={{ backgroundColor: colors[nodeState] }}
       onClick={() => handleNodeClick(x, y)}
+      onMouseDown={() => handleNodeClick(x, y)}
+      onMouseUp={() => handleNodeClick(x, y)}
+      onMouseEnter={() => handleNodeClick(x, y)}
     ></div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Node from "./Node";
-import { constructNodes } from "./helpers";
+import { constructNodes, visualize, resetAllNodes } from "./helpers";
 import djikstra from "../../Algorithms/Pathfinding/Djikstra";
 import { NodeType, CoordinatesType } from "../../Types";
 import { table } from "console";
@@ -13,14 +13,25 @@ interface Props {
 export default function Pathfinding(props: Props) {
   const { columns, rows } = props;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
-    start: { x: 10, y: 10 },
-    finish: { x: 15, y: 30 },
+    start: { x: 4, y: 2 },
+    finish: { x: 8, y: 30 },
   });
   const [tree, setTree] = useState<NodeType[][]>(
     constructNodes(rows, columns, coordinates)
   );
+  const [isSearching, setIsSearching] = useState(false);
+
+  const handleReset = (visitedInOrder: NodeType[]) => {
+    setTree(constructNodes(rows, columns, coordinates));
+    resetAllNodes(tree);
+  };
+
+  const onFinish = () => {
+    setIsSearching(false);
+    // setTree(constructNodes(rows, columns, coordinates));
+  };
+
   const handleStart = () => {
-    // for (let i = 0; i < tree.length; i++) {
     const {
       start: { x: sX, y: sY },
       finish: { x: fX, y: fY },
@@ -29,15 +40,21 @@ export default function Pathfinding(props: Props) {
     const start = tree[sX][sY];
     const finish = tree[fX][fY];
 
-    djikstra(tree, start, finish);
-    // setTimeout(() => {
-    //   const nodeTag: any = document.getElementById(`${i}-${j}`);
-    //   nodeTag.classList.add("searching");
-    // });
-    // }
+    const visitedInOrder = djikstra(tree, start, finish);
+    if (!visitedInOrder) return;
+
+    resetAllNodes(tree);
+    setIsSearching(true);
+    visualize(visitedInOrder, 2, onFinish);
   };
 
   const handleNodeClick = (x: number, y: number) => {
+    const {
+      start: { x: sX, y: sY },
+      finish: { x: fX, y: fY },
+    } = coordinates;
+
+    if ((sX == x && sY == y) || (fX == x && fY == y)) return;
     const node = tree[x][y];
     const changedNode = { ...node, isWall: !node.isWall };
     const changedTree = tree.slice();
@@ -47,7 +64,11 @@ export default function Pathfinding(props: Props) {
 
   return (
     <div className="pathfindingContainer">
-      <button style={{ marginBottom: "30px" }} onClick={handleStart}>
+      <button
+        style={{ marginBottom: "30px" }}
+        onClick={handleStart}
+        disabled={isSearching}
+      >
         Start
       </button>
       {tree.map((row, y) => (

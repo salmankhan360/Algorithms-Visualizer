@@ -6,20 +6,20 @@ export default function djikstra(
   start: NodeType,
   finish: NodeType
 ) {
-  const unvisited: NodeType[] = [];
-  tree.forEach((col) => col.forEach((node) => unvisited.push(node)));
-  const { x, y } = start;
-  tree[x][y].distance = 1;
-  const visitedNodes: NodeType[] = [];
+  start.distance = 1;
+  const unvisited = allNodes(tree);
+  const visitedInOrder: NodeType[] = [];
+
   while (unvisited.length) {
-    unvisited.sort((a, b) => a.distance - b.distance);
+    sortNodes(unvisited);
     const closest = unvisited.shift();
     if (!closest || closest.isWall) continue;
-    if (closest == finish)
-      console.log(finish.x, finish.y, " ww", start.x, start.y);
+    if (closest == finish) {
+      visitedInOrder.push(finish);
+      return visitedInOrder;
+    }
     closest.isVisited = true;
-    // console.log(visitedNodes);
-    closest && visitedNodes.push(closest);
+    visitedInOrder.push(closest);
     updateUnvisitedNodes(closest, tree);
   }
 }
@@ -42,4 +42,14 @@ function updateUnvisitedNodes(
       n.distance = closest.distance + 1;
     }
   });
+}
+
+function sortNodes(nodes: NodeType[]) {
+  nodes.sort((a, b) => a.distance - b.distance);
+}
+
+function allNodes(tree: NodeType[][]) {
+  const nodes: NodeType[] = [];
+  tree.forEach((c) => c.forEach((n) => nodes.push(n)));
+  return nodes;
 }
