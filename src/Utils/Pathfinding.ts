@@ -1,4 +1,6 @@
 import { NodeType } from "../Types";
+
+
 export function getNeighbours(tree: NodeType[][], node: NodeType) {
   const { x, y } = node;
   const neighbours = [];

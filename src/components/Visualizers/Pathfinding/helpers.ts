@@ -1,4 +1,4 @@
-import { CoordinatesType, NodeType } from "../../Types";
+import { CoordinatesType, NodeType } from "../../../Types";
 
 export function locateCoordinates(
   table: NodeType[][],
@@ -54,14 +54,13 @@ export function visualize(
       nodeTag.classList.add("searching");
     }, i * speed);
   });
-
+  const finish = visitedInOrder[visitedInOrder.length - 1];
+  if (!finish.isFinish) {
+    onFinish();
+    return;
+  }
   setTimeout(
-    () =>
-      visualizePath(
-        visitedInOrder[visitedInOrder.length - 1],
-        speed * 10,
-        onFinish
-      ),
+    () => visualizePath(finish, speed, onFinish),
     speed * visitedInOrder.length
   );
 }

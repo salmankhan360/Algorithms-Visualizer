@@ -1,10 +1,26 @@
 import React from "react";
-import Pathfinding from "./Visualizers/Pathfinding/Pathfinding";
+import { Pathfinding } from "./components";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
+
 function App() {
+  const navigate = useNavigate();
+  const { search } = useLocation();
+  React.useEffect(() => {
+    console.log("nva");
+    navigate(`/pathfinding${search}`);
+  }, []);
+
   return (
-    <div className="App">
-      <Pathfinding columns={40} rows={20} />
-    </div>
+    <Routes>
+      <Route
+        path={"/Pathfinding"}
+        element={<Pathfinding columns={40} rows={20} />}
+      />
+      <Route
+        path={"/sorting"}
+        element={<Pathfinding columns={40} rows={20} />}
+      />
+    </Routes>
   );
 }
 

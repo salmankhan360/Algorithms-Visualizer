@@ -18,6 +18,7 @@ export default function djikstra(
       visitedInOrder.push(finish);
       return visitedInOrder;
     }
+    if (closest.distance == Infinity) return visitedInOrder;
     closest.isVisited = true;
     visitedInOrder.push(closest);
     updateUnvisitedNodes(closest, tree);

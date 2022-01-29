@@ -13,7 +13,12 @@ export default function AStar(
     sortNodes(unvisitedNodes);
     const curr = unvisitedNodes.shift();
     if (!curr || curr.isWall) continue;
-    if (curr == finish) return visitedInOrder;
+    if (curr == finish) {
+      visitedInOrder.push(finish);
+      return visitedInOrder;
+    }
+    if (curr.distance == Infinity || curr.heuristics == Infinity)
+      return visitedInOrder;
     curr.isVisited = true;
     visitedInOrder.push(curr);
     updateNeighbourNodes(tree, curr, finish);
@@ -44,4 +49,3 @@ function getManhatanDistance(node: NodeType, finish: NodeType) {
 function sortNodes(nodes: NodeType[]) {
   nodes.sort((a, b) => a.distance + a.heuristics - (a.distance + b.heuristics));
 }
-export {};
