@@ -9,12 +9,11 @@ const colors = {
 };
 
 interface Props extends NodeType {
-  handleNodeClick: (x: number, y: number) => void;
-  isClicked: boolean;
+  handleNodeClick: (x: number, y: number, eventType?: string) => void;
 }
 
 export default function Node(props: Props) {
-  const { x, y, isStart, isFinish, isWall, isClicked, handleNodeClick } = props;
+  const { x, y, isStart, isFinish, isWall, handleNodeClick } = props;
 
   const nodeState = isStart
     ? "start"
@@ -30,9 +29,9 @@ export default function Node(props: Props) {
       id={`${x}-${y}`}
       style={{ backgroundColor: colors[nodeState] }}
       // onClick={() => handleNodeClick(x, y)}
-      onMouseUp={() => handleNodeClick(x, y)}
-      onMouseDown={() => handleNodeClick(x, y)}
-      onMouseOver={() => isClicked && handleNodeClick(x, y)}
+      onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
+      onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
+      onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
       // onMouseEnter={() => handleNodeClick(x, y)}
     ></div>
   );

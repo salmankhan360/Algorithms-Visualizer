@@ -5,15 +5,16 @@ import { constructNodes, visualize, resetAllNodes } from "./helpers";
 import { parse } from "query-string";
 import { djikstra, aStar } from "../../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../../Types";
+import Tree from "./Tree";
 
 const allAlgorithms = {
   aStar,
   djikstra,
 };
 const speeds = {
-  fast: 20,
-  slow: 90,
-  medium: 40,
+  fast: 3,
+  slow: 10,
+  medium: 5,
 };
 interface QueryProps {
   algorithm?: "aStar" | "djikstra";
@@ -35,7 +36,6 @@ export default function Pathfinding(props: Props) {
   const [tree, setTree] = useState<NodeType[][]>(
     constructNodes(rows, columns, coordinates)
   );
-  const [isClicked, setIsClicked] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
 
   const handleReset = (visitedInOrder: NodeType[]) => {
@@ -48,7 +48,7 @@ export default function Pathfinding(props: Props) {
   };
 
   const handleStart = () => {
-    const { algorithm, speed = "medium" } = qs;
+    const { algorithm = "djikstra", speed = "medium" } = qs;
     if (!algorithm) return;
 
     const {
@@ -67,20 +67,6 @@ export default function Pathfinding(props: Props) {
     visualize(visitedInOrder, speeds[speed], onFinish);
   };
 
-  const handleNodeClick = (x: number, y: number) => {
-    const {
-      start: { x: sX, y: sY },
-      finish: { x: fX, y: fY },
-    } = coordinates;
-
-    if ((sX == x && sY == y) || (fX == x && fY == y)) return;
-    const node = tree[x][y];
-    const changedNode = { ...node, isWall: !node.isWall };
-    const changedTree = tree.slice();
-    changedTree[x][y] = changedNode;
-    setTree(changedTree);
-  };
-
   return (
     <div className="pathfindingContainer">
       <button
@@ -90,23 +76,12 @@ export default function Pathfinding(props: Props) {
       >
         Start
       </button>
-      <div
-        onMouseDown={() => setIsClicked(true)}
-        onMouseUp={() => setIsClicked(false)}
-      >
-        {tree.map((row, y) => (
-          <div className={"row"} id={`row-${y}`}>
-            {row.map((node, x) => (
-              <Node
-                key={`${y}-${x}`}
-                handleNodeClick={handleNodeClick}
-                isClicked={isClicked}
-                {...node}
-              />
-            ))}
-          </div>
-        ))}
-      </div>
+      <Tree
+        tree={tree}
+        setTree={setTree}
+        coordinates={coordinates}
+        setCoordinates={setCoordinates}
+      />
     </div>
   );
 }
