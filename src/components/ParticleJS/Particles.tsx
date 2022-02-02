@@ -17,97 +17,97 @@ class Canvas extends Component {
     });
   };
   render() {
-    const { width, height } = this.state;
-    console.log(width, height);
     return (
-      <Particles
-        {...this.state}
-        params={{
-          particles: {
-            number: {
-              value: 30,
-              density: {
-                enable: true,
-                value_area: 800,
+      <div style={{ position: "fixed", zIndex: -1 }}>
+        {/* <Particles
+          {...this.state}
+          params={{
+            particles: {
+              number: {
+                value: 30,
+                density: {
+                  enable: true,
+                  value_area: 800,
+                },
               },
-            },
-            color: {
-              value: "#ffffff",
-            },
-            shape: {
-              type: "circle",
-              stroke: {
-                width: 0,
-                color: "#000000",
+              color: {
+                value: "#ffffff",
               },
-              image: {
-                src: "img/github.svg",
-                width: 100,
-                height: 100,
+              shape: {
+                type: "circle",
+                stroke: {
+                  width: 0,
+                  color: "#000000",
+                },
+                image: {
+                  src: "img/github.svg",
+                  width: 100,
+                  height: 100,
+                },
               },
-            },
-            opacity: {
-              value: 0.4,
-              random: true,
-              anim: {
+              opacity: {
+                value: 0.4,
+                random: true,
+                anim: {
+                  enable: true,
+                  speed: 1,
+                  opacity_min: 0.1,
+                  sync: false,
+                },
+              },
+              size: {
+                value: 3,
+                random: true,
+                anim: {
+                  enable: true,
+                  speed: 2,
+                  size_min: 0.1,
+                  sync: false,
+                },
+              },
+              line_linked: {
+                enable_auto: true,
+                distance: 100,
+                color: "#fff",
+                opacity: 1,
+                width: 1,
+                condensed_mode: {
+                  enable: false,
+                  rotateX: 600,
+                  rotateY: 600,
+                },
+              },
+              move: {
                 enable: true,
                 speed: 1,
-                opacity_min: 0.1,
-                sync: false,
+                direction: "none",
+                random: false,
+                straight: false,
+                out_mode: "out",
+                bounce: false,
+                attract: {
+                  enable: false,
+                  rotateX: 600,
+                  rotateY: 1200,
+                },
               },
             },
-            size: {
-              value: 3,
-              random: true,
-              anim: {
-                enable: true,
-                speed: 2,
-                size_min: 0.1,
-                sync: false,
+            interactivity: {
+              detect_on: "canvas",
+              events: {
+                onhover: {
+                  enable: false,
+                },
+                onclick: {
+                  enable: false,
+                },
+                resize: true,
               },
             },
-            line_linked: {
-              enable_auto: true,
-              distance: 100,
-              color: "#fff",
-              opacity: 1,
-              width: 1,
-              condensed_mode: {
-                enable: false,
-                rotateX: 600,
-                rotateY: 600,
-              },
-            },
-            move: {
-              enable: true,
-              speed: 1,
-              direction: "none",
-              random: false,
-              straight: false,
-              out_mode: "out",
-              bounce: false,
-              attract: {
-                enable: false,
-                rotateX: 600,
-                rotateY: 1200,
-              },
-            },
-          },
-          interactivity: {
-            detect_on: "canvas",
-            events: {
-              onhover: {
-                enable: false,
-              },
-              onclick: {
-                enable: false,
-              },
-              resize: true,
-            },
-          },
-          retina_detect: true,
-        }}
-      />
+            retina_detect: true,
+          }}
+        /> */}
+      </div>
     );
   }
 }
