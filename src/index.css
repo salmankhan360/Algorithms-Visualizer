@@ -1,29 +1,16 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: 'Inconsolata', Consolas, monospace !important;
+}
+body{
+  
 }
 
-.box {
-  transition: all 200ms ease-in-out;
-  height: 20px;
-  width: 20px;
-  border: 1px solid rgb(66, 82, 85);
-  display: inline-block;
-}
-.row {
-  max-height: 20.6px;
-}
 .searching {
   background-color: rgb(11, 210, 245);
 }
 .path {
   background-color: rgb(229, 245, 11);
 }
-.pathfindingContainer {
-  padding-top: 100px;
-  max-width: 900px;
-  margin: 0 auto;
-  text-align: center;
-  /* display: grid; */
-  /* grid-template-columns: 20 20 20 20 20 20 20 20 20 20 20 20 20 20; */
-}
+

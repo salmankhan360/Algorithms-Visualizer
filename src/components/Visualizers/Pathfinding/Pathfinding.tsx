@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
-import Node from "./Node";
+import HomePng from "../../../assets/Home.png";
+import targetPng from '../../../assets/target_PNG8.png';
 import { constructNodes, visualize, resetAllNodes } from "./helpers";
 import { parse } from "query-string";
+import Selects from "./Selects";
 import { djikstra, aStar } from "../../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../../Types";
+import './styles.scss';
 import Tree from "./Tree";
 
 const allAlgorithms = {
@@ -67,21 +70,28 @@ export default function Pathfinding(props: Props) {
     visualize(visitedInOrder, speeds[speed], onFinish);
   };
 
-  return (
-    <div className="pathfindingContainer">
-      <button
-        style={{ marginBottom: "30px" }}
-        onClick={handleStart}
-        disabled={isSearching}
-      >
-        Start
-      </button>
+ 
+  return (<div className="pathfindingWrapper">
+    <span id={'visualize'} style={{display: "none"}} onClick={handleStart}/>
+    <div className="nodesLabels">
+        <div className="start"><img src={HomePng}/> Start Node</div>
+        <div className="unvisited"><span></span> UnVisited Node</div>
+        <div className="visited"><span></span>Visited Node</div>
+        <div className="shortestpath"><span></span>Shortest-path Node</div>
+        <div className="wall"><span></span>Wall</div>
+        <div className="finish"> <img src={HomePng}/>Target Node</div>
+      </div>
+        <div className="pathfindingContainer">
       <Tree
         tree={tree}
         setTree={setTree}
         coordinates={coordinates}
         setCoordinates={setCoordinates}
-      />
+        />
+        <Selects/>
+        
     </div>
+  </div>
+
   );
 }
