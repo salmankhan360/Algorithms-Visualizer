@@ -61,7 +61,7 @@
   display: inline-block;
 }
 .box {
-  transition: all 200ms ease-in-out;
+  // transition: all 200ms ease-in-out;
   height: 30px;
   width: 30px;
   display: inline-block;
@@ -89,8 +89,10 @@
   animation-play-state: running;
 }
 .path {
-  animation: searching 1000ms;
   background-color: rgb(230, 214, 170);
+}
+.pathAnim{
+  animation: searching 1000ms;
   animation-name: shortestPath;
   animation-duration: 1.5s;
   animation-timing-function: ease-out;

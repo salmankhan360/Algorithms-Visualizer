@@ -20,7 +20,7 @@ const Header = () => {
   const handleVisualize = () => {
     const startBtn: any = document.getElementById("visualize");
     startBtn.click();
-  };
+  }
   return (
     <AppBar position="static" sx={{ backgroundColor: "#161b22", opacity: 1 , padding: "10px 0"}}>
       <Container maxWidth="xl">

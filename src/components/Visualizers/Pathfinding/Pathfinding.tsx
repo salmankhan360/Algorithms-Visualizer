@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import HomePng from "../../../assets/Home.png";
-import TargetPng from "../../../assets/target_PNG8.png";
+
 import { constructNodes, visualize, resetAllNodes } from "./helpers";
 import { parse } from "query-string";
 import Selects from "./Selects";
@@ -9,7 +8,7 @@ import { djikstra, aStar } from "../../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../../Types";
 import "./styles.scss";
 import Tree from "./Tree";
-
+import NodeInfo from "./NodeInfo";
 const allAlgorithms = {
   aStar,
   djikstra,
@@ -30,6 +29,7 @@ interface Props {
 }
 
 export default function Pathfinding(props: Props) {
+  const [isVisualized, setVisualized] = useState(false);
   const { columns, rows } = props;
   const { search } = useLocation();
   const qs: QueryProps = parse(search);
@@ -53,58 +53,36 @@ export default function Pathfinding(props: Props) {
   };
 
   const handleStart = (speed: QueryProps["speed"] = "0") => {
-    if (!algorithm) return;
+    setVisualized(true);
+    if (!algorithm || isSearching) return;
 
     const {
       start: { x: sX, y: sY },
       finish: { x: fX, y: fY },
     } = coordinates;
 
-    const start = tree[sX][sY];
-    const finish = tree[fX][fY];
+    const copyTree = tree.map((row) => row.map((node) => ({ ...node })));
+    const start = copyTree[sX][sY];
+    const finish = copyTree[fX][fY];
 
     const selectedAlgorithm = allAlgorithms[algorithm];
-    const visitedInOrder = selectedAlgorithm(tree, start, finish);
+    const visitedInOrder = selectedAlgorithm(copyTree, start, finish);
     if (!visitedInOrder) return;
 
     setIsSearching(true);
+    resetAllNodes(tree, 0);
     visualize(visitedInOrder, speeds[speed], onFinish);
   };
 
   useEffect(() => {
+    if (!isVisualized) return;
     resetAllNodes(tree, 0);
-    handleStart();
+    handleStart("0");
   }, [tree]);
 
   return (
     <div className="pathfindingWrapper">
-      <span
-        id={"visualize"}
-        style={{ display: "none" }}
-        onClick={() => handleStart(qsSpeed)}
-      />
-      <div className="nodesLabels">
-        <div className="start">
-          <img src={HomePng} /> Start Node
-        </div>
-        <div className="unvisited">
-          <span></span> UnVisited Node
-        </div>
-        <div className="visited">
-          <span></span>Visited Node
-        </div>
-        <div className="shortestpath">
-          <span></span>Shortest-path Node
-        </div>
-        <div className="wall">
-          <span></span>Wall
-        </div>
-        <div className="finish">
-          {" "}
-          <img src={TargetPng} />
-          Target Node
-        </div>
-      </div>
+    <NodeInfo /> 
       <div className="pathfindingContainer">
         <Tree
           tree={tree}

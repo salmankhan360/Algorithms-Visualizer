@@ -41,7 +41,6 @@ export default function Selects() {
             </Select>
             </FormControl>
             )
-            console.log(formsStates[form])
       }
       return formsArr
   }
