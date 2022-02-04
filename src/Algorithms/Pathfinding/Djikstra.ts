@@ -13,7 +13,10 @@ export default function djikstra(
   while (unvisited.length) {
     sortNodes(unvisited);
     const closest = unvisited.shift();
-    if (!closest || closest.isWall) continue;
+    if (!closest || closest.isWall){
+      console.log(closest, 'this is a wall ')
+      continue
+    }
     if (closest == finish) {
       visitedInOrder.push(finish);
       return visitedInOrder;
