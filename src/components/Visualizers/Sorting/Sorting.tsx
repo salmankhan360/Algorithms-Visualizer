@@ -1,6 +1,6 @@
 import React from "react";
 import { getHeight, genRandomArray } from "./helpers";
-import { bubbleSort } from "../../../Algorithms/Sorting/BubbleSort";
+import bubbleSort from "../../../Algorithms/Sorting/BubbleSort";
 import "./styles.css";
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
@@ -9,22 +9,21 @@ export default function Sorting() {
 
   const visualize = () => {
     const inOrder = bubbleSort(array);
-    console.log(inOrder);
-    inOrder.forEach((node: any, i) => {
+    inOrder.forEach((node: any, i: any) => {
       setTimeout(() => {
         const {
           pile,
-          changing: [_, j],
+          index: [_, j],
         } = node;
         const curr: any = document.getElementById(j);
         const prev: any = document.getElementById(
-          String(inOrder[i].changing[1])
+          String(inOrder[i-1].index[1])
         );
-        prev.style.backgroundColor = "#fff";
+        prev.style.backgroundColor = "lightBlue";
         curr.style.backgroundColor = "yellow";
         // console.log(pile);
         setArray(pile);
-      }, i * 100);
+      }, i * 30);
     });
   };
   return (
