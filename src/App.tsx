@@ -6,19 +6,19 @@ function App() {
   const navigate = useNavigate();
   const { search } = useLocation();
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 894b63baac33aedee9b1a55515bc4b4835f76543
   return (
     <div className="App">
-      {/* <Particles /> */}
-      {/* <Header /> */}
+      <Particles />
+      <Header />
       <Routes>
-        <Route
-          path={"/"}
-          element={<Home/>}
-        />
+        <Route path={"/"} element={<Home />} />
         <Route
           path={"/Pathfinding"}
-          element={<Pathfinding columns={40} rows={20} />}
+          element={<Pathfinding columns={35} rows={15} />}
         />
         <Route path={"/"} element={<Sorting />} />
       </Routes>
