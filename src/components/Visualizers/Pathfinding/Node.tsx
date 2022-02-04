@@ -1,10 +1,11 @@
 import React from "react";
 import { NodeType } from "../../../Types";
+import HomePng from "../../../assets/Home.png";
+import TargetPng from "../../../assets/target_PNG8.png";
 
-const colors = {
-  start: "#9e381f",
-  finish: "#219652",
-  wall: "#2e2928",
+const Icons = {
+  start: HomePng,
+  finish: TargetPng,
   "": "",
 };
 
@@ -15,24 +16,27 @@ interface Props extends NodeType {
 export default function Node(props: Props) {
   const { x, y, isStart, isFinish, isWall, handleNodeClick } = props;
 
-  const nodeState = isStart
-    ? "start"
-    : isFinish
-    ? "finish"
-    : isWall
-    ? "wall"
-    : "";
-
+  const nodeState = isStart ? "start" : isFinish ? "finish" : "";
   return (
-    <div
-      className="box"
-      id={`${x}-${y}`}
-      style={{ backgroundColor: colors[nodeState] }}
-      // onClick={() => handleNodeClick(x, y)}
-      onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
-      onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
-      onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
-      // onMouseEnter={() => handleNodeClick(x, y)}
-    ></div>
+    <div className="boxWrapper">
+      <div
+        className="box"
+        id={`${x}-${y}`}
+        style={{ backgroundColor: isWall ? "#2e2928" : "" }}
+        // onClick={() => handleNodeClick(x, y)}
+        onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
+        onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
+        onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
+        // onMouseEnter={() => handleNodeClick(x, y)}
+      >
+        {Icons[nodeState] && (
+          <img
+            height={"30px"}
+            style={{ backgroundColor: "#fff" }}
+            src={Icons[nodeState]}
+          />
+        )}
+      </div>
+    </div>
   );
 }

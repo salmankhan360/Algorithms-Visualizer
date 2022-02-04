@@ -1,5 +1,5 @@
 import React from "react";
-import { Header, Pathfinding, Particles, Sorting } from "./components";
+import { Header, Pathfinding, Particles, Sorting, Home } from "./components";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 function App() {
@@ -8,12 +8,13 @@ function App() {
 
   return (
     <div className="App">
-      {/* <Particles /> */}
-      {/* <Header /> */}
+      <Particles />
+      <Header />
       <Routes>
+        <Route path={"/"} element={<Home />} />
         <Route
           path={"/Pathfinding"}
-          element={<Pathfinding columns={40} rows={20} />}
+          element={<Pathfinding columns={35} rows={15} />}
         />
         <Route path={"/"} element={<Sorting />} />
       </Routes>

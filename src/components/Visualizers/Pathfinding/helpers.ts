@@ -52,6 +52,7 @@ export function visualize(
     setTimeout(() => {
       const nodeTag: any = document.getElementById(`${x}-${y}`);
       nodeTag.classList.add("searching");
+      nodeTag.classList.add("searchAnim");
     }, i * speed);
   });
   const finish = visitedInOrder[visitedInOrder.length - 1];
@@ -84,13 +85,17 @@ function visualizePath(
   visualizePath(previousNode, speed, onFinish, i + 1);
 }
 
-export function resetAllNodes(tree: NodeType[][]) {
+export function resetAllNodes(tree: NodeType[][], speed: number) {
+  console.log(speed);
   tree.forEach((col) =>
     col.forEach((node) => {
       const { x, y } = node;
       const nodeTag = document.getElementById(`${x}-${y}`);
-      nodeTag?.classList.remove("searching");
-      nodeTag?.classList.remove("path");
+      nodeTag?.classList?.remove(
+        `searching`,
+        speed > 0 ? "searchAnim" : "claas"
+      );
+      nodeTag?.classList?.remove("path");
     })
   );
 }

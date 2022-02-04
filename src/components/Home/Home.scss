@@ -1,0 +1,190 @@
+$bg: #1d1f20;
+$text-color: #000000;
+$caret-color: white;
+$text-length: 19;
+$animation-time: 4s;
+
+
+
+.Home{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-top: 80px;
+  font-family: 'Inconsolata', Consolas, monospace;
+  color: $text-color;
+
+}
+h1{
+	font-size: 4em;
+  margin-bottom: 30px;
+}
+
+.typing {
+  overflow: hidden; 
+  border-right: .4em solid rgba(255, 255, 255, 0.5); 
+  white-space: nowrap;
+ 
+  max-width: fit-content;
+  letter-spacing: .15em;
+  animation: 
+    typing 6.5s steps(90, end),
+    blink-caret .75s step-end infinite;
+}
+
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+
+@keyframes blink-caret {
+  from, to { border-color: transparent, border }
+  50% { border-color: rgba(83, 83, 83, .8);  }
+}
+
+
+
+
+h2{
+  margin-bottom: 70px;
+  height: 76px;
+  font: {
+		size: 3.125em;
+		weight: 700;
+	}
+}
+.glitch{
+  font-size: 1.3em;
+  color:rgb(0, 0, 0);
+  position:relative;
+  width:400px;
+  margin:0 auto;
+}
+@keyframes noise-anim{
+  $steps:20;
+  @for $i from 0 through $steps{
+    #{percentage($i*(1/$steps))}{
+      clip:rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+.glitch:after{
+  content:attr(data-text);
+  position:absolute;
+  left:2px;
+  text-shadow:-1px 0 red;
+  top:0;
+  color:white;
+  background:black;
+  overflow:hidden;
+  clip:rect(0,900px,0,0); 
+  animation:noise-anim 3s infinite linear alternate-reverse;
+}
+
+@keyframes noise-anim-2{
+  $steps:20;
+  @for $i from 0 through $steps{
+    #{percentage($i*(1/$steps))}{
+      clip:rect(random(100)+px,9999px,random(100)+px,0);
+    }
+  }
+}
+.glitch:before{
+  content:attr(data-text);
+  position:absolute;
+  left:-2px;
+  text-shadow:1px 0 blue; 
+  top:0;
+  color:white;
+  background:rgb(145, 142, 142);
+  overflow:hidden;
+  clip:rect(0,900px,0,0); 
+  animation:noise-anim-2 3s infinite linear alternate-reverse;
+}
+
+p{
+  font-size: 2em;
+  font-weight: 900;
+}
+
+
+.fade-In-left {
+  overflow: hidden;
+  display: inline-block;
+  animation: fadeInLeft 3000ms
+}
+
+.fade-In-Bottom{
+  overflow: hidden;
+  display: inline-block;
+  animation: fadeInBottom 3000ms
+}
+.bottom-top{
+  display: inline-block;
+  animation: bottomTop 2000ms
+}
+
+@keyframes fadeInBottom{
+  0%{
+    height: 0;
+  }
+ 100%{
+   height: inherit;
+ }
+}
+
+@keyframes bottomTop {
+  0%{
+    opacity: 0;
+    transform: translateY(100px);
+  }
+  30%{
+    opacity: 1;
+  }
+  100%{
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInLeft{
+  0%{opacity: 0;
+    transform: translateX(-500px);
+  }
+  30%{
+    opacity: 1;
+  }
+  100%{
+    transform: translateX(0);
+  }
+}
+
+.algorithms-wrapper{
+  max-width: 450px;
+  margin: 0 auto;
+  width: 100%;
+  padding-top: 80px;
+}
+.algorithms{
+  display: flex;
+  justify-content: space-between;
+  width: inherit;
+  
+  & div{
+    cursor: pointer;
+    width: 200px;
+    background-color: #666666;
+    text-align: center;
+    font-size: 24px;
+    padding: 10px 0;
+    color: #fff;
+    transition: all 100ms ease-in-out;
+    &:hover{
+      transform: translate(-8px, -5px);
+      box-shadow: 20px 10px rgba(0,0,0,1);
+    }
+    
+  }
+
+}
