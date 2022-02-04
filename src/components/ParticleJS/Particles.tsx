@@ -1,6 +1,8 @@
-import React from "react";
+
+import React, { Component } from "react";
 import Particles from "react-tsparticles";
 import particlesConfig from "./config.json";
+
 
 function ParticlesBG() {
   return (
