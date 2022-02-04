@@ -5,6 +5,7 @@ export default function AStar(
   start: NodeType,
   finish: NodeType
 ) {
+  
   start.distance = 0;
   start.heuristics = 0;
   const unvisitedNodes = getAllNodes(tree);
@@ -22,7 +23,9 @@ export default function AStar(
     curr.isVisited = true;
     visitedInOrder.push(curr);
     updateNeighbourNodes(tree, curr, finish);
+
   }
+  return visitedInOrder;
 }
 
 function updateNeighbourNodes(

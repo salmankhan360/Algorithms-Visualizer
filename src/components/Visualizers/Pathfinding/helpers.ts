@@ -21,7 +21,8 @@ export function constructNodes(
   for (let i = 0; i < rows; i++) {
     const columnsArr = [];
     for (let j = 0; j < columns; j++) {
-      const emptyNode = {
+      const emptyNode: any = {
+        id: table.length,
         x: i,
         y: j,
         distance: Infinity,
@@ -49,10 +50,16 @@ export function visualize(
 ) {
   visitedInOrder.forEach((node, i) => {
     const { x, y } = node;
-    setTimeout(() => {
-      const nodeTag: any = document.getElementById(`${x}-${y}`);
+    const nodeTag: any = document.getElementById(`${x}-${y}`);
+    if(speed == 0) {
       nodeTag.classList.add("searching");
-    }, i * speed);
+    } else {
+
+      setTimeout(() => {
+        nodeTag.classList.add("searching");
+        nodeTag.classList.add("searchAnim");
+      }, speed *i);
+    }
   });
   const finish = visitedInOrder[visitedInOrder.length - 1];
   if (!finish.isFinish) {
@@ -77,20 +84,34 @@ function visualizePath(
   }
   const { previousNode } = closestNode;
   const { x, y } = previousNode;
-  setTimeout(() => {
-    const pathNode = document.getElementById(`${x}-${y}`);
+  const pathNode = document.getElementById(`${x}-${y}`);
+  if(speed == 0) { 
     pathNode?.classList.add("path");
-  }, i * speed);
+  } else {
+
+    setTimeout(() => {
+      pathNode?.classList.add("path");
+      pathNode?.classList.add("pathAnim");
+    }, i * speed);
+  }
   visualizePath(previousNode, speed, onFinish, i + 1);
+ let prev =  previousNode?.previousNode 
+prev = undefined
 }
 
-export function resetAllNodes(tree: NodeType[][]) {
+export function resetAllNodes(tree: NodeType[][], speed: number) {
   tree.forEach((col) =>
     col.forEach((node) => {
       const { x, y } = node;
       const nodeTag = document.getElementById(`${x}-${y}`);
-      nodeTag?.classList.remove("searching");
-      nodeTag?.classList.remove("path");
+
+      nodeTag?.classList?.remove(
+        `searching`,
+        "path",
+        "searchAnim",
+        "pathAnim"
+      );
+
     })
   );
 }

@@ -4,6 +4,7 @@ export interface CoordinatesType {
 }
 
 export interface NodeType {
+  id: number
   x: number;
   y: number;
   distance: number;
