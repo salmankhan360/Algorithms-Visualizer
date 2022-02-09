@@ -23,11 +23,9 @@ export default function Node(props: Props) {
         className="box"
         id={`${x}-${y}`}
         style={{ backgroundColor: isWall ? "#2e2928" : "" }}
-        // onClick={() => handleNodeClick(x, y)}
         onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
         onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
         onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
-        // onMouseEnter={() => handleNodeClick(x, y)}
       >
         {Icons[nodeState] && (
           <img

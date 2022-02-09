@@ -83,6 +83,7 @@ export default function Pathfinding(props: Props) {
   return (
     <div className="pathfindingWrapper">
     <NodeInfo /> 
+    <div onClick={()=> handleStart(qsSpeed)} id="visualize"/>
       <div className="pathfindingContainer">
         <Tree
           tree={tree}

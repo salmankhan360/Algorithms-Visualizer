@@ -4,7 +4,6 @@ import bubbleSort from "../../../Algorithms/Sorting/BubbleSort";
 import "./styles.css";
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
-
   const max = Math.max(...array);
 
   const visualize = () => {
@@ -21,7 +20,9 @@ export default function Sorting() {
         );
         prev.style.backgroundColor = "lightBlue";
         curr.style.backgroundColor = "yellow";
-        // console.log(pile);
+        if(i === inOrder.length - 1) {
+          curr.style.backgroundColor = "lightBlue";
+        }
         setArray(pile);
       }, i * 30);
     });
@@ -34,6 +35,7 @@ export default function Sorting() {
       <div className="sortingContainer">
         <div className="sortingContent">
           {array.map((val, i) => (
+          
             <div
               className="bar"
               style={{ height: `calc(${getHeight(val, max)}% + 20px)` }}
