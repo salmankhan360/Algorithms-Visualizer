@@ -17,7 +17,7 @@ function App() {
           path={"/Pathfinding"}
           element={<Pathfinding columns={35} rows={15} />}
         />
-        <Route path={"/"} element={<Sorting />} />
+        <Route path={"/sorting"} element={<Sorting />} />
       </Routes>
     </div>
   );
