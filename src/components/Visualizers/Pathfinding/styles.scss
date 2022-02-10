@@ -1,5 +1,5 @@
 .pathfindingWrapper {
-  padding-top: 50px;
+  padding-top: 40px;
 }
 .pathfindingContainer {
   // max-width: 900px;
@@ -13,7 +13,7 @@
   max-width: 1400px;
   font-size: 20px;
   margin: 0 auto;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   & img {
     height: 50px;
     width: 50px;
@@ -91,7 +91,7 @@
 .path {
   background-color: rgb(230, 214, 170);
 }
-.pathAnim{
+.pathAnim {
   animation: searching 1000ms;
   animation-name: shortestPath;
   animation-duration: 1.5s;
@@ -101,7 +101,27 @@
   animation-iteration-count: 1;
   animation-play-state: running;
 }
+.wall-node {
+  background-color: #313131;
+  animation: wallAnimation 1000ms;
+}
 
+@keyframes wallAnimation {
+  0% {
+    border-radius: 10%;
+    transform: scale(0.3);
+  }
+  40% {
+    border-radius: 50%;
+  }
+  90% {
+    transform: scale(1.1);
+  }
+  100% {
+    border-radius: 0;
+    transform: scale(1);
+  }
+}
 @keyframes visitedAnimation {
   0% {
     transform: scale(0.3);

@@ -51,14 +51,13 @@ export function visualize(
   visitedInOrder.forEach((node, i) => {
     const { x, y } = node;
     const nodeTag: any = document.getElementById(`${x}-${y}`);
-    if(speed == 0) {
+    if (speed == 0) {
       nodeTag.classList.add("searching");
     } else {
-
       setTimeout(() => {
         nodeTag.classList.add("searching");
         nodeTag.classList.add("searchAnim");
-      }, speed *i);
+      }, speed * i);
     }
   });
   const finish = visitedInOrder[visitedInOrder.length - 1];
@@ -85,33 +84,26 @@ function visualizePath(
   const { previousNode } = closestNode;
   const { x, y } = previousNode;
   const pathNode = document.getElementById(`${x}-${y}`);
-  if(speed == 0) { 
+  if (speed == 0) {
     pathNode?.classList.add("path");
   } else {
-
     setTimeout(() => {
       pathNode?.classList.add("path");
       pathNode?.classList.add("pathAnim");
     }, i * speed);
   }
   visualizePath(previousNode, speed, onFinish, i + 1);
- let prev =  previousNode?.previousNode 
-prev = undefined
+  let prev = previousNode?.previousNode;
+  prev = undefined;
 }
 
-export function resetAllNodes(tree: NodeType[][], speed: number) {
+export function resetAllNodes(tree: NodeType[][]) {
   tree.forEach((col) =>
     col.forEach((node) => {
       const { x, y } = node;
       const nodeTag = document.getElementById(`${x}-${y}`);
 
-      nodeTag?.classList?.remove(
-        `searching`,
-        "path",
-        "searchAnim",
-        "pathAnim"
-      );
-
+      nodeTag?.classList?.remove(`searching`, "path", "searchAnim", "pathAnim");
     })
   );
 }

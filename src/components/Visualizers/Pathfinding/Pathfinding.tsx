@@ -4,11 +4,13 @@ import { useLocation } from "react-router-dom";
 import { constructNodes, visualize, resetAllNodes } from "./helpers";
 import { parse } from "query-string";
 import Selects from "./Selects";
+import { Box } from "@mui/system";
 import { djikstra, aStar } from "../../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../../Types";
 import "./styles.scss";
 import Tree from "./Tree";
 import NodeInfo from "./NodeInfo";
+import { Button } from "@mui/material";
 const allAlgorithms = {
   aStar,
   djikstra,
@@ -43,9 +45,10 @@ export default function Pathfinding(props: Props) {
   );
   const [isSearching, setIsSearching] = useState(false);
 
-  const handleReset = (visitedInOrder: NodeType[]) => {
+  const handleReset = () => {
     setTree(constructNodes(rows, columns, coordinates));
-    resetAllNodes(tree, 0);
+    resetAllNodes(tree);
+    setVisualized(false);
   };
 
   const onFinish = () => {
@@ -70,28 +73,30 @@ export default function Pathfinding(props: Props) {
     if (!visitedInOrder) return;
 
     setIsSearching(true);
-    resetAllNodes(tree, 0);
+    resetAllNodes(tree);
     visualize(visitedInOrder, speeds[speed], onFinish);
   };
 
   useEffect(() => {
     if (!isVisualized) return;
-    resetAllNodes(tree, 0);
+    resetAllNodes(tree);
     handleStart("0");
   }, [tree]);
 
+  const isWalls = tree.find((row) => row.find((node) => node.isWall));
   return (
     <div className="pathfindingWrapper">
-    <NodeInfo /> 
-    <div onClick={()=> handleStart(qsSpeed)} id="visualize"/>
+      <NodeInfo />
+      <div onClick={() => handleStart(qsSpeed)} id="visualize" />
+      <div onClick={handleReset} id="ResetTree" />
       <div className="pathfindingContainer">
+        <Selects isChanged={!!isWalls} />
         <Tree
           tree={tree}
           setTree={setTree}
           coordinates={coordinates}
           setCoordinates={setCoordinates}
         />
-        <Selects />
       </div>
     </div>
   );

@@ -20,9 +20,8 @@ export default function Node(props: Props) {
   return (
     <div className="boxWrapper">
       <div
-        className="box"
+        className={`box ${isWall ? "wall-node" : ""}`}
         id={`${x}-${y}`}
-        style={{ backgroundColor: isWall ? "#2e2928" : "" }}
         onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
         onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
         onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
