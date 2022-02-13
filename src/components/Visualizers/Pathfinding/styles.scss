@@ -166,3 +166,35 @@
     background-color: rgb(230, 214, 170);
   }
 }
+
+.tree {
+  position: relative;
+  z-index: 9999;
+  width: fit-content;
+  margin: 0 auto;
+  background-color: #fff;
+}
+
+.growAnim {
+  animation: growAnimation 1000ms;
+}
+
+@keyframes growAnimation {
+  0% {
+    pointer-events: none;
+    border-radius: 10%;
+    transform: scale(0.3);
+  }
+  40% {
+    border-radius: 50%;
+  }
+  90% {
+    transform: scale(1.1);
+    pointer-events: all;
+  }
+
+  100% {
+    border-radius: 0;
+    transform: scale(1);
+  }
+}

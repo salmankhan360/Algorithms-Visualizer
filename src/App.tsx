@@ -6,7 +6,6 @@ function App() {
   const navigate = useNavigate();
   const { search } = useLocation();
 
-
   return (
     <div className="App">
       <Particles />

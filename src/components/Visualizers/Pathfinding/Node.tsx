@@ -28,8 +28,13 @@ export default function Node(props: Props) {
       >
         {Icons[nodeState] && (
           <img
+            id={nodeState}
             height={"30px"}
-            style={{ backgroundColor: "#fff" }}
+            style={{
+              backgroundColor: "#fff",
+              userSelect: "none",
+              pointerEvents: "none",
+            }}
             src={Icons[nodeState]}
           />
         )}

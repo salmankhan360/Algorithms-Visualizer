@@ -16,11 +16,11 @@ export default function Sorting() {
         } = node;
         const curr: any = document.getElementById(j);
         const prev: any = document.getElementById(
-          String(inOrder[i-1].index[1])
+          String(inOrder[i - 1].index[1])
         );
         prev.style.backgroundColor = "lightBlue";
         curr.style.backgroundColor = "yellow";
-        if(i === inOrder.length - 1) {
+        if (i === inOrder.length - 1) {
           curr.style.backgroundColor = "lightBlue";
         }
         setArray(pile);
@@ -29,13 +29,14 @@ export default function Sorting() {
   };
   return (
     <div>
-      <button style={{ marginBottom: "30px" }} onClick={visualize}>
-        SOrt
-      </button>
+      <button
+        style={{ marginBottom: "30px" }}
+        onClick={visualize}
+        id="visualize"
+      ></button>
       <div className="sortingContainer">
         <div className="sortingContent">
           {array.map((val, i) => (
-          
             <div
               className="bar"
               style={{ height: `calc(${getHeight(val, max)}% + 20px)` }}
