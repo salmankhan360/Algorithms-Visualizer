@@ -1,5 +1,6 @@
 import React from "react";
-import GithubLogo from '../../assets/github.png';
+import GithubLogo from "../../assets/github.png";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -14,21 +15,30 @@ import {
   MenuItem,
 } from "@mui/material";
 
-const pages = ["Home", "PathFinding", "Sorting"];
+const pages = [
+  { name: "Home", path: "/" },
+  { name: "PathFinding", path: "/pathfinding" },
+  { name: "Sorting", path: "/sorting" },
+];
 
 const Header = () => {
+  const navigate = useNavigate();
   const handleVisualize = () => {
     const startBtn: any = document.getElementById("visualize");
     startBtn.click();
-  }
+  };
   return (
-    <AppBar position="static" sx={{ backgroundColor: "#161b22", opacity: 1 , padding: "10px 0"}}>
+    <AppBar
+      position="static"
+      sx={{ backgroundColor: "#161b22", opacity: 1, padding: "10px 0" }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             variant="h4"
             noWrap
             component="div"
+            onClick={() => navigate("/")}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -38,21 +48,11 @@ const Header = () => {
           >
             Visualiser
           </Typography>
-          <Typography
-            variant="h6"
-            noWrap
-            component="div"
-            sx={{     mr: 2,
-              display: { xs: "none", md: "flex" },
-              marginRight: "80px",
-              cursor: "pointer",} }
-          >
-                  Visualiser
-          </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
+            {pages.map(({ name, path }) => (
               <Button
-                key={page}
+                key={path}
                 sx={{
                   my: 2,
                   color: "white",
@@ -60,8 +60,9 @@ const Header = () => {
                   fontSize: "20px",
                   margin: "0px 10px",
                 }}
+                onClick={() => navigate(path)}
               >
-                {page}
+                {name}
               </Button>
             ))}
             <Button
@@ -79,9 +80,8 @@ const Header = () => {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <Tooltip  title={"w"}>
-
-            <img src={GithubLogo} height={60}/>
+            <Tooltip title={"w"}>
+              <img src={GithubLogo} height={60} />
             </Tooltip>
           </Box>
         </Toolbar>

@@ -34,10 +34,16 @@ export default function Tree(props: Props) {
       treeCopy[sX][sY].isStart = false;
       treeCopy[x][y].isStart = true;
       setCoordinates({ ...coordinates, start: { x, y } });
+
+      const startNode: any = document.getElementById("start");
+      startNode.style.animation = "growAnimation 3000ms";
+      startNode.style.animation = "";
     } else {
       treeCopy[fX][fY].isFinish = false;
       treeCopy[x][y].isFinish = true;
       setCoordinates({ ...coordinates, finish: { x, y } });
+      document.getElementById("finish")?.classList.add("growAnim");
+      // document.getElementById("finish")?.classList.remove("growAnim");
     }
     setTree(treeCopy);
   };
@@ -67,6 +73,7 @@ export default function Tree(props: Props) {
 
   return (
     <div
+      className="tree"
       onMouseDown={() => setIsClicked(true)}
       onMouseUp={() => setIsClicked(false)}
     >
