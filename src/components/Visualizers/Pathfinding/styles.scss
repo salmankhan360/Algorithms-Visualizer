@@ -103,21 +103,18 @@
 }
 .wall-node {
   background-color: #313131;
-  animation: wallAnimation 1000ms;
+  animation: wallAnimation 100ms;
 }
 
 @keyframes wallAnimation {
   0% {
-    pointer-events: none;
     border-radius: 10%;
-    transform: scale(0.3);
   }
   40% {
     border-radius: 50%;
   }
   90% {
     transform: scale(1.1);
-    pointer-events: all;
   }
 
   100% {
@@ -169,7 +166,7 @@
 
 .tree {
   position: relative;
-  z-index: 9999;
+  z-index: 500;
   width: fit-content;
   margin: 0 auto;
   background-color: #fff;
