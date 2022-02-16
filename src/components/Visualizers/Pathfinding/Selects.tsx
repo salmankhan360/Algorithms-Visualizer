@@ -46,6 +46,7 @@ export default function Selects(props: Props) {
           sx={{
             minWidth: "220px",
             fontSize: "18px",
+
             textTransform: "capitalize",
             backgroundColor: openStates[form] ? "#6c757d" : "transparent",
             color: openStates[form] ? "white" : "#000",
@@ -65,7 +66,10 @@ export default function Selects(props: Props) {
           {selectsForms[form].map((item: any) => (
             <MenuItem
               value={item}
-              sx={{ fontSize: "20px", textTransform: "capitalize" }}
+              sx={{
+                fontSize: "20px",
+                textTransform: "capitalize",
+              }}
             >
               {item}
             </MenuItem>
