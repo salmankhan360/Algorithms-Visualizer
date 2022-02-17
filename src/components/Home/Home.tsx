@@ -4,12 +4,15 @@ import { useNavigate } from "react-router-dom";
 import "./Home.scss";
 export default function Home() {
   const navigate = useNavigate();
-  
+
   return (
     <div className="Home">
       <h1 className="typing">Welcome, I'm Rehman</h1>
       <h2>
-        <span style={{ fontWeight: 300 }} className="fade-In-left">
+        <span
+          style={{ fontWeight: 300, transition: "all 300ms ease-in-out" }}
+          className="fade-In-left"
+        >
           Algorithms
         </span>{" "}
         <span className="glitch fade-In-Bottom" data-text="Visualizer">

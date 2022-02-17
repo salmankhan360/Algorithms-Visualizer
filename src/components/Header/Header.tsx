@@ -5,14 +5,10 @@ import {
   AppBar,
   Box,
   Toolbar,
-  IconButton,
   Typography,
-  Menu,
   Container,
-  Avatar,
   Button,
   Tooltip,
-  MenuItem,
 } from "@mui/material";
 
 const pages = [
@@ -28,10 +24,7 @@ const Header = () => {
     startBtn.click();
   };
   return (
-    <AppBar
-      position="static"
-      sx={{ backgroundColor: "#161b22", opacity: 1, padding: "10px 0" }}
-    >
+    <AppBar position="static" sx={{ backgroundColor: "#161b22", opacity: 1 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -57,7 +50,7 @@ const Header = () => {
                   my: 2,
                   color: "white",
                   display: "block",
-                  fontSize: "20px",
+                  fontSize: "17px",
                   margin: "0px 10px",
                 }}
                 onClick={() => navigate(path)}
@@ -69,7 +62,7 @@ const Header = () => {
               variant="contained"
               onClick={handleVisualize}
               sx={{
-                fontSize: "20px",
+                fontSize: "17px",
                 marginLeft: "30px",
                 backgroundColor: "#48505a",
                 "&:hover": { backgroundColor: "rgba(72, 80, 90, .8)" },
@@ -79,10 +72,15 @@ const Header = () => {
             </Button>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
-            <Tooltip title={"w"}>
-              <img src={GithubLogo} height={60} />
-            </Tooltip>
+          <Box sx={{ flexGrow: 0, height: "45px" }}>
+            <a
+              href="https://github.com/Shutah64/Algorithms-Visualizer"
+              target="_blank"
+            >
+              <Tooltip title={"Github Repository"}>
+                <img src={GithubLogo} height={"100%"} />
+              </Tooltip>
+            </a>
           </Box>
         </Toolbar>
       </Container>

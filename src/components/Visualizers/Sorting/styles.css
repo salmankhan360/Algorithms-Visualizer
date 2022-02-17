@@ -1,9 +1,9 @@
 .sortingContainer {
-  height: 500px;
+  height: 450px;
   max-width: 1000px;
   margin: 0 auto;
   text-align: center;
-  padding-top: 30px;
+  padding-top: 50px;
 }
 .sortingContent {
   display: flex;
@@ -14,15 +14,14 @@
   padding: 0;
   margin: 0;
   position: relative;
-  z-index: 9999;
 }
 .bar {
-  min-width: 30px;
+  min-width: 25px;
   border: 1px solid #000;
   display: inline-block;
 }
 .sortSearch {
-  background-color: rgb(234, 255, 115) !important;
+  background-color: hsl(320, 100%, 54%) !important;
 }
 .bar span {
   display: inline-block;

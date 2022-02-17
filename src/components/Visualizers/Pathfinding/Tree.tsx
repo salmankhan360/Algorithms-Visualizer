@@ -7,6 +7,7 @@ interface Props {
   setTree: (tree: NodeType[][]) => void;
   coordinates: CoordinatesType;
   setCoordinates: (c: CoordinatesType) => void;
+  isSearching: boolean;
 }
 
 interface CoordinatesClickType {
@@ -14,13 +15,13 @@ interface CoordinatesClickType {
   finish?: boolean;
 }
 export default function Tree(props: Props) {
-  const { tree, setTree, coordinates, setCoordinates } = props;
+  const { tree, setTree, coordinates, setCoordinates, isSearching } = props;
   const [isClicked, setIsClicked] = useState(false);
   const [coordinatesClick, setCoordinatesClick] =
     useState<CoordinatesClickType | null>();
 
   // This component is a little bit dirty because of the advance event listners
-  // I'm not sure if it's the best way to do it, but it works for now
+  // I'm not sure if it's the best way to do it, but it works for me
 
   const handleCoordinates = (node: NodeType) => {
     const { x, y } = node;
@@ -34,21 +35,16 @@ export default function Tree(props: Props) {
       treeCopy[sX][sY].isStart = false;
       treeCopy[x][y].isStart = true;
       setCoordinates({ ...coordinates, start: { x, y } });
-
-      const startNode: any = document.getElementById("start");
-      startNode.style.animation = "growAnimation 3000ms";
-      startNode.style.animation = "";
     } else {
       treeCopy[fX][fY].isFinish = false;
       treeCopy[x][y].isFinish = true;
       setCoordinates({ ...coordinates, finish: { x, y } });
-      document.getElementById("finish")?.classList.add("growAnim");
-      // document.getElementById("finish")?.classList.remove("growAnim");
     }
     setTree(treeCopy);
   };
 
   const handleNodeClick = (x: number, y: number, eventType = "onClick") => {
+    if (isSearching) return;
     const node = tree[x][y];
 
     if (!node.isWall) {
