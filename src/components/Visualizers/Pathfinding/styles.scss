@@ -1,19 +1,22 @@
 .pathfindingWrapper {
-  padding-top: 40px;
+  padding: 25px;
 }
 .pathfindingContainer {
-  // max-width: 900px;
   background-color: #fff;
   margin: 0 auto;
   text-align: center;
 }
 .nodesLabels {
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
+  justify-content: center;
   max-width: 1400px;
   font-size: 20px;
   margin: 0 auto;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
+  & > :not(:last-child) {
+    margin-right: 30px;
+  }
   & img {
     height: 50px;
     width: 50px;
@@ -32,23 +35,23 @@
     }
   }
   & .wall span {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 30px;
     background-color: #313131;
   }
   & .visited span {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 30px;
     background-color: rgba(129, 209, 219, 0.774);
   }
   & .unvisited span {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 30px;
     border: 1px solid #000;
   }
   & .shortestpath span {
-    height: 35px;
-    width: 35px;
+    height: 30px;
+    width: 30px;
     background-color: rgb(230, 214, 170);
   }
 }

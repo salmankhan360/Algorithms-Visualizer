@@ -14,6 +14,10 @@ export const visualize = (
   setArr: (arr: number[]) => void,
   onFinish: () => void
 ) => {
+  if (!inOrder.length) {
+    onFinish();
+    return;
+  }
   inOrder?.forEach((node: any, i: any) => {
     setTimeout(() => {
       const {
@@ -27,7 +31,6 @@ export const visualize = (
       prev.classList.remove("sortSearch");
       curr.classList.add("sortSearch");
       if (i === inOrder.length - 1) {
-        console.log("last");
         curr.classList.remove("sortSearch");
         onFinish();
       }

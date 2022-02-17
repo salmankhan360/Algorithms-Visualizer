@@ -21,7 +21,6 @@ export default function Selects(props: Props) {
   const { isChanged, feilds, onReset, resetText } = props;
   const { search, pathname } = useLocation();
   const qs: any = parse(search);
-  console.log(qs);
   const navigateTo = useNavigate();
   const [openStates, setOpenStates] = React.useState<any>({});
 

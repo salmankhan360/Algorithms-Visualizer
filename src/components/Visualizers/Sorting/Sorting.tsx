@@ -18,7 +18,7 @@ export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
   const [visualizing, setVisualizing] = React.useState(false);
   const { search } = useLocation();
-  const { size = "40", speed = "medium" }: any = parse(search);
+  const { size = "30", speed = "medium" }: any = parse(search);
   const max = Math.max(...array);
 
   useEffect(() => {
@@ -29,7 +29,9 @@ export default function Sorting() {
   const onFinish = () => {
     setVisualizing(false);
   };
+
   const handleClick = () => {
+    console.log(visualizing);
     if (visualizing) return;
     setVisualizing(true);
     const loopSpeed = speeds[speed];
@@ -39,9 +41,9 @@ export default function Sorting() {
   return (
     <div>
       <button
-        style={{ marginBottom: "30px" }}
         onClick={handleClick}
         id="visualize"
+        style={{ display: "none" }}
       ></button>
 
       <div className="sortingContainer">
@@ -69,10 +71,10 @@ export default function Sorting() {
           feilds={{
             speed: ["slow", "medium", "fast"],
             algorithm: ["Bubble Sort", "Merge Sort"],
-            size: ["10", "30", "40"],
+            size: ["30", "40", "20"],
           }}
-          onReset={() => setArray(genRandomArray(size, 100))}
           resetText={"Generate"}
+          onReset={() => setArray(genRandomArray(size, 100))}
         />
       </Box>
     </div>

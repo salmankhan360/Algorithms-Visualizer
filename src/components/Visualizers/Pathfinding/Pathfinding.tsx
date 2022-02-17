@@ -57,8 +57,8 @@ export default function Pathfinding(props: Props) {
   };
 
   const handleStart = (speed: QueryProps["speed"] = "0") => {
-    setVisualized(true);
     if (!algorithm || isSearching) return;
+    setVisualized(true);
 
     const {
       start: { x: sX, y: sY },
@@ -105,6 +105,7 @@ export default function Pathfinding(props: Props) {
           setTree={setTree}
           coordinates={coordinates}
           setCoordinates={setCoordinates}
+          isSearching={isSearching}
         />
       </div>
     </div>
