@@ -1,25 +1,31 @@
 import React from "react";
-import {
-  InputLabel,
-  MenuItem,
-  FormControl,
-  Select as MUISelect,
-} from "@mui/material";
+import { MenuItem, Select as MUISelect } from "@mui/material";
 
 interface Props {
   value: string;
   prefix?: string;
   active?: boolean;
   options: string[];
+  disabled?: boolean;
   onChange: (val: string) => void;
   onOpen?: () => void;
   onClose?: () => void;
 }
 export default function Select(props: Props) {
-  const { onChange, onOpen, onClose, value, prefix, active, options } = props;
+  const {
+    onChange,
+    onOpen,
+    onClose,
+    value,
+    prefix,
+    active,
+    options,
+    disabled,
+  } = props;
   return (
     <div>
       <MUISelect
+        disabled={disabled}
         value={value}
         renderValue={(value) => (
           <div>

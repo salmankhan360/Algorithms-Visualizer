@@ -1,7 +1,16 @@
-export function genRandomArray(size: number, max: number) {
-  const arr = [];
-  for (let i = 0; i < size; i++) {
-    arr.push(Math.floor(Math.random() * max));
+export function genRandomArray(
+  size: number,
+  max: number,
+  arr: number[] = []
+): number[] {
+  for (let i = 0; i < size; ) {
+    const unique = Math.floor(Math.random() * max);
+    if (arr.includes(unique)) {
+      continue;
+    } else {
+      i++;
+      arr.push(unique);
+    }
   }
   return arr;
 }
@@ -22,19 +31,65 @@ export const visualize = (
     setTimeout(() => {
       const {
         pile,
-        index: [_, j],
+        index: [k, j],
+        pivote,
       } = node;
-      const curr: any = document.getElementById(j);
-      const prev: any = document.getElementById(
-        String(inOrder[i - 1]?.index[1])
-      );
-      prev.classList.remove("sortSearch");
-      curr.classList.add("sortSearch");
-      if (i === inOrder.length - 1) {
-        curr.classList.remove("sortSearch");
-        onFinish();
+
+      performSwap(j, k, speed);
+      if (pivote) {
+        addUniqueClass("pivote", String(pivote));
       }
-      setArr(pile);
+      // setArr(pile);
     }, i * speed);
   });
+  setTimeout(
+    () => [onFinish(), resetAllClasses()],
+    (inOrder.length - 1) * speed
+  );
 };
+
+function performSwap(i: number, j: number, speed: number) {
+  const curr: any = document.getElementById(String(i));
+  const next: any = document.getElementById(String(j));
+  const currCopy = JSON.parse(JSON.stringify(curr.style.left));
+  curr.style.left = next.style.left;
+  next.style.left = currCopy;
+  next.id = String(i);
+  addUniqueClass("sortSearch1", String(i));
+  curr.id = String(j);
+  addUniqueClass("sortSearch2", String(j));
+  console.log(next);
+}
+
+function addUniqueClass(className: string, id: string) {
+  const allClasses = document.querySelectorAll(`.${className}`);
+  allClasses.forEach((node: any) => {
+    node.classList.remove(className);
+  });
+  document.getElementById(id)?.classList.add(className);
+  console.log(allClasses);
+}
+
+function resetAllClasses() {
+  document.querySelectorAll(".bar").forEach((node: any) => {
+    node.classList.remove("sortSearch1");
+    node.classList.remove("sortSearch2");
+    node.classList.remove("pivote");
+  });
+}
+
+export function resetBars(array: number[]) {
+  const firstNode = document.getElementById("0");
+  if (!firstNode) return;
+
+  array.forEach((bar: any, i) => {
+    console.log(bar);
+    const dups: any = document.querySelectorAll(`.bar-${bar}`);
+    dups.forEach((node: any) => {
+      console.log(node);
+      const left = `${i * 35}px`;
+      node.id = String(i);
+      node.style.left = left;
+    });
+  });
+}

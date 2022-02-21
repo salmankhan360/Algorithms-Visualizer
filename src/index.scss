@@ -1,0 +1,23 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Inconsolata", Consolas, monospace !important;
+}
+body {
+}
+
+.searching {
+  background-color: rgb(11, 210, 245);
+}
+.path {
+  background-color: rgb(229, 245, 11);
+}
+
+.flexCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  & > :not(:last-child) {
+    margin-right: 15px;
+  }
+}

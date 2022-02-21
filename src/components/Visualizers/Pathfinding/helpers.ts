@@ -61,7 +61,7 @@ export function visualize(
     }
   });
   const finish = visitedInOrder[visitedInOrder.length - 1];
-  if (!finish.isFinish) {
+  if (!finish?.isFinish) {
     onFinish();
     return;
   }
@@ -107,3 +107,78 @@ export function resetAllNodes(tree: NodeType[][]) {
     })
   );
 }
+
+export function getRandomIndices(
+  max: number,
+  i = 0,
+  arr: number[] = [],
+  indexHash: any = {}
+) {
+  if (i === max) return;
+  const index = Math.floor(Math.random() * max);
+  if (indexHash[index]) {
+    getRandomIndices(max, i, arr, indexHash);
+  } else {
+    indexHash[index] = true;
+    arr.push(index);
+    getRandomIndices(max, i + 1, arr, indexHash);
+  }
+  return arr;
+}
+
+export const drawPattern = (
+  pattern: { x: number; y: number }[],
+  speed: number,
+  tree: NodeType[][],
+  setTree: (tree: NodeType[][]) => void,
+  onFinish: () => void
+) => {
+  sortByCoordinates(pattern);
+
+  const chunk1 = pattern.slice(0, pattern.length / 2);
+  const chunk2 = pattern.slice(pattern.length / 2);
+  sortByCoordinates(chunk2);
+
+  chunk1?.forEach((val, i) => {
+    const { x, y } = val;
+    const node = tree[x][y];
+    if (!node.isWall) {
+      setTimeout(() => {
+        if (!node.isFinish && !node.isStart) {
+          node.isWall = true;
+          setTree([...tree]);
+          i++;
+        }
+      }, i * speed);
+    }
+  });
+
+  chunk2?.forEach((val, i) => {
+    const { x, y } = chunk2[chunk2.length - 1 - i];
+    const node = tree[x][y];
+    if (!node.isWall) {
+      setTimeout(() => {
+        if (!node.isFinish && !node.isStart) {
+          node.isWall = true;
+          setTree([...tree]);
+          i++;
+        }
+      }, i * speed);
+    }
+  });
+  setTimeout(() => onFinish(), chunk1.length * speed);
+};
+
+const sortByCoordinates = (
+  arr: { x: number; y: number }[],
+  direction = "asc"
+) => {
+  arr.sort((a, b) => {
+    const sumA = a.x + a.y;
+    const sumB = b.x + b.y;
+    if (direction === "asc") {
+      return sumA - sumB;
+    }
+    return sumB - sumA;
+  });
+};
