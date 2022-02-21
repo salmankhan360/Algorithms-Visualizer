@@ -13,12 +13,10 @@ interface feildValue {
 }
 interface Props {
   feilds: feildsType;
-  isChanged?: boolean;
-  onReset?: () => void;
-  resetText?: string;
+  disabled?: boolean;
 }
 export default function Selects(props: Props) {
-  const { isChanged, feilds, onReset, resetText } = props;
+  const { feilds, disabled } = props;
   const { search, pathname } = useLocation();
   const qs: any = parse(search);
   const navigateTo = useNavigate();
@@ -49,6 +47,7 @@ export default function Selects(props: Props) {
           onClose={() => setOpenStates({ ...openStates, [form]: false })}
           active={!!openStates[form]}
           options={feilds[form]}
+          disabled={!!disabled}
         />
       );
     }
@@ -58,16 +57,6 @@ export default function Selects(props: Props) {
   return (
     <Box display="flex" justifyContent={"center"} alignItems="center">
       {renderForms()}
-      {isChanged && (
-        <Button
-          onClick={onReset}
-          color="error"
-          variant="contained"
-          sx={{ "&>div": { padding: "10px" }, marginLeft: "20px" }}
-        >
-          {resetText ?? "Reset"}
-        </Button>
-      )}
     </Box>
   );
 }

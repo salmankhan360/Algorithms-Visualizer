@@ -6,6 +6,20 @@
   margin: 0 auto;
   text-align: center;
 }
+.themeButton {
+  width: fit-content;
+  background-color: #6c757d !important;
+  &:not(:last-child) {
+    margin-right: 10px;
+  }
+  &:hover {
+    background-color: #5a6268 !important;
+  }
+  margin-left: 20px;
+  & > div {
+    padding: 10px;
+  }
+}
 .nodesLabels {
   display: flex;
   flex-wrap: wrap;
@@ -106,12 +120,16 @@
 }
 .wall-node {
   background-color: #313131;
-  animation: wallAnimation 100ms;
+  pointer-events: none;
+  position: relative;
+  z-index: -1;
+  animation: wallAnimation 1000ms;
 }
 
 @keyframes wallAnimation {
   0% {
-    border-radius: 10%;
+    border-radius: 0%;
+    transform: scale(0.1);
   }
   40% {
     border-radius: 50%;

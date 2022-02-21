@@ -18,13 +18,16 @@ export default function Node(props: Props) {
 
   const nodeState = isStart ? "start" : isFinish ? "finish" : "";
   return (
-    <div className="boxWrapper">
+    <div
+      className="boxWrapper"
+      onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
+      onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
+      onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
+    >
       <div
         className={`box ${isWall ? "wall-node" : ""}`}
         id={`${x}-${y}`}
-        onMouseDown={() => handleNodeClick(x, y, "onMouseDown")}
-        onMouseUp={() => handleNodeClick(x, y, "onMouseUp")}
-        onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
+        style={{ pointerEvents: "none" }}
       >
         {Icons[nodeState] && (
           <img

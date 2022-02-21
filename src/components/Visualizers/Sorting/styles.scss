@@ -1,0 +1,45 @@
+.sortingContainer {
+  height: 450px;
+  margin: 0 auto;
+  text-align: center;
+  padding-top: 50px;
+  position: relative;
+}
+.sortingContent {
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  position: relative;
+}
+.bar {
+  transition: 200ms;
+  min-width: 35px;
+  border: 1px solid #000;
+  display: inline-block;
+}
+.sortSearch1 {
+  background-color: hsl(81, 55%, 58%) !important;
+}
+.sortSearch2 {
+  background-color: hsl(27, 67%, 64%) !important;
+}
+.pivote {
+  background-color: rgb(255, 244, 83) !important;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    transform: translateY(-2px);
+    background-color: rgb(46, 46, 46);
+  }
+}
+.bar span {
+  display: inline-block;
+  margin-top: 5px;
+}
