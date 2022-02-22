@@ -18,6 +18,7 @@ export default function Actions(props: PropsType) {
             "quick sort",
             "merge sort",
             "insertion sort",
+            "selection sort",
           ],
           size: ["25", "30", "15"],
         }}
