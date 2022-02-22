@@ -8,6 +8,7 @@ import {
   quickSort,
   mergeSort,
   insertionSort,
+  selectionSort,
 } from "../../../Algorithms/Sorting";
 import Actions from "./Actions";
 import "./styles.scss";
@@ -21,6 +22,7 @@ const algorithms: any = {
   "quick sort": quickSort,
   "merge sort": mergeSort,
   "insertion sort": insertionSort,
+  "selection sort": insertionSort,
 };
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
