@@ -3,12 +3,14 @@ import { getHeight, genRandomArray } from "./helpers";
 import { useLocation } from "react-router-dom";
 import { parse } from "query-string";
 import { visualize, resetBars } from "./helpers";
-import bubbleSort from "../../../Algorithms/Sorting/BubbleSort";
-import quickSort from "../../../Algorithms/Sorting/QuickSort";
-import mergeSort from "../../../Algorithms/Sorting/MergeSort";
+import {
+  bubbleSort,
+  quickSort,
+  mergeSort,
+  insertionSort,
+} from "../../../Algorithms/Sorting";
 import Actions from "./Actions";
 import "./styles.scss";
-
 const speeds: any = {
   fast: 100,
   slow: 500,
@@ -18,6 +20,7 @@ const algorithms: any = {
   "bubble sort": bubbleSort,
   "quick sort": quickSort,
   "merge sort": mergeSort,
+  "insertion sort": insertionSort,
 };
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
@@ -41,7 +44,7 @@ export default function Sorting() {
   }, [array]);
 
   useEffect(() => {
-    if (size > 40) return;
+    if (size > 30) return;
     handleNewArr();
   }, [size]);
 

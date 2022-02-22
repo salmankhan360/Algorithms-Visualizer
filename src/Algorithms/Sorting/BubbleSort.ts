@@ -1,8 +1,5 @@
-function swap(a: number, b: number, arr: number[]) {
-  let tmp = arr[a];
-  arr[a] = arr[b];
-  arr[b] = tmp;
-}
+import { swap } from "./helper";
+
 export default function bubbleSort(array: number[]) {
   let sortedInOrder: any = [];
   for (let i = 0; i < array.length; i++) {

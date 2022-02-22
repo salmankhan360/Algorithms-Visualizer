@@ -13,8 +13,13 @@ export default function Actions(props: PropsType) {
       <SelectSettings
         feilds={{
           speed: ["slow", "medium", "fast"],
-          algorithm: ["bubble sort", "quick sort", "merge sort"],
-          size: ["30", "40", "20"],
+          algorithm: [
+            "bubble sort",
+            "quick sort",
+            "merge sort",
+            "insertion sort",
+          ],
+          size: ["25", "30", "15"],
         }}
         disabled={visualizing}
       />

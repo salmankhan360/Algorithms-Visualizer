@@ -69,10 +69,10 @@ function performSwap(i: number, j: number, speed: number) {
   const currCopy = JSON.parse(JSON.stringify(curr.style.left));
   curr.style.left = next.style.left;
   next.style.left = currCopy;
-  next.id = String(i);
   addUniqueClass("sortSearch1", String(i));
-  curr.id = String(j);
   addUniqueClass("sortSearch2", String(j));
+  next.id = String(i);
+  curr.id = String(j);
 }
 
 function addUniqueClass(className: string, id: string) {
