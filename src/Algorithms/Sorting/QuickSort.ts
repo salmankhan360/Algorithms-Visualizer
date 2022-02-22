@@ -13,8 +13,8 @@ function partition(
       sortedInOrder.push({ pile: [...arr], index: [j, i], pivote: high });
     }
   }
-  sortedInOrder.push({ pile: [...arr], index: [i + 1, high] });
   [arr[i + 1], arr[high]] = [arr[high], arr[i + 1]];
+  sortedInOrder.push({ pile: [...arr], index: [i + 1, high] });
   return i + 1;
 }
 

@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect } from "react";
+import React, { useEffect } from "react";
 import { getHeight, genRandomArray } from "./helpers";
-import { Box } from "@mui/material";
 import { useLocation } from "react-router-dom";
 import { parse } from "query-string";
 import { visualize, resetBars } from "./helpers";
-import { Button } from "@mui/material";
-import SelectSettings from "../../../shared_components/SelectSettings";
 import bubbleSort from "../../../Algorithms/Sorting/BubbleSort";
 import quickSort from "../../../Algorithms/Sorting/QuickSort";
 import mergeSort from "../../../Algorithms/Sorting/MergeSort";
+import Actions from "./Actions";
 import "./styles.scss";
 
 const speeds: any = {
@@ -19,6 +17,7 @@ const speeds: any = {
 const algorithms: any = {
   "bubble sort": bubbleSort,
   "quick sort": quickSort,
+  "merge sort": mergeSort,
 };
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
@@ -31,17 +30,24 @@ export default function Sorting() {
   }: any = parse(search);
   const max = Math.max(...array);
 
-  const handleNewArr = () =>
-    !visualizing && setArray(genRandomArray(size, max));
+  const handleNewArr = () => {
+    const newArr = genRandomArray(size, max);
+    setArray(newArr);
+    return newArr;
+  };
 
-  useEffect(() => resetBars(array), [array]);
+  useEffect(() => {
+    resetBars(array);
+  }, [array]);
+
   useEffect(() => {
     if (size > 40) return;
     handleNewArr();
   }, [size]);
 
-  const onFinish = () => {
+  const onFinish = (finishPile: number[] = []) => {
     setVisualizing(false);
+    if (finishPile.length) setArray(finishPile);
   };
 
   const handleClick = () => {
@@ -50,7 +56,6 @@ export default function Sorting() {
     const loopSpeed = speeds[speed];
     const algorithm = algorithms[qsAlgorithm];
     const inOrder = algorithm(array.slice());
-    resetBars(array.slice());
     visualize(inOrder, loopSpeed, setArray, onFinish);
   };
 
@@ -61,7 +66,6 @@ export default function Sorting() {
         id="visualize"
         style={{ display: "none" }}
       ></button>
-
       <div className="sortingContainer">
         <div
           className="sortingContent"
@@ -77,7 +81,10 @@ export default function Sorting() {
                   height: `calc(${getHeight(val, max)}% + 20px)`,
                   backgroundColor: color,
                   left: `${i * 35}px`,
-                  // left:
+                  transition:
+                    qsAlgorithm == "merge sort"
+                      ? "none"
+                      : "all 200ms ease-in-out",
                 }}
                 id={`${i}`}
               >
@@ -85,27 +92,10 @@ export default function Sorting() {
               </div>
             );
           })}
+          <div id="innerTweek"></div>
         </div>
       </div>
-      <Box className="flexCenter" marginTop="30px">
-        <SelectSettings
-          feilds={{
-            speed: ["slow", "medium", "fast"],
-            algorithm: ["bubble sort", "quick sort"],
-            size: ["30", "40", "20"],
-          }}
-          disabled={visualizing}
-        />
-
-        <Button
-          variant="contained"
-          className={"themeButton"}
-          onClick={handleNewArr}
-          disabled={visualizing}
-        >
-          Generate
-        </Button>
-      </Box>
+      <Actions visualizing={!!visualizing} handleNewArr={handleNewArr} />
     </div>
   );
 }
