@@ -14,39 +14,54 @@ export function genRandomArray(
   }
   return arr;
 }
-
 export const getHeight = (value: number, max: number) => (value / max) * 100;
 
 export const visualize = (
   inOrder: any,
   speed: number,
   setArr: (arr: number[]) => void,
-  onFinish: () => void
+  onFinish: (finishPile: number[]) => void
 ) => {
   if (!inOrder.length) {
-    onFinish();
+    onFinish([]);
     return;
   }
   inOrder?.forEach((node: any, i: any) => {
     setTimeout(() => {
       const {
         pile,
-        index: [k, j],
+        index: [k, j, z],
         pivote,
+        type,
       } = node;
 
-      performSwap(j, k, speed);
-      if (pivote) {
-        addUniqueClass("pivote", String(pivote));
+      if (type == "merge") {
+        addUniqueClass("sortSearch1", String(j));
+        addUniqueClass("sortSearch2", String(k));
+        addUniqueClass("sortSearch3", String(z));
+        setArr(pile);
+      } else if (pivote) {
+        performSwap(j, k, speed);
+        performPivote(String(pivote));
+      } else {
+        performSwap(j, k, speed);
       }
-      // setArr(pile);
     }, i * speed);
   });
   setTimeout(
-    () => [onFinish(), resetAllClasses()],
+    () => [onFinish(inOrder[inOrder.length - 1].pile), resetAllClasses()],
     (inOrder.length - 1) * speed
   );
 };
+
+function performPivote(id: string) {
+  const node = document.getElementById(id);
+  const tweekNode = document.getElementById("innerTweek");
+  addUniqueClass("pivote", id);
+  addUniqueClass("pivote-line", "innerTweek");
+  if (!node || !tweekNode) return;
+  tweekNode.style.height = getComputedStyle(node).height;
+}
 
 function performSwap(i: number, j: number, speed: number) {
   const curr: any = document.getElementById(String(i));
@@ -58,7 +73,6 @@ function performSwap(i: number, j: number, speed: number) {
   addUniqueClass("sortSearch1", String(i));
   curr.id = String(j);
   addUniqueClass("sortSearch2", String(j));
-  console.log(next);
 }
 
 function addUniqueClass(className: string, id: string) {
@@ -67,14 +81,15 @@ function addUniqueClass(className: string, id: string) {
     node.classList.remove(className);
   });
   document.getElementById(id)?.classList.add(className);
-  console.log(allClasses);
 }
 
 function resetAllClasses() {
-  document.querySelectorAll(".bar").forEach((node: any) => {
+  document.querySelectorAll(".bar, #innerTweek").forEach((node: any) => {
     node.classList.remove("sortSearch1");
     node.classList.remove("sortSearch2");
     node.classList.remove("pivote");
+    node.classList.remove("pivote");
+    node.classList.remove("pivote-line");
   });
 }
 
@@ -83,10 +98,8 @@ export function resetBars(array: number[]) {
   if (!firstNode) return;
 
   array.forEach((bar: any, i) => {
-    console.log(bar);
     const dups: any = document.querySelectorAll(`.bar-${bar}`);
     dups.forEach((node: any) => {
-      console.log(node);
       const left = `${i * 35}px`;
       node.id = String(i);
       node.style.left = left;
