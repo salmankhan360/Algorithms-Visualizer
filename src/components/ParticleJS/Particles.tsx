@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Particles from "react-tsparticles";
-import particlesConfig from "./config.json";
 
 function ParticlesBG() {
   return (
@@ -52,7 +51,7 @@ function ParticlesBG() {
               enable: true,
               outMode: "bounce",
               random: false,
-              speed: 6,
+              speed: 1,
               straight: false,
             },
             number: {

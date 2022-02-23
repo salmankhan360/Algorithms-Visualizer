@@ -1,5 +1,4 @@
-import { swap } from "./helper";
-
+import { swap } from "../../Utils/Sorting";
 export default function bubbleSort(array: number[]) {
   let sortedInOrder: any = [];
   for (let i = 0; i < array.length; i++) {
