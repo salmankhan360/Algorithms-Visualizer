@@ -123,7 +123,7 @@ const Header = () => {
               Visualize
             </Button>
           </Box>
-          <Box
+          {/* <Box
             sx={{
               display: "flex",
               alignItems: "center",
@@ -147,8 +147,8 @@ const Header = () => {
             >
               <FastForwardRounded />
             </IconButton>
-          </Box>
-          <Stack
+          </Box> */}
+          {/* <Stack
             spacing={2}
             direction="row"
             sx={{ minWidth: "170px", mr: "50px", "& *": { m: "0 !important" } }}
@@ -166,7 +166,7 @@ const Header = () => {
             <IconButton sx={{ color: "#fff" }} onClick={() => setVolume(100)}>
               <VolumeUp />
             </IconButton>
-          </Stack>
+          </Stack> */}
           <Box sx={{ flexGrow: 0, height: "45px" }}>
             <a
               href="https://github.com/Shutah64/Algorithms-Visualizer"
