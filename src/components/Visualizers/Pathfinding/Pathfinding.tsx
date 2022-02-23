@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
   constructNodes,
   visualize,
@@ -8,22 +8,24 @@ import {
 } from "./helpers";
 import { parse } from "query-string";
 import { Box } from "@mui/system";
-import { djikstra, aStar } from "../../../Algorithms/Pathfinding";
+import { djikstra, aStar, DFS, BFS } from "../../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../../Types";
 import "./styles.scss";
 import Tree from "./Tree";
 import NodeInfo from "./NodeInfo";
 import SelectSettings from "../../../shared_components/SelectSettings";
-import { Button } from "@mui/material";
 import {
   zigZagPattern,
   infinityPattern,
 } from "../../../Algorithms/Pathfinding/WallPatterns";
 import Actions from "./Actions";
+import { stringify } from "query-string";
 
 const allAlgorithms = {
   aStar,
   djikstra,
+  DFS,
+  BFS,
 };
 const speeds = {
   fast: 3,
@@ -48,7 +50,8 @@ interface Props {
 export default function Pathfinding(props: Props) {
   const [isVisualized, setVisualized] = useState(false);
   const { columns, rows } = props;
-  const { search } = useLocation();
+  const { search, pathname } = useLocation();
+  const navigate = useNavigate();
   const qs: QueryProps = parse(search);
   const {
     algorithm = "djikstra",
@@ -90,6 +93,7 @@ export default function Pathfinding(props: Props) {
 
     const selectedAlgorithm = allAlgorithms[algorithm];
     const visitedInOrder = selectedAlgorithm(copyTree, start, finish);
+    console.log(visitedInOrder);
     if (!visitedInOrder) return;
 
     setIsSearching(true);
@@ -98,11 +102,11 @@ export default function Pathfinding(props: Props) {
   };
 
   const handlePattern = () => {
-    console.log(isSearching, isVisualized);
     if (isSearching) return;
     isVisualized && setVisualized(false);
 
     const newTree = constructNodes(rows, columns, coordinates);
+    resetAllNodes(tree);
     setIsSearching(true);
     drawPattern(allPatterns[pattern], 80, newTree, setTree, onFinish);
   };
@@ -113,6 +117,12 @@ export default function Pathfinding(props: Props) {
     handleStart("0");
   }, [tree]);
 
+  useEffect(() => {
+    const qs: any = parse(search);
+    qs["visualizing"] = isSearching;
+    navigate(`${pathname}?${stringify(qs)}`);
+  }, [isSearching]);
+
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
   return (
     <div className="pathfindingWrapper">
@@ -121,9 +131,10 @@ export default function Pathfinding(props: Props) {
       <div className="pathfindingContainer">
         <Box marginBottom="20px" className="flexCenter">
           <SelectSettings
+            disabled={isSearching}
             feilds={{
               speed: ["slow", "medium", "fast"],
-              algorithm: ["djikstra", "aStar"],
+              algorithm: ["djikstra", "aStar", "DFS", "BFS"],
               pattern: ["zigzag", "infinity"],
             }}
           />

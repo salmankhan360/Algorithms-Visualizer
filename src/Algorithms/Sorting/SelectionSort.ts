@@ -1,4 +1,4 @@
-import { swap } from "./helper";
+import { swap } from "../../Utils/Sorting";
 
 export default function selectionSort(piles: number[]) {
   let statesInOrder = [];
@@ -8,13 +8,10 @@ export default function selectionSort(piles: number[]) {
       if (piles[j] < piles[minId]) {
         minId = j;
       }
-      //   const temp = { piles: piles.slice(), changing: [j] };
-      //   statesInOrder.push(temp);
     }
     swap(minId, i, piles);
     const temp = { piles: piles.slice(), changing: [minId, i] };
     statesInOrder.push(temp);
   }
-  console.log(statesInOrder);
   return statesInOrder;
 }

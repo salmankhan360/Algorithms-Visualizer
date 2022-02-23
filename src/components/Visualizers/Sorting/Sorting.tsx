@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { getHeight, genRandomArray } from "./helpers";
-import { useLocation } from "react-router-dom";
-import { parse } from "query-string";
+import { useLocation, useNavigate } from "react-router-dom";
+import { parse, stringify } from "query-string";
 import { visualize, resetBars } from "./helpers";
 import {
   bubbleSort,
@@ -27,7 +27,9 @@ const algorithms: any = {
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
   const [visualizing, setVisualizing] = React.useState(false);
-  const { search } = useLocation();
+  const { search, pathname } = useLocation();
+  const navigate = useNavigate();
+
   const {
     size = "30",
     speed = "medium",
@@ -50,6 +52,11 @@ export default function Sorting() {
     handleNewArr();
   }, [size]);
 
+  useEffect(() => {
+    const qs: any = parse(search);
+    qs.visualizing = visualizing;
+    navigate(`${pathname}?${stringify(qs)}`);
+  }, [visualizing]);
   const onFinish = (finishPile: number[] = []) => {
     setVisualizing(false);
     if (finishPile.length) setArray(finishPile);

@@ -1,4 +1,4 @@
-import { swap } from "./helper";
+import { swap } from "../../Utils/Sorting";
 
 export default function insertionSort(piles: number[]) {
   let statesInOrder = [];

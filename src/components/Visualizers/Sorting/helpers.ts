@@ -64,6 +64,13 @@ function performPivote(id: string) {
 }
 
 function performSwap(i: number, j: number, speed: number) {
+  if (i !== j) {
+    const speedPlay = (speed / 500) * 7;
+    console.log(speedPlay);
+    const audio: any = document.getElementById("swap");
+    audio.playbackRate = 10 - speedPlay;
+    audio.play();
+  }
   const curr: any = document.getElementById(String(i));
   const next: any = document.getElementById(String(j));
   const currCopy = JSON.parse(JSON.stringify(curr.style.left));
