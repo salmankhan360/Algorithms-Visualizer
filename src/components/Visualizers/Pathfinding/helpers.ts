@@ -229,51 +229,51 @@ export function getBidirectionalNodes(
   ) => NodeType[],
   heuristics: string = "manhattan"
 ) {
-  // const finalVisited: NodeType[] = [];
-  // const {
-  //   start: { x: sX, y: sY },
-  //   finish: { x: fX, y: fY },
-  // } = coordinates;
-  // const copyTree = tree.map((row) => row.map((node) => ({ ...node, tree: 1 })));
-  // const copyTree2 = tree.map((row) =>
-  //   row.map((node) => ({ ...node, tree: 2 }))
-  // );
-  // const start = copyTree[sX][sY];
-  // const finish = copyTree[fX][fY];
-  // const start2 = copyTree2[sX][sY];
-  // const finish2 = copyTree2[fX][fY];
-  // const visitedInOrder1: NodeType[] = selectedAlgorithm(
-  //   copyTree,
-  //   start,
-  //   finish,
-  //   heuristics
-  // );
-  // const visitedInOrder2: NodeType[] = selectedAlgorithm(
-  //   copyTree2,
-  //   finish2,
-  //   start2,
-  //   heuristics
-  // );
-  // let i = 0;
-  // let j = 0;
-  // let e = 0;
-  // const prev: any = {};
-  // while (i < visitedInOrder1.length || j < visitedInOrder2.length) {
-  //   e++;
-  //   const p1 = `${visitedInOrder1[i]?.x}-${visitedInOrder1[i]?.y}`;
-  //   const p2 = `${visitedInOrder2[j]?.x}-${visitedInOrder2[j]?.y}`;
-  //   if (prev[p2] || prev[p1]) break;
-  //   if (e % 2 == 0 && visitedInOrder1[i]) {
-  //     prev[p1] = visitedInOrder1[i];
-  //     finalVisited.push(visitedInOrder1[i]);
-  //     i++;
-  //   } else if (visitedInOrder2[j]) {
-  //     prev[p2] = visitedInOrder2[j];
-  //     finalVisited.push(visitedInOrder2[j]);
-  //     j++;
-  //   }
-  // }
-  // return { visitedInOrder: finalVisited, start: start2, finish };
+  const finalVisited: NodeType[] = [];
+  const {
+    start: { x: sX, y: sY },
+    finish: { x: fX, y: fY },
+  } = coordinates;
+  const copyTree = tree.map((row) => row.map((node) => ({ ...node, tree: 1 })));
+  const copyTree2 = tree.map((row) =>
+    row.map((node) => ({ ...node, tree: 2 }))
+  );
+  const start = copyTree[sX][sY];
+  const finish = copyTree[fX][fY];
+  const start2 = copyTree2[sX][sY];
+  const finish2 = copyTree2[fX][fY];
+  const visitedInOrder1: NodeType[] = selectedAlgorithm(
+    copyTree,
+    start,
+    finish,
+    heuristics
+  );
+  const visitedInOrder2: NodeType[] = selectedAlgorithm(
+    copyTree2,
+    finish2,
+    start2,
+    heuristics
+  );
+  let i = 0;
+  let j = 0;
+  let e = 0;
+  const prev: any = {};
+  while (i < visitedInOrder1.length || j < visitedInOrder2.length) {
+    e++;
+    const p1 = `${visitedInOrder1[i]?.x}-${visitedInOrder1[i]?.y}`;
+    const p2 = `${visitedInOrder2[j]?.x}-${visitedInOrder2[j]?.y}`;
+    if (prev[p2] || prev[p1]) break;
+    if (e % 2 == 0 && visitedInOrder1[i]) {
+      prev[p1] = visitedInOrder1[i];
+      finalVisited.push(visitedInOrder1[i]);
+      i++;
+    } else if (visitedInOrder2[j]) {
+      prev[p2] = visitedInOrder2[j];
+      finalVisited.push(visitedInOrder2[j]);
+      j++;
+    }
+  }
+  return { visitedInOrder: finalVisited, start: start2, finish };
 }
 
 export function getSingleDirectionalNodes(
