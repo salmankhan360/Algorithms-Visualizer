@@ -49,7 +49,7 @@ function getManhatanDistance(cX: number, cY: number, fX: number, fY: number) {
 }
 
 function getEuclideanDistance(cX: number, cY: number, fX: number, fY: number) {
-  // return Math.sqrt(Math.pow(cX - fX, 2) + Math.pow(cY - fY, 2));
+  return Math.sqrt(Math.pow(cX - fX, 2) + Math.pow(cY - fY, 2));
 }
 function getOctileDistance(cX: number, cY: number, fX: number, fY: number) {
   // const dx = Math.abs(cX - fX);
