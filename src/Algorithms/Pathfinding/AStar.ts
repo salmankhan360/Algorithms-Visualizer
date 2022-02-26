@@ -52,9 +52,9 @@ function getEuclideanDistance(cX: number, cY: number, fX: number, fY: number) {
   return Math.sqrt(Math.pow(cX - fX, 2) + Math.pow(cY - fY, 2));
 }
 function getOctileDistance(cX: number, cY: number, fX: number, fY: number) {
-  // const dx = Math.abs(cX - fX);
-  // const dy = Math.abs(cY - fY);
-  // return dx + dy + (Math.sqrt(2) - 2) * Math.min(dx, dy);
+  const dx = Math.abs(cX - fX);
+  const dy = Math.abs(cY - fY);
+  return dx + dy + (Math.sqrt(2) - 2) * Math.min(dx, dy);
 }
 function getChebyshevDistance(cX: number, cY: number, fX: number, fY: number) {
   // return Math.max(Math.abs(cX - fX), Math.abs(cY - fY));
