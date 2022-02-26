@@ -1,7 +1,5 @@
 ## Visualizer
 
-[![CodeFactor](https://github.com/Shutah64/Algorithms-Visualizer)](https://github.com/Shutah64/Algorithms-Visualizer)
-
 This project is developed with React to help people to view algorithmic processes intuitively and entertainingly. <br/>
 You may visit the page at <a href="https://visualizer-b47d1.web.app">https://visualizer-b47d1.web.app</a> with Chrome (use full screen view to achieve better experience).
 
