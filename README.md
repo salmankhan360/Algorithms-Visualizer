@@ -19,14 +19,14 @@ You may visit the page at <a href="https://visualizer-b47d1.web.app">https://vis
 
 ## Music Included
 
-Added some science music of my faviroute youtuber <a href="https://www.youtube.com/c/MarkRober">Mark Rober</a>. Click his name to checkout his videos
+Added some science music of my faviroute youtuber <a href="https://www.youtube.com/c/MarkRober" target="_blank">Mark Rober</a>. Click his name to checkout his videos
 
 ## How To Use
 
-Open the <a href="https://visualizer-b47d1.web.app">website</a> in Chrome and follow the instructions to start visualizing algorithms!
+Open the <a href="https://visualizer-b47d1.web.app"target="_blank">website</a> in Chrome and follow the instructions to start visualizing algorithms!
 
 ## How To Contribute
 
-You may find me through <a href="mailto:madvillain115@gmail.com">email</a> with any comments or ideas and fork this project!
+You may find me through <a href="mailto:madvillain115@gmail.com" target="_blank">email</a> with any comments or ideas and fork this project!
 
 #### ENJOY THE BEAUTY OF ALGORITHMS!
