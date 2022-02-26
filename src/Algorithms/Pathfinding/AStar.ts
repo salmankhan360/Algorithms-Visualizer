@@ -57,7 +57,7 @@ function getOctileDistance(cX: number, cY: number, fX: number, fY: number) {
   return dx + dy + (Math.sqrt(2) - 2) * Math.min(dx, dy);
 }
 function getChebyshevDistance(cX: number, cY: number, fX: number, fY: number) {
-  // return Math.max(Math.abs(cX - fX), Math.abs(cY - fY));
+  return Math.max(Math.abs(cX - fX), Math.abs(cY - fY));
 }
 
 const allHeuristics: any = {
