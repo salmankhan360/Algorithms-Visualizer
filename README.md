@@ -17,6 +17,10 @@ You may visit the page at <a href="https://visualizer-b47d1.web.app">https://vis
     - Merge Sort
     - Quick Sort
 
+## Music Included
+
+Added some science music of my faviroute youtuber <a href="https://www.youtube.com/c/MarkRober">Mark Rober</a>. Click his name to checkout his videos
+
 ## How To Use
 
 Open the <a href="https://visualizer-b47d1.web.app">website</a> in Chrome and follow the instructions to start visualizing algorithms!
