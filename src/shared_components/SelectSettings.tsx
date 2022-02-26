@@ -3,7 +3,6 @@ import { Box } from "@mui/system";
 import Select from "./Select";
 import { parse, stringify } from "query-string";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Button } from "@mui/material";
 
 interface feildsType {
   [key: string]: string[];
@@ -55,7 +54,12 @@ export default function Selects(props: Props) {
   };
 
   return (
-    <Box display="flex" justifyContent={"center"} alignItems="center">
+    <Box
+      display="flex"
+      justifyContent={"center"}
+      alignItems="center"
+      className="globalSettings"
+    >
       {renderForms()}
     </Box>
   );

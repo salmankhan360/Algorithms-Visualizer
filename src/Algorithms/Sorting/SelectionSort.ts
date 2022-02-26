@@ -10,8 +10,9 @@ export default function selectionSort(piles: number[]) {
       }
     }
     swap(minId, i, piles);
-    const temp = { piles: piles.slice(), changing: [minId, i] };
+    const temp = { pile: piles.slice(), index: [minId, i] };
     statesInOrder.push(temp);
   }
+  console.log(statesInOrder);
   return statesInOrder;
 }

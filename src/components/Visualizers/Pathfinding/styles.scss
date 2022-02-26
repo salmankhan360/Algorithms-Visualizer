@@ -20,6 +20,10 @@
     padding: 10px;
   }
 }
+.nodesWrapper {
+  min-width: 1120px;
+  width: fit-content;
+}
 .nodesLabels {
   display: flex;
   flex-wrap: wrap;
@@ -74,6 +78,7 @@
   height: fit-content;
   width: fit-content;
   height: 30px;
+  transform: scale(1.01);
   width: 30px;
   display: inline-block;
 }
@@ -109,13 +114,7 @@
   background-color: rgb(230, 214, 170);
 }
 .pathAnim {
-  animation: searching 1000ms;
-  animation-name: shortestPath;
-  animation-duration: 1.5s;
-  animation-timing-function: ease-out;
-  animation-delay: 0;
-  animation-direction: alternate;
-  animation-iteration-count: 1;
+  animation: shortestPath 1500ms;
   animation-play-state: running;
 }
 .wall-node {
@@ -167,14 +166,28 @@
     background-color: rgba(129, 209, 219, 0.774);
   }
 }
+.settingsWapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 
+  margin: 0 auto;
+  flex-wrap: wrap;
+
+  & > :not(last-child) {
+    margin-bottom: 20px;
+  }
+}
 @keyframes shortestPath {
   0% {
+    border-radius: 50%;
     transform: scale(0.6);
     background-color: rgb(226, 184, 137);
   }
 
   50% {
+    border-radius: 0%;
+
     transform: scale(1.2);
     background-color: rgb(214, 117, 7);
   }

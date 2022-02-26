@@ -3,9 +3,10 @@ import { getAllNodes, getNeighbours } from "../../Utils/Pathfinding";
 export default function AStar(
   tree: NodeType[][],
   start: NodeType,
-  finish: NodeType
+  finish: NodeType,
+  heuristics = "manhattan"
 ) {
-  
+  console.log(heuristics);
   start.distance = 0;
   start.heuristics = 0;
   const unvisitedNodes = getAllNodes(tree);
@@ -22,8 +23,7 @@ export default function AStar(
       return visitedInOrder;
     curr.isVisited = true;
     visitedInOrder.push(curr);
-    updateNeighbourNodes(tree, curr, finish);
-
+    updateNeighbourNodes(tree, curr, finish, heuristics);
   }
   return visitedInOrder;
 }
@@ -31,22 +31,45 @@ export default function AStar(
 function updateNeighbourNodes(
   tree: NodeType[][],
   curr: NodeType,
-  finish: NodeType
+  finish: NodeType,
+  heuristics: string
 ) {
   const neighbours = getNeighbours(tree, curr);
   neighbours.forEach((n) => {
     if (!n.isVisited) {
       n.distance = curr.distance + 1;
-      n.heuristics = getManhatanDistance(n, finish);
+      n.heuristics = getHeuristics(n, finish, heuristics);
       n.previousNode = curr;
     }
   });
 }
 
-function getManhatanDistance(node: NodeType, finish: NodeType) {
+function getManhatanDistance(cX: number, cY: number, fX: number, fY: number) {
+  return Math.abs(cX - fX) + Math.abs(cY - fY);
+}
+
+function getEuclideanDistance(cX: number, cY: number, fX: number, fY: number) {
+  // return Math.sqrt(Math.pow(cX - fX, 2) + Math.pow(cY - fY, 2));
+}
+function getOctileDistance(cX: number, cY: number, fX: number, fY: number) {
+  // const dx = Math.abs(cX - fX);
+  // const dy = Math.abs(cY - fY);
+  // return dx + dy + (Math.sqrt(2) - 2) * Math.min(dx, dy);
+}
+function getChebyshevDistance(cX: number, cY: number, fX: number, fY: number) {
+  // return Math.max(Math.abs(cX - fX), Math.abs(cY - fY));
+}
+
+const allHeuristics: any = {
+  manhattan: getManhatanDistance,
+  euclidean: getEuclideanDistance,
+  octile: getOctileDistance,
+  chebyshev: getChebyshevDistance,
+};
+function getHeuristics(node: NodeType, finish: NodeType, heuristics: string) {
   const { x: cX, y: cY } = node;
   const { x: fX, y: fY } = finish;
-  return Math.abs(cX - fX) + Math.abs(cY - fY);
+  return allHeuristics[heuristics](cX, cY, fX, fY);
 }
 
 function sortNodes(nodes: NodeType[]) {

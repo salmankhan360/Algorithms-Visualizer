@@ -21,3 +21,11 @@ body {
     margin-right: 15px;
   }
 }
+
+.globalSettings {
+  max-width: 1700px;
+  flex-wrap: wrap;
+  & > div {
+    margin-bottom: 15px;
+  }
+}

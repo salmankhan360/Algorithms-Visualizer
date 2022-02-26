@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import { getHeight, genRandomArray } from "./helpers";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parse, stringify } from "query-string";
-import { visualize, resetBars } from "./helpers";
+import { visualize, resetAllClasses, resetBars } from "./helpers";
 import {
   bubbleSort,
   quickSort,
@@ -22,13 +22,13 @@ const algorithms: any = {
   "quick sort": quickSort,
   "merge sort": mergeSort,
   "insertion sort": insertionSort,
-  "selection sort": insertionSort,
+  "selection sort": selectionSort,
 };
 export default function Sorting() {
   const [array, setArray] = React.useState(genRandomArray(30, 100));
   const [visualizing, setVisualizing] = React.useState(false);
-  const { search, pathname } = useLocation();
-  const navigate = useNavigate();
+  const { search } = useLocation();
+  const [clearTimeouts, setClearTimeouts] = React.useState<any>(null);
 
   const {
     size = "30",
@@ -39,12 +39,13 @@ export default function Sorting() {
 
   const handleNewArr = () => {
     const newArr = genRandomArray(size, max);
+    resetAllClasses();
     setArray(newArr);
     return newArr;
   };
 
   useEffect(() => {
-    resetBars(array);
+    if (qsAlgorithm !== "merge sort") resetBars(array);
   }, [array]);
 
   useEffect(() => {
@@ -52,25 +53,29 @@ export default function Sorting() {
     handleNewArr();
   }, [size]);
 
-  useEffect(() => {
-    const qs: any = parse(search);
-    qs.visualizing = visualizing;
-    navigate(`${pathname}?${stringify(qs)}`);
-  }, [visualizing]);
   const onFinish = (finishPile: number[] = []) => {
     setVisualizing(false);
     if (finishPile.length) setArray(finishPile);
   };
 
+  const onStart = (timeouts: any) => {
+    setClearTimeouts(timeouts);
+  };
   const handleClick = () => {
     if (visualizing) return;
     setVisualizing(true);
     const loopSpeed = speeds[speed];
     const algorithm = algorithms[qsAlgorithm];
     const inOrder = algorithm(array.slice());
-    visualize(inOrder, loopSpeed, setArray, onFinish);
+    visualize(inOrder, loopSpeed, setArray, onFinish, onStart);
   };
-
+  const handleClearTimeouts = () => {
+    if (clearTimeouts) {
+      clearTimeouts.forEach((timeout: any) => clearTimeout(timeout));
+      handleNewArr();
+      onFinish();
+    }
+  };
   return (
     <div>
       <button
@@ -107,7 +112,11 @@ export default function Sorting() {
           <div id="innerTweek"></div>
         </div>
       </div>
-      <Actions visualizing={!!visualizing} handleNewArr={handleNewArr} />
+      <Actions
+        visualizing={!!visualizing}
+        handleNewArr={handleNewArr}
+        handleClearTimeouts={handleClearTimeouts}
+      />
     </div>
   );
 }
