@@ -32,7 +32,7 @@ export default function Sorting() {
 
   const {
     size = "30",
-    speed = "medium",
+    speed = "slow",
     algorithm: qsAlgorithm = "quick sort",
   }: any = parse(search);
   const max = Math.max(...array);

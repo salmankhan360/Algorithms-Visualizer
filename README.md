@@ -12,10 +12,10 @@ You may visit the page at <a href="https://visualizer-b47d1.web.app">https://vis
   - DFS
 - Sorting Category
   - Bubble Sort
-    - Insertion Sort
-    - Selection Sort
-    - Merge Sort
-    - Quick Sort
+  - Insertion Sort
+  - Selection Sort
+  - Merge Sort
+  - Quick Sort
 
 ## Music Included
 

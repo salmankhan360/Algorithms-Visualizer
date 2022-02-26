@@ -15,8 +15,8 @@ export default function Actions(props: PropsType) {
         feilds={{
           speed: ["slow", "medium", "fast"],
           algorithm: [
-            "bubble sort",
             "quick sort",
+            "bubble sort",
             "merge sort",
             "insertion sort",
             "selection sort",

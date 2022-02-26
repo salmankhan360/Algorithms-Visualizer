@@ -72,7 +72,7 @@ export default function Pathfinding(props: Props) {
   const qs: QueryProps = parse(search);
   const {
     algorithm = "aStar",
-    speed: qsSpeed = "medium",
+    speed: qsSpeed = "slow",
     pattern = "zigzag",
     direction: qsDirection = "double",
     heuristics = "manhattan",
@@ -114,7 +114,7 @@ export default function Pathfinding(props: Props) {
       heuristics
     );
     if (!visitedInOrder) return;
-    setIsSearching(true);
+    if (speed != "0") setIsSearching(true);
     resetAllNodes(tree);
     visualize(visitedInOrder, speeds[speed], finish, start, onFinish, onStart);
   };
@@ -132,22 +132,22 @@ export default function Pathfinding(props: Props) {
     if (!isVisualized) return;
     resetAllNodes(tree);
     handleStart("0");
-  }, [tree, heuristics, algorithm]);
+  }, [tree]);
 
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
 
   const queryFeilds: any = {
     speed: ["slow", "medium", "fast"],
-    algorithm: ["djikstra", "aStar", "DFS", "BFS"],
+    algorithm: ["aStar", "djikstra", "DFS", "BFS"],
     direction: ["double", "single"],
     pattern: [
       "zigzag",
+      "Recursive",
       "infinity",
       "maze",
-      "evenOdd",
-      "Recursive",
       "Recursive-Y",
       "Recursive-X",
+      "evenOdd",
     ],
   };
   if (algorithm === "aStar")
@@ -158,7 +158,23 @@ export default function Pathfinding(props: Props) {
       <div onClick={() => handleStart(qsSpeed)} id="visualize" />
       <div className="pathfindingContainer">
         <Box className="settingsWapper">
-          <SelectSettings disabled={isSearching} feilds={queryFeilds} />
+          <SelectSettings
+            disabled={isSearching}
+            feilds={{
+              speed: ["slow", "medium", "fast"],
+              algorithm: ["aStar", "djikstra", "DFS", "BFS"],
+              direction: ["double", "single"],
+              pattern: [
+                "zigzag",
+                "Recursive",
+                "infinity",
+                "maze",
+                "Recursive-Y",
+                "Recursive-X",
+                "evenOdd",
+              ],
+            }}
+          />
           <Actions
             onDrawPattern={handlePattern}
             onReset={handleReset}

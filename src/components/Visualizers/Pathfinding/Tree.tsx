@@ -59,7 +59,11 @@ export default function Tree(props: Props) {
       }
     }
 
-    if ((eventType == "onMouseOver" && !isClicked) || eventType == "onMouseUp")
+    if (
+      (eventType == "onMouseOver" && !isClicked) ||
+      eventType == "onMouseUp" ||
+      coordinatesClick
+    )
       return;
     const changedNode = { ...node, isWall: !node.isWall };
     const changedTree = tree.slice();

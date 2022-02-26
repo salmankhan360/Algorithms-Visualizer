@@ -25,7 +25,8 @@
 .env.production.local
 *.cache
 *.firebase
-
+*.lock
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
