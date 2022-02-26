@@ -71,7 +71,7 @@ export default function Pathfinding(props: Props) {
   const { search } = useLocation();
   const qs: QueryProps = parse(search);
   const {
-    algorithm = "djikstra",
+    algorithm = "aStar",
     speed: qsSpeed = "medium",
     pattern = "zigzag",
     direction: qsDirection = "double",
