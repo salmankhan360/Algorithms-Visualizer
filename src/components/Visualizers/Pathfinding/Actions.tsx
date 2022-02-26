@@ -10,11 +10,12 @@ export default function Actions(props: PropsType) {
   const { onReset, onDrawPattern, isChanged } = props;
 
   return (
-    <div>
+    <div style={{ minWidth: "max-content" }}>
       <Button
         onClick={onDrawPattern}
         variant="contained"
         className="themeButton"
+        sx={{ mb: "15px" }}
       >
         Draw Pattern
       </Button>
@@ -23,7 +24,8 @@ export default function Actions(props: PropsType) {
           onClick={onReset}
           color="error"
           variant="contained"
-          sx={{ "&>div": { padding: "10px" }, marginLeft: "20px" }}
+          sx={{ "&>div": { padding: "10px" }, mb: "15px" }}
+          id="reset"
         >
           Reset
         </Button>

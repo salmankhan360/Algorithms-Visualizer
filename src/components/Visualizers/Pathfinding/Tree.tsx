@@ -73,17 +73,19 @@ export default function Tree(props: Props) {
       onMouseDown={() => setIsClicked(true)}
       onMouseUp={() => setIsClicked(false)}
     >
-      {tree.map((row, y) => (
-        <div className={"row"} id={`row-${y}`}>
-          {row.map((node, x) => (
-            <Node
-              key={`${y}-${x}`}
-              handleNodeClick={handleNodeClick}
-              {...node}
-            />
-          ))}
-        </div>
-      ))}
+      <div className={"nodesWrapper"}>
+        {tree.map((row, y) => (
+          <div className={"row"} id={`row-${y}`}>
+            {row.map((node, x) => (
+              <Node
+                key={`${y}-${x}`}
+                handleNodeClick={handleNodeClick}
+                {...node}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

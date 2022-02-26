@@ -4,7 +4,7 @@ export interface CoordinatesType {
 }
 
 export interface NodeType {
-  id: number
+  id: number;
   x: number;
   y: number;
   distance: number;
@@ -16,4 +16,5 @@ export interface NodeType {
   isPath: boolean;
   searching: boolean;
   previousNode?: NodeType;
+  wallIndex?: number;
 }

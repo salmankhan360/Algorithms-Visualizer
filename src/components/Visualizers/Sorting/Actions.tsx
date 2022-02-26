@@ -5,11 +5,12 @@ import { Button, Box } from "@mui/material";
 interface PropsType {
   visualizing: boolean;
   handleNewArr: () => void;
+  handleClearTimeouts: () => void;
 }
 export default function Actions(props: PropsType) {
-  const { visualizing, handleNewArr } = props;
+  const { visualizing, handleNewArr, handleClearTimeouts } = props;
   return (
-    <Box className="flexCenter" marginTop="30px">
+    <Box className="flexCenter" marginTop="30px" minWidth="max-content">
       <SelectSettings
         feilds={{
           speed: ["slow", "medium", "fast"],
@@ -30,8 +31,30 @@ export default function Actions(props: PropsType) {
         className={"themeButton"}
         onClick={handleNewArr}
         disabled={visualizing}
+        sx={{
+          mr: "10px",
+          mb: "15px",
+          "&.Mui-disabled": {
+            color: "rgba(255, 255, 255, 0.5)",
+          },
+        }}
       >
         Generate
+      </Button>
+      <Button
+        variant="contained"
+        color="error"
+        onClick={handleClearTimeouts}
+        disabled={!visualizing}
+        id="reset"
+        sx={{
+          mb: "15px",
+          "&.Mui-disabled": {
+            color: "rgba(255, 255, 255, 0.5)",
+          },
+        }}
+      >
+        Reset
       </Button>
     </Box>
   );

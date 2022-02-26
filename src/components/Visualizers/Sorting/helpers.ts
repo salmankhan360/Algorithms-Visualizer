@@ -20,14 +20,16 @@ export const visualize = (
   inOrder: any,
   speed: number,
   setArr: (arr: number[]) => void,
-  onFinish: (finishPile: number[]) => void
+  onFinish: (finishPile: number[]) => void,
+  onStart: (timeouts: any) => void
 ) => {
   if (!inOrder.length) {
     onFinish([]);
     return;
   }
+  const allTimeouts: any = [];
   inOrder?.forEach((node: any, i: any) => {
-    setTimeout(() => {
+    const timeoutBar = setTimeout(() => {
       const {
         pile,
         index: [k, j, z],
@@ -47,11 +49,14 @@ export const visualize = (
         performSwap(j, k, speed);
       }
     }, i * speed);
+    allTimeouts.push(timeoutBar);
   });
-  setTimeout(
+  const timeout2 = setTimeout(
     () => [onFinish(inOrder[inOrder.length - 1].pile), resetAllClasses()],
     (inOrder.length - 1) * speed
   );
+  allTimeouts.push(timeout2);
+  onStart(allTimeouts);
 };
 
 function performPivote(id: string) {
@@ -90,7 +95,7 @@ function addUniqueClass(className: string, id: string) {
   document.getElementById(id)?.classList.add(className);
 }
 
-function resetAllClasses() {
+export function resetAllClasses() {
   document.querySelectorAll(".bar, #innerTweek").forEach((node: any) => {
     node.classList.remove("sortSearch1");
     node.classList.remove("sortSearch2");

@@ -5,6 +5,8 @@ import {
   visualize,
   resetAllNodes,
   drawPattern,
+  getBidirectionalNodes,
+  getSingleDirectionalNodes,
 } from "./helpers";
 import { parse } from "query-string";
 import { Box } from "@mui/system";
@@ -17,6 +19,11 @@ import SelectSettings from "../../../shared_components/SelectSettings";
 import {
   zigZagPattern,
   infinityPattern,
+  mazePattern,
+  evenOddPattern,
+  recursiveDivision,
+  recursiveVertical,
+  recursiveHorizontal,
 } from "../../../Algorithms/Pathfinding/WallPatterns";
 import Actions from "./Actions";
 import { stringify } from "query-string";
@@ -27,20 +34,31 @@ const allAlgorithms = {
   DFS,
   BFS,
 };
+const directions = {
+  single: getSingleDirectionalNodes,
+  double: getBidirectionalNodes,
+};
 const speeds = {
   fast: 3,
   slow: 30,
-  medium: 20,
+  medium: 10,
   "0": 0,
 };
 const allPatterns = {
   infinity: infinityPattern,
   zigzag: zigZagPattern,
+  maze: mazePattern,
+  evenOdd: evenOddPattern,
+  Recursive: recursiveDivision,
+  "Recursive-Y": recursiveVertical,
+  "Recursive-X": recursiveHorizontal,
 };
 interface QueryProps {
   algorithm?: "aStar" | "djikstra";
   speed?: "fast" | "slow" | "medium" | "0";
   pattern?: "zigzag" | "infinity";
+  direction?: "single" | "double";
+  heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
 }
 interface Props {
   columns: number;
@@ -50,98 +68,101 @@ interface Props {
 export default function Pathfinding(props: Props) {
   const [isVisualized, setVisualized] = useState(false);
   const { columns, rows } = props;
-  const { search, pathname } = useLocation();
-  const navigate = useNavigate();
+  const { search } = useLocation();
   const qs: QueryProps = parse(search);
   const {
     algorithm = "djikstra",
     speed: qsSpeed = "medium",
     pattern = "zigzag",
+    direction: qsDirection = "double",
+    heuristics = "manhattan",
   } = qs;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
-    start: { x: 4, y: 2 },
-    finish: { x: 8, y: 10 },
+    start: { x: 7, y: 9 },
+    finish: { x: 7, y: 28 },
   });
   const [tree, setTree] = useState<NodeType[][]>(
     constructNodes(rows, columns, coordinates)
   );
   const [isSearching, setIsSearching] = useState(false);
+  const [clearTimeouts, setClearTimeouts] = useState<any>([]);
 
   const handleReset = () => {
+    clearTimeouts.forEach((timeout: any) => {
+      clearTimeout(timeout);
+    });
     setTree(constructNodes(rows, columns, coordinates));
     resetAllNodes(tree);
     setVisualized(false);
     setIsSearching(false);
   };
 
-  const onFinish = () => {
-    setIsSearching(false);
-  };
+  const onFinish = () => setIsSearching(false);
+  const onStart = (timeouts: any) => setClearTimeouts(timeouts);
 
   const handleStart = (speed: QueryProps["speed"] = "0") => {
     if (!algorithm || isSearching) return;
     setVisualized(true);
 
-    const {
-      start: { x: sX, y: sY },
-      finish: { x: fX, y: fY },
-    } = coordinates;
+    const selectedAlgorithm: any = allAlgorithms[algorithm];
+    const direction = directions[qsDirection];
 
-    const copyTree = tree.map((row) => row.map((node) => ({ ...node })));
-    const start = copyTree[sX][sY];
-    const finish = copyTree[fX][fY];
-
-    const selectedAlgorithm = allAlgorithms[algorithm];
-    const visitedInOrder = selectedAlgorithm(copyTree, start, finish);
-    console.log(visitedInOrder);
+    const { visitedInOrder, start, finish }: any = direction(
+      coordinates,
+      tree,
+      selectedAlgorithm,
+      heuristics
+    );
     if (!visitedInOrder) return;
-
     setIsSearching(true);
     resetAllNodes(tree);
-    visualize(visitedInOrder, speeds[speed], onFinish);
+    visualize(visitedInOrder, speeds[speed], finish, start, onFinish, onStart);
   };
 
   const handlePattern = () => {
     if (isSearching) return;
     isVisualized && setVisualized(false);
-
-    const newTree = constructNodes(rows, columns, coordinates);
     resetAllNodes(tree);
     setIsSearching(true);
-    drawPattern(allPatterns[pattern], 80, newTree, setTree, onFinish);
+    const newTree = constructNodes(rows, columns, coordinates);
+    drawPattern(allPatterns[pattern], 80, newTree, setTree, onFinish, onStart);
   };
 
   useEffect(() => {
     if (!isVisualized) return;
     resetAllNodes(tree);
     handleStart("0");
-  }, [tree]);
-
-  useEffect(() => {
-    const qs: any = parse(search);
-    qs["visualizing"] = isSearching;
-    navigate(`${pathname}?${stringify(qs)}`);
-  }, [isSearching]);
+  }, [tree, heuristics, algorithm]);
 
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
+
+  const queryFeilds: any = {
+    speed: ["slow", "medium", "fast"],
+    algorithm: ["djikstra", "aStar", "DFS", "BFS"],
+    direction: ["double", "single"],
+    pattern: [
+      "zigzag",
+      "infinity",
+      "maze",
+      "evenOdd",
+      "Recursive",
+      "Recursive-Y",
+      "Recursive-X",
+    ],
+  };
+  if (algorithm === "aStar")
+    queryFeilds.heuristics = ["manhattan", "euclidean", "octile", "chebyshev"];
   return (
     <div className="pathfindingWrapper">
       <NodeInfo />
       <div onClick={() => handleStart(qsSpeed)} id="visualize" />
       <div className="pathfindingContainer">
-        <Box marginBottom="20px" className="flexCenter">
-          <SelectSettings
-            disabled={isSearching}
-            feilds={{
-              speed: ["slow", "medium", "fast"],
-              algorithm: ["djikstra", "aStar", "DFS", "BFS"],
-              pattern: ["zigzag", "infinity"],
-            }}
-          />
+        <Box className="settingsWapper">
+          <SelectSettings disabled={isSearching} feilds={queryFeilds} />
           <Actions
             onDrawPattern={handlePattern}
             onReset={handleReset}
-            isChanged={!isSearching && !!isWalls}
+            isChanged={isSearching || !!isWalls || isVisualized}
           />
         </Box>
         <Tree
