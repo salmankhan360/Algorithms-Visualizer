@@ -1,6 +1,10 @@
 import { finished } from "stream";
 import { NodeType } from "../../Types";
-import { getNeighbours, getAllNodes } from "../../Utils/Pathfinding";
+import {
+  getNeighbours,
+  getAllNodes,
+  checkAdjacent,
+} from "../../Utils/Pathfinding";
 
 export default function djikstra(
   tree: NodeType[][],
@@ -35,9 +39,10 @@ function updateUnvisitedNodes(
   if (!closest) return;
   const neighbours = getNeighbours(tree, closest);
   neighbours.forEach((n) => {
-    if (!n.isVisited) {
+    if (!n.isVisited && !n.previousNode) {
+      const isAdjacent = checkAdjacent(closest, n);
+      n.distance = isAdjacent ? closest.distance + 1 : closest.distance + 1.5;
       n.previousNode = closest;
-      n.distance = closest.distance + 1;
     }
   });
 }

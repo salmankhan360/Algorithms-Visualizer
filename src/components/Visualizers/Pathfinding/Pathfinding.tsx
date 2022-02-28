@@ -39,9 +39,9 @@ const directions = {
   double: getBidirectionalNodes,
 };
 const speeds = {
-  fast: 3,
-  slow: 30,
-  medium: 10,
+  fast: 10,
+  slow: 40,
+  medium: 20,
   "0": 0,
 };
 const allPatterns = {
@@ -72,10 +72,10 @@ export default function Pathfinding(props: Props) {
   const qs: QueryProps = parse(search);
   const {
     algorithm = "aStar",
-    speed: qsSpeed = "slow",
+    speed: qsSpeed = "medium",
     pattern = "zigzag",
     direction: qsDirection = "double",
-    heuristics = "manhattan",
+    heuristics = "chebyshev",
   } = qs;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
     start: { x: 7, y: 9 },
@@ -107,7 +107,7 @@ export default function Pathfinding(props: Props) {
     const selectedAlgorithm: any = allAlgorithms[algorithm];
     const direction = directions[qsDirection];
 
-    const { visitedInOrder, start, finish }: any = direction(
+    const { visitedInOrder, pathArr }: any = direction(
       coordinates,
       tree,
       selectedAlgorithm,
@@ -116,7 +116,7 @@ export default function Pathfinding(props: Props) {
     if (!visitedInOrder) return;
     if (speed != "0") setIsSearching(true);
     resetAllNodes(tree);
-    visualize(visitedInOrder, speeds[speed], finish, start, onFinish, onStart);
+    visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart);
   };
 
   const handlePattern = () => {
@@ -132,12 +132,12 @@ export default function Pathfinding(props: Props) {
     if (!isVisualized) return;
     resetAllNodes(tree);
     handleStart("0");
-  }, [tree]);
+  }, [tree, heuristics]);
 
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
 
   const queryFeilds: any = {
-    speed: ["slow", "medium", "fast"],
+    speed: ["medium", "slow", "fast"],
     algorithm: ["aStar", "djikstra", "DFS", "BFS"],
     direction: ["double", "single"],
     pattern: [
@@ -151,33 +151,19 @@ export default function Pathfinding(props: Props) {
     ],
   };
   if (algorithm === "aStar")
-    queryFeilds.heuristics = ["manhattan", "euclidean", "octile", "chebyshev"];
+    queryFeilds.heuristics = ["chebyshev", "euclidean", "octile", "manhattan"];
   return (
     <div className="pathfindingWrapper">
       <NodeInfo />
       <div onClick={() => handleStart(qsSpeed)} id="visualize" />
       <div className="pathfindingContainer">
         <Box className="settingsWapper">
-          <SelectSettings
-            disabled={isSearching}
-            feilds={{
-              speed: ["slow", "medium", "fast"],
-              algorithm: ["aStar", "djikstra", "DFS", "BFS"],
-              direction: ["double", "single"],
-              pattern: [
-                "zigzag",
-                "Recursive",
-                "infinity",
-                "maze",
-                "Recursive-Y",
-                "Recursive-X",
-                "evenOdd",
-              ],
-            }}
-          />
+          <SelectSettings disabled={isSearching} feilds={queryFeilds} />
           <Actions
+            onStart={() => handleStart(qsSpeed)}
             onDrawPattern={handlePattern}
             onReset={handleReset}
+            isSearching={isSearching}
             isChanged={isSearching || !!isWalls || isVisualized}
           />
         </Box>

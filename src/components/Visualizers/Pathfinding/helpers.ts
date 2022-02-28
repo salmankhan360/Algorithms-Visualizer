@@ -47,8 +47,7 @@ export function constructNodes(
 export function visualize(
   visitedInOrder: NodeType[],
   speed: number,
-  finish: NodeType,
-  start: NodeType,
+  pathArr: NodeType[],
   onFinish: () => void,
   onStart: (timeouts: any) => void
 ) {
@@ -68,7 +67,7 @@ export function visualize(
   });
 
   const timeout = setTimeout(
-    () => visualizePath(finish, start, speed, onFinish, allTimeouts),
+    () => visualizePath(pathArr, speed, onFinish, allTimeouts),
     speed * visitedInOrder.length
   );
   allTimeouts.push(timeout);
@@ -84,23 +83,12 @@ function getAllPrevNodes(node: NodeType, prevNodes: NodeType[] = []) {
   return prevNodes;
 }
 function visualizePath(
-  finish: NodeType,
-  start: NodeType,
+  pathArr: NodeType[],
   speed: number,
   onFinish: () => void,
   allTimeouts: any[]
 ) {
-  const finishPath = getAllPrevNodes(finish);
-  const startPath = getAllPrevNodes(start);
-
-  let path: NodeType[] = [];
-  if (finishPath.length < startPath.length) {
-    if (startPath.length) path = startPath;
-  } else {
-    if (finishPath.length) path = finishPath;
-  }
-
-  path.forEach((node, i) => {
+  pathArr.forEach((node, i) => {
     const { x, y } = node;
     const pathNode = document.getElementById(`${x}-${y}`);
     if (speed == 0) {
@@ -114,7 +102,10 @@ function visualizePath(
     }
   });
 
-  const timeout = setTimeout(() => onFinish(), (path.length - 1) * 1.2 * speed);
+  const timeout = setTimeout(
+    () => onFinish(),
+    (pathArr.length - 1) * 1.2 * speed
+  );
   allTimeouts.push(timeout);
   return;
 }
@@ -125,7 +116,13 @@ export function resetAllNodes(tree: NodeType[][]) {
       const { x, y } = node;
       const nodeTag = document.getElementById(`${x}-${y}`);
 
-      nodeTag?.classList?.remove(`searching`, "path", "searchAnim", "pathAnim");
+      nodeTag?.classList?.remove(
+        `searching`,
+        "path",
+        "searchAnim",
+        "pathAnim",
+        "shutah"
+      );
     })
   );
 }
@@ -156,47 +153,89 @@ export const drawPattern = (
   onFinish: () => void,
   onStart: (timeouts: any) => void
 ) => {
-  const allTimeouts: any = [];
-  if (pattern[0].wallIndex !== undefined) sortByProp(pattern, "wallIndex");
-  else sortByCoordinates(pattern);
+  function recursiveMaze(x: number, y: number) {
+    const row = tree[x];
+    const col = tree[x][y];
 
-  const chunk1 = pattern.slice(0, pattern.length / 2);
-  const chunk2 = pattern.slice(pattern.length / 2);
+    // if(x>row.length||y>col.length) return;
+    const rowMax = row.length - 1;
+    const colMax = tree.length - 1;
 
-  chunk1?.forEach((val, i) => {
-    const { x, y } = val;
-    const node = tree[x]?.[y];
-    if (!node.isWall) {
-      const timeout = setTimeout(() => {
-        if (!node.isFinish && !node.isStart) {
-          node.isWall = true;
-          setTree([...tree]);
-          i++;
-        }
-      }, i * speed);
-      allTimeouts.push(timeout);
-    }
-  });
-  chunk2?.forEach((val, i) => {
-    const { x, y } = chunk2[chunk2.length - 1 - i];
-    const node = tree[x]?.[y];
-    if (!node.isWall) {
-      const timeout = setTimeout(() => {
-        if (!node.isFinish && !node.isStart) {
-          node.isWall = true;
-          setTree([...tree]);
-          i++;
-        }
-      }, i * speed);
-      allTimeouts.push(timeout);
-    }
-  });
+    // for (let i = 0; i <= rowMax; i++) {
+    //   const node = tree[colMax]?.[i];
+    //   if (node) {
+    //     node.isWall = true;
+    //     setTree(tree);
+    //   }
+    // }
+    // for (let i = 0; i <= rowMax; i++) {
+    //   const node = tree[0]?.[i];
+    //   if (node) {
+    //     node.isWall = true;
+    //     setTree(tree);
+    //   }
+    // }
+    // for (let i = 0; i <= colMax; i++) {
+    //   const node = tree[i]?.[rowMax];
+    //   if (node) {
+    //     node.isWall = true;
+    //     setTree(tree);
+    //   }
+    // }
+    // for (let i = 0; i <= rowMax; i++) {
+    //   const node = tree[i]?.[0];
+    //   if (node) {
+    //     node.isWall = true;
+    //     setTree(tree);
+    //   }
+    // }
+    const wallsInOrder = [];
 
-  const timeout = setTimeout(() => onFinish(), chunk1.length * speed);
-  allTimeouts.push(timeout);
-  onStart(allTimeouts);
+    const doorIndex = getRandomIndices(tree.length - 1, 10);
+    console.log(doorIndex);
+    for (let i = 0; i < tree.length; i++) {}
+    // const allTimeouts: any = [];
+    // if (pattern[0].wallIndex !== undefined) sortByProp(pattern, "wallIndex");
+    // else sortByCoordinates(pattern);
+
+    // const chunk1 = pattern.slice(0, pattern.length / 2);
+    // const chunk2 = pattern.slice(pattern.length / 2);
+
+    // chunk1?.forEach((val, i) => {
+    //   const { x, y } = val;
+    //   const node = tree[x]?.[y];
+    //   if (!node.isWall) {
+    //     const timeout = setTimeout(() => {
+    //       if (!node.isFinish && !node.isStart) {
+    //         node.isWall = true;
+    //         setTree([...tree]);
+    //         i++;
+    //       }
+    //     }, i * speed);
+    //     allTimeouts.push(timeout);
+    //   }
+    // });
+    // chunk2?.forEach((val, i) => {
+    //   const { x, y } = chunk2[chunk2.length - 1 - i];
+    //   const node = tree[x]?.[y];
+    //   if (!node.isWall) {
+    //     const timeout = setTimeout(() => {
+    //       if (!node.isFinish && !node.isStart) {
+    //         node.isWall = true;
+    //         setTree([...tree]);
+    //         i++;
+    //       }
+    //     }, i * speed);
+    //     allTimeouts.push(timeout);
+    //   }
+    // });
+
+    // const timeout = setTimeout(() => onFinish(), chunk1.length * speed);
+    // allTimeouts.push(timeout);
+    // onStart(allTimeouts);
+  }
+  recursiveMaze(0, 0);
 };
-
 function sortByCoordinates(arr: { x: number; y: number }[], direction = "asc") {
   arr.sort((a, b) => {
     const sumA = a.x + a.y;
@@ -216,6 +255,7 @@ function sortByProp(arr: any, prop: string, direction = "asc") {
     return b[prop] - a[prop];
   });
 }
+
 // Below code is for Directions of the search
 
 export function getBidirectionalNodes(
@@ -254,6 +294,17 @@ export function getBidirectionalNodes(
     start2,
     heuristics
   );
+  const visited1Hash: any = {};
+  const visited2Hash: any = {};
+  visitedInOrder1.forEach((n) => {
+    visited1Hash[`${n.x}-${n.y}`] = n;
+  });
+  visitedInOrder2.forEach((n) => {
+    visited2Hash[`${n.x}-${n.y}`] = n;
+  });
+
+  let pathArr: any = [];
+
   let i = 0;
   let j = 0;
   let e = 0;
@@ -262,7 +313,14 @@ export function getBidirectionalNodes(
     e++;
     const p1 = `${visitedInOrder1[i]?.x}-${visitedInOrder1[i]?.y}`;
     const p2 = `${visitedInOrder2[j]?.x}-${visitedInOrder2[j]?.y}`;
-    if (prev[p2] || prev[p1]) break;
+    if (prev[p2] || prev[p1]) {
+      if (prev[p2]) {
+        pathArr = getSwitchedPath(prev[p2], visited2Hash[p2]);
+      } else {
+        pathArr = getSwitchedPath(prev[p1], visited1Hash[p1]);
+      }
+      break;
+    }
     if (e % 2 == 0 && visitedInOrder1[i]) {
       prev[p1] = visitedInOrder1[i];
       finalVisited.push(visitedInOrder1[i]);
@@ -273,9 +331,27 @@ export function getBidirectionalNodes(
       j++;
     }
   }
-  return { visitedInOrder: finalVisited, start: start2, finish };
+  return {
+    visitedInOrder: finalVisited,
+    pathArr,
+  };
+}
+function getSwitchedPath(node1: NodeType, node2: NodeType) {
+  changePrevNodes(node1, node2);
+  const firstNodes = getAllPrevNodes(node1);
+  const secondNodes = getAllPrevNodes(node2);
+  const path = [...firstNodes, ...secondNodes];
+  path.sort((a, b) => a.distance - b.distance);
+  return path;
 }
 
+function changePrevNodes(node: any, node2: any) {
+  if (node.previousNode) {
+    changePrevNodes(node.previousNode, node2);
+  } else {
+    node.previousNode = node2;
+  }
+}
 export function getSingleDirectionalNodes(
   coordinates: CoordinatesType,
   tree: NodeType[][],
@@ -304,5 +380,7 @@ export function getSingleDirectionalNodes(
     heuristics
   );
 
-  return { visitedInOrder, start, finish };
+  let pathArr = getAllPrevNodes(finish);
+
+  return { visitedInOrder, pathArr };
 }

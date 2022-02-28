@@ -6,9 +6,10 @@ interface PropsType {
   visualizing: boolean;
   handleNewArr: () => void;
   handleClearTimeouts: () => void;
+  handleStart: () => void;
 }
 export default function Actions(props: PropsType) {
-  const { visualizing, handleNewArr, handleClearTimeouts } = props;
+  const { visualizing, handleNewArr, handleClearTimeouts, handleStart } = props;
   return (
     <Box className="flexCenter" marginTop="30px" minWidth="max-content">
       <SelectSettings
@@ -26,6 +27,21 @@ export default function Actions(props: PropsType) {
         disabled={visualizing}
       />
 
+      <Button
+        variant="contained"
+        color="success"
+        onClick={handleStart}
+        disabled={visualizing}
+        sx={{
+          mr: "10px",
+          mb: "15px",
+          "&.Mui-disabled": {
+            color: "rgba(255, 255, 255, 0.5)",
+          },
+        }}
+      >
+        Start
+      </Button>
       <Button
         variant="contained"
         className={"themeButton"}

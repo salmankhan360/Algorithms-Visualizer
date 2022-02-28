@@ -13,6 +13,5 @@ export default function selectionSort(piles: number[]) {
     const temp = { pile: piles.slice(), index: [minId, i] };
     statesInOrder.push(temp);
   }
-  console.log(statesInOrder);
   return statesInOrder;
 }

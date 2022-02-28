@@ -116,6 +116,7 @@ export default function Sorting() {
         visualizing={!!visualizing}
         handleNewArr={handleNewArr}
         handleClearTimeouts={handleClearTimeouts}
+        handleStart={handleClick}
       />
     </div>
   );

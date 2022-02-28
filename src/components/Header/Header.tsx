@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import React from "react";
 import GithubLogo from "../../assets/github.png";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   AppBar,
   Box,
@@ -9,17 +9,13 @@ import {
   Container,
   Button,
   Tooltip,
-  Stack,
-  Slider,
 } from "@mui/material";
-import { useAudioPlayer } from "react-use-audio-player";
 
-import { parse } from "query-string";
 import AudioPlayer from "./AudioPlayer";
 const pages = [
   { name: "Home", path: "/" },
-  { name: "PathFinding", path: "/pathfinding" },
-  { name: "Sorting", path: "/sorting" },
+  { name: "PathFinding", path: "/pathfinding#pathfinding" },
+  { name: "Sorting", path: "/sorting#sorting" },
 ];
 
 const Header = () => {
@@ -28,10 +24,6 @@ const Header = () => {
   const navigate = (path: string) => {
     document.getElementById("reset")?.click();
     goTo(path);
-  };
-  const handleVisualize = () => {
-    const startBtn: any = document.getElementById("visualize");
-    startBtn.click();
   };
 
   return (
@@ -50,7 +42,7 @@ const Header = () => {
               cursor: "pointer",
             }}
           >
-            Visualiser
+            Visualizer
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { md: "flex" } }}>
@@ -72,21 +64,6 @@ const Header = () => {
                 {name}
               </Button>
             ))}
-            <Button
-              variant="contained"
-              onClick={handleVisualize}
-              sx={{
-                fontSize: "17px",
-                marginLeft: "30px",
-                backgroundColor: "#48505a",
-                "&:hover": { backgroundColor: "rgba(72, 80, 90, .8)" },
-                "&.Mui-disabled": {
-                  color: "rgba(255, 255, 255, 0.5)",
-                },
-              }}
-            >
-              Visualize
-            </Button>
           </Box>
           <AudioPlayer />
           <Box sx={{ flexGrow: 0, height: "45px" }}>

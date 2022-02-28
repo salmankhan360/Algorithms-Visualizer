@@ -24,8 +24,10 @@ export default function Home() {
       </div>
       <div className="algorithms-wrapper">
         <div className="algorithms">
-          <div onClick={() => navigate("/sorting")}>Sorting</div>
-          <div onClick={() => navigate("/pathfinding")}>Pathfinding</div>
+          <div onClick={() => navigate("/sorting/#sorting")}>Sorting</div>
+          <div onClick={() => navigate("/pathfinding/#pathfinding")}>
+            Pathfinding
+          </div>
         </div>
       </div>
     </div>

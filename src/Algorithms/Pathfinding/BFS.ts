@@ -29,7 +29,7 @@ function updateNeighbourNodes(tree: NodeType[][], curr: NodeType) {
   const neighbours = getNeighbours(tree, curr);
   const reN: NodeType[] = [];
   neighbours.forEach((n) => {
-    if (!n.isVisited) {
+    if (!n.isVisited && !n.previousNode) {
       n.previousNode = curr;
       n.isVisited = true;
       reN.push(n);
