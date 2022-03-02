@@ -29,3 +29,55 @@ export function getAllNodes(tree: NodeType[][]) {
   tree.forEach((c) => c.forEach((n) => nodes.push(n)));
   return nodes;
 }
+
+export function getManhatanDistance(
+  cX: number,
+  cY: number,
+  fX: number,
+  fY: number
+) {
+  return Math.abs(cX - fX) + Math.abs(cY - fY);
+}
+
+export function getEuclideanDistance(
+  cX: number,
+  cY: number,
+  fX: number,
+  fY: number
+) {
+  return Math.sqrt(Math.pow(cX - fX, 2) + Math.pow(cY - fY, 2));
+}
+export function getOctileDistance(
+  cX: number,
+  cY: number,
+  fX: number,
+  fY: number
+) {
+  const dx = Math.abs(cX - fX);
+  const dy = Math.abs(cY - fY);
+  return dx + dy + (Math.sqrt(2) - 2) * Math.min(dx, dy);
+}
+export function getChebyshevDistance(
+  cX: number,
+  cY: number,
+  fX: number,
+  fY: number
+) {
+  return Math.max(Math.abs(cX - fX), Math.abs(cY - fY));
+}
+
+const allHeuristics: any = {
+  manhattan: getManhatanDistance,
+  euclidean: getEuclideanDistance,
+  octile: getOctileDistance,
+  chebyshev: getChebyshevDistance,
+};
+export function getHeuristics(
+  node: NodeType,
+  finish: NodeType,
+  heuristics: string
+) {
+  const { x: cX, y: cY } = node;
+  const { x: fX, y: fY } = finish;
+  return allHeuristics[heuristics](cX, cY, fX, fY);
+}
