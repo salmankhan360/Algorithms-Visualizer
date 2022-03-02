@@ -30,6 +30,21 @@ export function getAllNodes(tree: NodeType[][]) {
   return nodes;
 }
 
+export function changePrevNodes(node: any, node2: any) {
+  if (node.previousNode) {
+    changePrevNodes(node.previousNode, node2);
+  } else {
+    node.previousNode = node2;
+  }
+}
+export function sortByProp(arr: any, prop: string, direction = "asc") {
+  arr.sort((a: any, b: any) => {
+    if (direction === "asc") {
+      return a[prop] - b[prop];
+    }
+    return b[prop] - a[prop];
+  });
+}
 export function getManhatanDistance(
   cX: number,
   cY: number,

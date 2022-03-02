@@ -1,5 +1,5 @@
 import { CoordinatesType, NodeType } from "../../../Types";
-
+import { changePrevNodes, sortByProp } from "../../../Utils/Pathfinding";
 export function locateCoordinates(
   table: NodeType[][],
   coordinates: CoordinatesType
@@ -153,88 +153,45 @@ export const drawPattern = (
   onFinish: () => void,
   onStart: (timeouts: any) => void
 ) => {
-  function recursiveMaze(x: number, y: number) {
-    const row = tree[x];
-    const col = tree[x][y];
+  const allTimeouts: any = [];
+  if (pattern[0].wallIndex !== undefined) sortByProp(pattern, "wallIndex");
+  else sortByCoordinates(pattern);
 
-    // if(x>row.length||y>col.length) return;
-    const rowMax = row.length - 1;
-    const colMax = tree.length - 1;
+  const chunk1 = pattern.slice(0, pattern.length / 2);
+  const chunk2 = pattern.slice(pattern.length / 2);
 
-    // for (let i = 0; i <= rowMax; i++) {
-    //   const node = tree[colMax]?.[i];
-    //   if (node) {
-    //     node.isWall = true;
-    //     setTree(tree);
-    //   }
-    // }
-    // for (let i = 0; i <= rowMax; i++) {
-    //   const node = tree[0]?.[i];
-    //   if (node) {
-    //     node.isWall = true;
-    //     setTree(tree);
-    //   }
-    // }
-    // for (let i = 0; i <= colMax; i++) {
-    //   const node = tree[i]?.[rowMax];
-    //   if (node) {
-    //     node.isWall = true;
-    //     setTree(tree);
-    //   }
-    // }
-    // for (let i = 0; i <= rowMax; i++) {
-    //   const node = tree[i]?.[0];
-    //   if (node) {
-    //     node.isWall = true;
-    //     setTree(tree);
-    //   }
-    // }
-    const wallsInOrder = [];
+  chunk1?.forEach((val, i) => {
+    const { x, y } = val;
+    const node = tree[x]?.[y];
+    if (!node.isWall) {
+      const timeout = setTimeout(() => {
+        if (!node.isFinish && !node.isStart) {
+          node.isWall = true;
+          setTree([...tree]);
+          i++;
+        }
+      }, i * speed);
+      allTimeouts.push(timeout);
+    }
+  });
+  chunk2?.forEach((val, i) => {
+    const { x, y } = chunk2[chunk2.length - 1 - i];
+    const node = tree[x]?.[y];
+    if (!node.isWall) {
+      const timeout = setTimeout(() => {
+        if (!node.isFinish && !node.isStart) {
+          node.isWall = true;
+          setTree([...tree]);
+          i++;
+        }
+      }, i * speed);
+      allTimeouts.push(timeout);
+    }
+  });
 
-    const doorIndex = getRandomIndices(tree.length - 1, 10);
-    console.log(doorIndex);
-    for (let i = 0; i < tree.length; i++) {}
-    // const allTimeouts: any = [];
-    // if (pattern[0].wallIndex !== undefined) sortByProp(pattern, "wallIndex");
-    // else sortByCoordinates(pattern);
-
-    // const chunk1 = pattern.slice(0, pattern.length / 2);
-    // const chunk2 = pattern.slice(pattern.length / 2);
-
-    // chunk1?.forEach((val, i) => {
-    //   const { x, y } = val;
-    //   const node = tree[x]?.[y];
-    //   if (!node.isWall) {
-    //     const timeout = setTimeout(() => {
-    //       if (!node.isFinish && !node.isStart) {
-    //         node.isWall = true;
-    //         setTree([...tree]);
-    //         i++;
-    //       }
-    //     }, i * speed);
-    //     allTimeouts.push(timeout);
-    //   }
-    // });
-    // chunk2?.forEach((val, i) => {
-    //   const { x, y } = chunk2[chunk2.length - 1 - i];
-    //   const node = tree[x]?.[y];
-    //   if (!node.isWall) {
-    //     const timeout = setTimeout(() => {
-    //       if (!node.isFinish && !node.isStart) {
-    //         node.isWall = true;
-    //         setTree([...tree]);
-    //         i++;
-    //       }
-    //     }, i * speed);
-    //     allTimeouts.push(timeout);
-    //   }
-    // });
-
-    // const timeout = setTimeout(() => onFinish(), chunk1.length * speed);
-    // allTimeouts.push(timeout);
-    // onStart(allTimeouts);
-  }
-  recursiveMaze(0, 0);
+  const timeout = setTimeout(() => onFinish(), chunk1.length * speed);
+  allTimeouts.push(timeout);
+  onStart(allTimeouts);
 };
 function sortByCoordinates(arr: { x: number; y: number }[], direction = "asc") {
   arr.sort((a, b) => {
@@ -247,17 +204,7 @@ function sortByCoordinates(arr: { x: number; y: number }[], direction = "asc") {
   });
 }
 
-function sortByProp(arr: any, prop: string, direction = "asc") {
-  arr.sort((a: any, b: any) => {
-    if (direction === "asc") {
-      return a[prop] - b[prop];
-    }
-    return b[prop] - a[prop];
-  });
-}
-
 // Below code is for Directions of the search
-
 export function getBidirectionalNodes(
   coordinates: CoordinatesType,
   tree: NodeType[][],
@@ -336,6 +283,7 @@ export function getBidirectionalNodes(
     pathArr,
   };
 }
+
 function getSwitchedPath(node1: NodeType, node2: NodeType) {
   changePrevNodes(node1, node2);
   const firstNodes = getAllPrevNodes(node1);
@@ -345,13 +293,6 @@ function getSwitchedPath(node1: NodeType, node2: NodeType) {
   return path;
 }
 
-function changePrevNodes(node: any, node2: any) {
-  if (node.previousNode) {
-    changePrevNodes(node.previousNode, node2);
-  } else {
-    node.previousNode = node2;
-  }
-}
 export function getSingleDirectionalNodes(
   coordinates: CoordinatesType,
   tree: NodeType[][],
