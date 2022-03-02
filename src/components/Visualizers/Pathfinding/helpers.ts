@@ -77,6 +77,7 @@ export function visualize(
 function getAllPrevNodes(node: NodeType, prevNodes: NodeType[] = []) {
   const { previousNode } = node;
   if (previousNode) {
+    console.log(prevNodes);
     prevNodes.unshift(previousNode);
     getAllPrevNodes(previousNode, prevNodes);
   }
@@ -221,10 +222,8 @@ export function getBidirectionalNodes(
     start: { x: sX, y: sY },
     finish: { x: fX, y: fY },
   } = coordinates;
-  const copyTree = tree.map((row) => row.map((node) => ({ ...node, tree: 1 })));
-  const copyTree2 = tree.map((row) =>
-    row.map((node) => ({ ...node, tree: 2 }))
-  );
+  const copyTree = tree.map((row) => row.map((node) => ({ ...node })));
+  const copyTree2 = tree.map((row) => row.map((node) => ({ ...node })));
   const start = copyTree[sX][sY];
   const finish = copyTree[fX][fY];
   const start2 = copyTree2[sX][sY];

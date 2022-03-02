@@ -10,7 +10,13 @@ import {
 } from "./helpers";
 import { parse } from "query-string";
 import { Box } from "@mui/system";
-import { djikstra, aStar, DFS, BFS } from "../../../Algorithms/Pathfinding";
+import {
+  djikstra,
+  aStar,
+  DFS,
+  BFS,
+  BestFS,
+} from "../../../Algorithms/Pathfinding";
 import { NodeType, CoordinatesType } from "../../../Types";
 import "./styles.scss";
 import Tree from "./Tree";
@@ -33,6 +39,7 @@ const allAlgorithms = {
   djikstra,
   DFS,
   BFS,
+  "Greedy-Best FS": BestFS,
 };
 const directions = {
   single: getSingleDirectionalNodes,
@@ -54,7 +61,7 @@ const allPatterns = {
   "Recursive-X": recursiveHorizontal,
 };
 interface QueryProps {
-  algorithm?: "aStar" | "djikstra";
+  algorithm?: "aStar" | "djikstra" | "DFS" | "BFS" | "Greedy-Best FS";
   speed?: "fast" | "slow" | "medium" | "0";
   pattern?: "zigzag" | "infinity";
   direction?: "single" | "double";
@@ -138,7 +145,7 @@ export default function Pathfinding(props: Props) {
 
   const queryFeilds: any = {
     speed: ["medium", "slow", "fast"],
-    algorithm: ["aStar", "djikstra", "DFS", "BFS"],
+    algorithm: ["Greedy-Best FS", "aStar", "djikstra", "DFS", "BFS"],
     direction: ["double", "single"],
     pattern: [
       "zigzag",
@@ -150,7 +157,7 @@ export default function Pathfinding(props: Props) {
       "evenOdd",
     ],
   };
-  if (algorithm === "aStar")
+  if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
     queryFeilds.heuristics = ["chebyshev", "euclidean", "octile", "manhattan"];
   return (
     <div className="pathfindingWrapper">
