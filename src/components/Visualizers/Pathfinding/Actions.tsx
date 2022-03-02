@@ -17,7 +17,6 @@ export default function Actions(props: PropsType) {
         onClick={onStart}
         variant="contained"
         color="success"
-        // className="themeButton"
         sx={{ mb: "5px", marginRight: "10px" }}
         disabled={isSearching}
       >
@@ -28,6 +27,7 @@ export default function Actions(props: PropsType) {
         variant="contained"
         className="themeButton"
         sx={{ mb: "5px" }}
+        disabled={isSearching}
       >
         Draw Pattern
       </Button>
