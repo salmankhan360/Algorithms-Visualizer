@@ -28,6 +28,7 @@ export default function Tree(props: Props) {
     const {
       start: { x: sX, y: sY },
       finish: { x: fX, y: fY },
+      bomb,
     } = coordinates;
     const treeCopy = tree.slice();
 
@@ -35,10 +36,14 @@ export default function Tree(props: Props) {
       treeCopy[sX][sY].isStart = false;
       treeCopy[x][y].isStart = true;
       setCoordinates({ ...coordinates, start: { x, y } });
-    } else {
+    } else if (coordinatesClick?.finish) {
       treeCopy[fX][fY].isFinish = false;
       treeCopy[x][y].isFinish = true;
       setCoordinates({ ...coordinates, finish: { x, y } });
+    } else if (bomb) {
+      treeCopy[bomb.x][bomb.y].isBomb = false;
+      treeCopy[x][y].isBomb = true;
+      setCoordinates({ ...coordinates, bomb: { x, y } });
     }
     setTree(treeCopy);
   };
@@ -48,9 +53,11 @@ export default function Tree(props: Props) {
     const node = tree[x][y];
 
     if (!node.isWall) {
-      if (node.isStart || node.isFinish) {
+      if (node.isStart || node.isFinish || node.isBomb) {
         if (eventType === "onMouseDown")
-          setCoordinatesClick({ [node.isStart ? "start" : "finish"]: true });
+          setCoordinatesClick({
+            [node.isBomb ? "bomb" : node.isStart ? "start" : "finish"]: true,
+          });
         else if (eventType === "onMouseUp") setCoordinatesClick(null);
         return;
       } else if (eventType === "onMouseOver" && coordinatesClick) {

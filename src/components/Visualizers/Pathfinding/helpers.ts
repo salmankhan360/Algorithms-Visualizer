@@ -1,5 +1,6 @@
 import { CoordinatesType, NodeType } from "../../../Types";
 import { changePrevNodes, sortByProp } from "../../../Utils/Pathfinding";
+import { addUniqueClass as addUltraUniqueClass } from "../Sorting/helpers";
 export function locateCoordinates(
   table: NodeType[][],
   coordinates: CoordinatesType
@@ -7,11 +8,23 @@ export function locateCoordinates(
   const {
     start: { x: sX, y: sY },
     finish: { x: fX, y: fY },
+    bomb,
   } = coordinates;
-  table[sX][sY].isStart = true;
-  table[fX][fY].isFinish = true;
+  const inRange =
+    table.length - 1 >= sX &&
+    table[0].length - 1 >= sY &&
+    table.length - 1 >= fX &&
+    table[0].length - 1 >= fY;
+  if (inRange) {
+    table[sX][sY].isStart = true;
+    table[fX][fY].isFinish = true;
+    if (bomb) table[bomb.x][bomb.y].isBomb = true;
+  } else {
+    table[table.length - 2][table[0].length - 2].isFinish = true;
+    table[1][1].isStart = true;
+    if (bomb) table[0][table[0].length - 1].isBomb = true;
+  }
 }
-
 export function constructNodes(
   rows: number,
   columns: number,
@@ -44,23 +57,37 @@ export function constructNodes(
   return table;
 }
 
+const addUniqueClass = (classname: string, id: string) => {
+  const node = document.getElementById(id);
+  if (node) {
+    node.classList.remove(classname);
+    setTimeout(() => node.classList.add(classname), 0);
+  }
+};
 export function visualize(
   visitedInOrder: NodeType[],
   speed: number,
   pathArr: NodeType[],
   onFinish: () => void,
-  onStart: (timeouts: any) => void
+  onStart: (timeouts: any) => void,
+  isBomb: boolean = false
 ) {
   const allTimeouts: any = [];
   visitedInOrder.forEach((node, i) => {
     const { x, y } = node;
     const nodeTag: any = document.getElementById(`${x}-${y}`);
     if (speed == 0) {
-      nodeTag.classList.add("searching");
+      if (isBomb) nodeTag.classList.add("bombed");
+      else nodeTag.classList.add("searching");
     } else {
       const timeout = setTimeout(() => {
-        nodeTag.classList.add("searching");
-        nodeTag.classList.add("searchAnim");
+        if (isBomb) {
+          nodeTag.classList.add("bombed");
+          nodeTag.classList.add("bombedAnim");
+        } else {
+          nodeTag.classList.add("searching");
+          nodeTag.classList.add("searchAnim");
+        }
       }, speed * i);
       allTimeouts.push(timeout);
     }
@@ -72,6 +99,7 @@ export function visualize(
   );
   allTimeouts.push(timeout);
   onStart(allTimeouts);
+  return allTimeouts;
 }
 
 function getAllPrevNodes(node: NodeType, prevNodes: NodeType[] = []) {
@@ -91,15 +119,17 @@ function visualizePath(
 ) {
   pathArr.forEach((node, i) => {
     const { x, y } = node;
-    const pathNode = document.getElementById(`${x}-${y}`);
-    if (speed == 0) {
-      pathNode?.classList.add("path");
-    } else {
+    const id = `${x}-${y}`;
+    const nodeTag: any = document.getElementById(id);
+    if (speed != 0) {
       const timeout = setTimeout(() => {
-        pathNode?.classList.add("path");
-        pathNode?.classList.add("pathAnim");
+        addUniqueClass("pathAnim", id);
+        addUniqueClass("path", id);
+        // addUltraUniqueClass('path-head');
       }, i * 1.2 * speed);
       allTimeouts.push(timeout);
+    } else {
+      nodeTag.classList.add("path");
     }
   });
 
@@ -119,6 +149,8 @@ export function resetAllNodes(tree: NodeType[][]) {
 
       nodeTag?.classList?.remove(
         `searching`,
+        "bombed",
+        "bombedAnim",
         "path",
         "searchAnim",
         "pathAnim",
@@ -147,7 +179,7 @@ export function getRandomIndices(
 }
 
 export const drawPattern = (
-  pattern: { x: number; y: number; wallIndex?: number }[],
+  pattern: { x: number; y: number }[],
   speed: number,
   tree: NodeType[][],
   setTree: (tree: NodeType[][]) => void,
@@ -155,8 +187,6 @@ export const drawPattern = (
   onStart: (timeouts: any) => void
 ) => {
   const allTimeouts: any = [];
-  if (pattern[0].wallIndex !== undefined) sortByProp(pattern, "wallIndex");
-  else sortByCoordinates(pattern);
 
   const chunk1 = pattern.slice(0, pattern.length / 2);
   const chunk2 = pattern.slice(pattern.length / 2);
@@ -206,7 +236,7 @@ function sortByCoordinates(arr: { x: number; y: number }[], direction = "asc") {
 }
 
 // Below code is for Directions of the search
-export function getBidirectionalNodes(
+const bothDirections = (
   coordinates: CoordinatesType,
   tree: NodeType[][],
   selectedAlgorithm: (
@@ -215,8 +245,9 @@ export function getBidirectionalNodes(
     finish: NodeType,
     heuristics: string
   ) => NodeType[],
-  heuristics: string = "manhattan"
-) {
+  heuristics: string = "manhattan",
+  isBomb: boolean = false
+) => {
   const finalVisited: NodeType[] = [];
   const {
     start: { x: sX, y: sY },
@@ -277,10 +308,54 @@ export function getBidirectionalNodes(
       j++;
     }
   }
+
   return {
     visitedInOrder: finalVisited,
     pathArr,
   };
+};
+const clone = (obj: any) => {
+  return JSON.parse(JSON.stringify(obj));
+};
+export function getBidirectionalNodes(
+  coordinates: any,
+  tree: NodeType[][],
+  selectedAlgorithm: (
+    tree: NodeType[][],
+    start: NodeType,
+    finish: NodeType,
+    heuristics: string
+  ) => NodeType[],
+  heuristics: string = "manhattan"
+) {
+  coordinates = clone(coordinates);
+  if (coordinates.bomb) {
+    const coordinatesCopy = clone(coordinates);
+    coordinates.finish = clone(coordinatesCopy.bomb);
+    const { visitedInOrder: bombedInOrder, pathArr: bombedPath } =
+      bothDirections(coordinates, tree, selectedAlgorithm, heuristics);
+    coordinates.start = clone(coordinatesCopy.bomb);
+    coordinates.finish = clone(coordinatesCopy.finish);
+    const { visitedInOrder, pathArr } = bothDirections(
+      coordinates,
+      tree,
+      selectedAlgorithm,
+      heuristics
+    );
+    return { visitedInOrder, pathArr, bombedPath, bombedInOrder };
+  } else {
+    const { visitedInOrder, pathArr } = bothDirections(
+      coordinates,
+      tree,
+      selectedAlgorithm,
+      heuristics,
+      !!coordinates.bomb
+    );
+    return {
+      visitedInOrder,
+      pathArr,
+    };
+  }
 }
 
 function getSwitchedPath(node1: NodeType, node2: NodeType) {
@@ -306,21 +381,35 @@ export function getSingleDirectionalNodes(
   const {
     start: { x: sX, y: sY },
     finish: { x: fX, y: fY },
+    bomb,
   } = coordinates;
 
-  const copyTree = tree.map((row) => row.map((node) => ({ ...node, tree: 1 })));
+  const copyTree = tree.map((row) => row.map((node) => ({ ...node })));
 
-  const start = copyTree[sX][sY];
+  let start = copyTree[sX][sY];
   const finish = copyTree[fX][fY];
 
+  let bombedInOrder: NodeType[] | undefined = [];
+
+  let bombedFinish: NodeType | undefined;
+  if (bomb) {
+    const { x: bX, y: bY } = bomb;
+    const copyTree2 = tree.map((row) => row.map((node) => ({ ...node })));
+    const start2 = copyTree2[sX][sY];
+    const finish2 = copyTree2[bX][bY];
+    start = copyTree[bX][bY];
+    bombedFinish = finish2;
+    bombedInOrder = selectedAlgorithm(copyTree2, start2, finish2, heuristics);
+  }
   const visitedInOrder: NodeType[] | undefined = selectedAlgorithm(
     copyTree,
     start,
     finish,
     heuristics
   );
-
   let pathArr = getAllPrevNodes(finish);
+  let bombedPath = bombedFinish ? getAllPrevNodes(bombedFinish) : [];
 
-  return { visitedInOrder, pathArr };
+  console.log({ visitedInOrder, bombedInOrder, bombedPath });
+  return { visitedInOrder, pathArr, bombedInOrder, bombedPath };
 }

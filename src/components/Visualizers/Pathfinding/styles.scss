@@ -21,7 +21,6 @@
   }
 }
 .nodesWrapper {
-  min-width: 1120px;
   width: fit-content;
 }
 .nodesLabels {
@@ -65,7 +64,7 @@
   & .unvisited span {
     height: 30px;
     width: 30px;
-    border: 1px solid #000;
+    border: 1px solid rgba(37, 37, 37, 0.993);
   }
   & .shortestpath span {
     height: 30px;
@@ -74,7 +73,8 @@
   }
 }
 .boxWrapper {
-  border: 1px solid rgb(66, 82, 85);
+  border: 1px solid rgba(37, 37, 37, 0.438);
+
   height: fit-content;
   width: fit-content;
   height: 30px;
@@ -83,23 +83,33 @@
   display: inline-block;
 }
 .box {
-  // transition: all 200ms ease-in-out;
+  transform: scale(1.1);
   height: 30px;
   width: 30px;
   display: inline-block;
   overflow: hidden;
   & img {
-    height: 36px;
-    background-color: rgb(255, 255, 255);
-    margin-left: -3px;
-    margin-top: -3px;
+    min-height: 25px !important;
   }
 }
 .row {
   max-height: 30.6px;
 }
+.bombed {
+  background-color: rgba(20, 206, 144, 0.774);
+}
+.bombedAnim {
+  animation-name: bombAnimation;
+  animation-duration: 2s;
+  animation-timing-function: ease-out;
+  animation-delay: 0;
+  animation-direction: alternate;
+  animation-iteration-count: 1;
+  animation-play-state: running;
+}
 .searching {
   background-color: rgba(129, 209, 219, 0.774);
+  transform: scale(1);
 }
 .searchAnim {
   animation-name: visitedAnimation;
@@ -112,6 +122,9 @@
 }
 .path {
   background-color: rgb(230, 214, 170);
+}
+.path-head{
+  background-color: rgb(0, 0, 0) !important;
 }
 .pathAnim {
   animation: shortestPath 1500ms;
@@ -144,11 +157,15 @@
 }
 @keyframes visitedAnimation {
   0% {
-    transform: scale(0.3);
+    transform: scale(0.7);
     border-radius: 50%;
     outline: 0;
-    background-color: rgb(255, 238, 0);
+    background-color: rgb(255, 230, 0);
     border-radius: 100%;
+  }
+  15% {
+    border-radius: 100%;
+    transform: scale(0.2);
   }
   50% {
     outline: 0;
@@ -164,6 +181,34 @@
   100% {
     transform: scale(1);
     background-color: rgba(129, 209, 219, 0.774);
+  }
+}
+@keyframes bombAnimation {
+  0% {
+    transform: scale(0.7);
+    border-radius: 50%;
+    outline: 0;
+    background-color: rgb(255, 0, 221);
+    border-radius: 100%;
+  }
+  15% {
+    border-radius: 100%;
+    transform: scale(0.2);
+  }
+  50% {
+    outline: 0;
+    background-color: rgba(12, 37, 180, 0.75);
+  }
+
+  60% {
+    transform: scale(1);
+    outline: 1px;
+    background-color: rgba(10, 117, 72, 0.75);
+  }
+
+  100% {
+    transform: scale(1);
+    background-color: rgba(20, 206, 144, 0.774);
   }
 }
 .settingsWapper {
@@ -227,8 +272,4 @@
     border-radius: 0;
     transform: scale(1);
   }
-}
-
-.shutah {
-  background-color: red;
 }

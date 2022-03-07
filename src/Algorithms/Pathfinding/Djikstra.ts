@@ -1,4 +1,3 @@
-import { finished } from "stream";
 import { NodeType } from "../../Types";
 import {
   getNeighbours,

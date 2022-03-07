@@ -3,8 +3,26 @@ import { Header, Pathfinding, Particles, Sorting, Home } from "./components";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 
 function App() {
-  const navigate = useNavigate();
-  const { search } = useLocation();
+  const [pathfinding, setPathfinding] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    const maxRows = 20;
+    const maxCols = 55;
+
+    const maxWidth = window.innerWidth - 200;
+    const maxHeight = window.innerHeight - 300;
+
+    const columns = maxWidth / 31 > maxCols ? maxCols : maxWidth / 31;
+    const rows = maxHeight / 31 > maxRows ? maxRows : maxHeight / 31;
+    console.log({ columns, rows });
+    setPathfinding({
+      ...pathfinding,
+      columns,
+      rows,
+    });
+    const body: any = document.querySelector("body");
+    body.style.minWidth = `${columns * 31 + 200}px`;
+  }, []);
 
   return (
     <div className="App">
@@ -14,7 +32,7 @@ function App() {
         <Route path={"/"} element={<Home />} />
         <Route
           path={"/Pathfinding"}
-          element={<Pathfinding columns={35} rows={15} />}
+          element={pathfinding && <Pathfinding {...pathfinding} />}
         />
         <Route path={"/sorting"} element={<Sorting />} />
       </Routes>
