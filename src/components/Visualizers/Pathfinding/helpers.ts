@@ -141,7 +141,7 @@ function visualizePath(
   return;
 }
 
-export function resetAllNodes(tree: NodeType[][]) {
+export function resetAllNodes(tree: NodeType[][], isWalls: boolean = false) {
   tree.forEach((col) =>
     col.forEach((node) => {
       const { x, y } = node;
@@ -154,7 +154,7 @@ export function resetAllNodes(tree: NodeType[][]) {
         "path",
         "searchAnim",
         "pathAnim",
-        "shutah"
+isWalls ?"wall-node" : "shutah"
       );
     })
   );
@@ -184,56 +184,31 @@ export const drawPattern = (
   tree: NodeType[][],
   setTree: (tree: NodeType[][]) => void,
   onFinish: () => void,
-  onStart: (timeouts: any) => void
+  onStart: (timeouts: any) => void,
 ) => {
   const allTimeouts: any = [];
+  const treeCopy = tree.map(row=> row.map(node=> ({...node})));
+  pattern.forEach((node, i) => {
+    const { x, y } = node;
+    const nodeTag: any = document.getElementById(`${x}-${y}`);
+    let time = setTimeout(() => {
+      const node = treeCopy[x][y];
+      if (!node.isStart && !node.isFinish && !node.isBomb) {
+      nodeTag.classList.add("wall-node");
+      treeCopy[x][y].isWall = true
+      }
+    }, speed * i);
+    allTimeouts.push(time)
+  })
 
-  const chunk1 = pattern.slice(0, pattern.length / 2);
-  const chunk2 = pattern.slice(pattern.length / 2);
-
-  chunk1?.forEach((val, i) => {
-    const { x, y } = val;
-    const node = tree[x]?.[y];
-    if (!node.isWall) {
-      const timeout = setTimeout(() => {
-        if (!node.isFinish && !node.isStart) {
-          node.isWall = true;
-          setTree([...tree]);
-          i++;
-        }
-      }, i * speed);
-      allTimeouts.push(timeout);
-    }
-  });
-  chunk2?.forEach((val, i) => {
-    const { x, y } = chunk2[chunk2.length - 1 - i];
-    const node = tree[x]?.[y];
-    if (!node.isWall) {
-      const timeout = setTimeout(() => {
-        if (!node.isFinish && !node.isStart) {
-          node.isWall = true;
-          setTree([...tree]);
-          i++;
-        }
-      }, i * speed);
-      allTimeouts.push(timeout);
-    }
-  });
-
-  const timeout = setTimeout(() => onFinish(), chunk1.length * speed);
-  allTimeouts.push(timeout);
+  let time = setTimeout(()=> {
+onFinish();
+  }, speed * pattern.length);
+  allTimeouts.push(time)
+  setTree(treeCopy)
   onStart(allTimeouts);
 };
-function sortByCoordinates(arr: { x: number; y: number }[], direction = "asc") {
-  arr.sort((a, b) => {
-    const sumA = a.x + a.y;
-    const sumB = b.x + b.y;
-    if (direction === "asc") {
-      return sumA - sumB;
-    }
-    return sumB - sumA;
-  });
-}
+
 
 // Below code is for Directions of the search
 const bothDirections = (
@@ -246,7 +221,6 @@ const bothDirections = (
     heuristics: string
   ) => NodeType[],
   heuristics: string = "manhattan",
-  isBomb: boolean = false
 ) => {
   const finalVisited: NodeType[] = [];
   const {
@@ -349,7 +323,6 @@ export function getBidirectionalNodes(
       tree,
       selectedAlgorithm,
       heuristics,
-      !!coordinates.bomb
     );
     return {
       visitedInOrder,
@@ -410,6 +383,5 @@ export function getSingleDirectionalNodes(
   let pathArr = getAllPrevNodes(finish);
   let bombedPath = bombedFinish ? getAllPrevNodes(bombedFinish) : [];
 
-  console.log({ visitedInOrder, bombedInOrder, bombedPath });
   return { visitedInOrder, pathArr, bombedInOrder, bombedPath };
 }

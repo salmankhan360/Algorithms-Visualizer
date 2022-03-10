@@ -42,7 +42,7 @@ export default function Node(props: Props) {
         {Icons[nodeState] && (
           <img
             id={nodeState}
-            height={"30px"}
+            height={"25px"}
             style={{
               userSelect: "none",
               pointerEvents: "none",

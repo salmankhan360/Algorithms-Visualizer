@@ -12,8 +12,11 @@ function App() {
     const maxWidth = window.innerWidth - 200;
     const maxHeight = window.innerHeight - 300;
 
-    const columns = maxWidth / 31 > maxCols ? maxCols : maxWidth / 31;
-    const rows = maxHeight / 31 > maxRows ? maxRows : maxHeight / 31;
+    // const columns = maxWidth / 31 > maxCols ? maxCols : maxWidth / 31;
+    // const rows = maxHeight / 31 > maxRows ? maxRows : maxHeight / 31;
+    const columns = maxWidth/ 26
+    const rows = maxHeight/ 26
+
     console.log({ columns, rows });
     setPathfinding({
       ...pathfinding,
@@ -21,7 +24,7 @@ function App() {
       rows,
     });
     const body: any = document.querySelector("body");
-    body.style.minWidth = `${columns * 31 + 200}px`;
+    body.style.minWidth = `${columns * 26 + 200}px`;
   }, []);
 
   return (
