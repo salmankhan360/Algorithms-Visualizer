@@ -42,7 +42,7 @@ function updateNeighbourNodes(
   neighbours.forEach((n) => {
     if (!n.isVisited) {
       const isAdjacent = checkAdjacent(curr, n);
-      n.distance = isAdjacent ? curr.distance + 1 : curr.distance + 1.5;
+      n.distance = isAdjacent ? curr.distance + 1 : curr.distance + 0.5;
       n.heuristics = isAdjacent
         ? getHeuristics(n, finish, heuristics)
         : getHeuristics(n, finish, heuristics) + 0.5;

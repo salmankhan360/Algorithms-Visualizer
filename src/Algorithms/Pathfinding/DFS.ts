@@ -1,5 +1,5 @@
 import { NodeType } from "../../Types";
-import { getAllNodes, getNeighbours } from "../../Utils/Pathfinding";
+import { getNeighbours } from "../../Utils/Pathfinding";
 
 export default function DFS(
   tree: NodeType[][],
@@ -30,6 +30,7 @@ function updateNeighbourNodes(tree: NodeType[][], curr: NodeType) {
   const reN: NodeType[] = [];
   neighbours.forEach((n) => {
     if (!n.isVisited) {
+      n.distance = curr.distance + 1;
       n.previousNode = curr;
       n.isVisited = true;
       reN.push(n);

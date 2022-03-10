@@ -1,6 +1,7 @@
 export interface CoordinatesType {
   start: { x: number; y: number };
   finish: { x: number; y: number };
+  bomb?: { x: number; y: number };
 }
 
 export interface NodeType {
@@ -16,5 +17,5 @@ export interface NodeType {
   isPath: boolean;
   searching: boolean;
   previousNode?: NodeType;
-  wallIndex?: number;
+  isBomb?: boolean;
 }

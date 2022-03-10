@@ -86,12 +86,13 @@ function performSwap(i: number, j: number, speed: number) {
   curr.id = String(j);
 }
 
-function addUniqueClass(className: string, id: string) {
+export function addUniqueClass(className: string, id: string = "") {
   const allClasses = document.querySelectorAll(`.${className}`);
   allClasses.forEach((node: any) => {
     node.classList.remove(className);
+    node.classList.add(className);
   });
-  document.getElementById(id)?.classList.add(className);
+  if (id) document.getElementById(id)?.classList.add(className);
 }
 
 export function resetAllClasses() {

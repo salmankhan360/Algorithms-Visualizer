@@ -23,7 +23,6 @@ import Tree from "./Tree";
 import NodeInfo from "./NodeInfo";
 import SelectSettings from "../../../shared_components/SelectSettings";
 import {
-  zigZagPattern,
   infinityPattern,
   mazePattern,
   evenOddPattern,
@@ -31,6 +30,8 @@ import {
   recursiveVertical,
   recursiveHorizontal,
 } from "../../../Algorithms/Pathfinding/WallPatterns";
+import RecursiveDivision from "../../../Algorithms/Mazes/RecursiveDivision";
+import ZigZag from "../../../Algorithms/Pathfinding/ZigZag";
 import Actions from "./Actions";
 import { stringify } from "query-string";
 
@@ -51,19 +52,14 @@ const speeds = {
   medium: 20,
   "0": 0,
 };
-const allPatterns = {
-  infinity: infinityPattern,
-  zigzag: zigZagPattern,
-  maze: mazePattern,
-  evenOdd: evenOddPattern,
-  Recursive: recursiveDivision,
-  "Recursive-Y": recursiveVertical,
-  "Recursive-X": recursiveHorizontal,
+const allPatterns: any = {
+  ZigZag,
+  RecursiveDivision
 };
 interface QueryProps {
   algorithm?: "aStar" | "djikstra" | "DFS" | "BFS" | "Greedy-Best FS";
   speed?: "fast" | "slow" | "medium" | "0";
-  pattern?: "zigzag" | "infinity";
+  pattern?: "ZigZag" | "infinity";
   direction?: "single" | "double";
   heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
 }
@@ -80,13 +76,14 @@ export default function Pathfinding(props: Props) {
   const {
     algorithm = "aStar",
     speed: qsSpeed = "medium",
-    pattern = "zigzag",
+    pattern = "RecursiveDivision",
     direction: qsDirection = "double",
     heuristics = "chebyshev",
   } = qs;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
-    start: { x: 7, y: 9 },
-    finish: { x: 7, y: 28 },
+    start: { x: Math.floor(rows / 2) - 5, y: 5},
+    finish: { x: Math.floor(rows / 2) + 5, y: Math.floor(columns)-5 },
+    bomb: { x: Math.floor(rows / 2), y: Math.floor(columns / 2) },
   });
   const [tree, setTree] = useState<NodeType[][]>(
     constructNodes(rows, columns, coordinates)
@@ -94,12 +91,31 @@ export default function Pathfinding(props: Props) {
   const [isSearching, setIsSearching] = useState(false);
   const [clearTimeouts, setClearTimeouts] = useState<any>([]);
 
+  const toggleBomb = () => {
+    const { bomb, ...rest } = coordinates;
+    if (bomb) {
+      tree[bomb.x][bomb.y].isBomb = false;
+      setTree(tree);
+      setCoordinates(rest);
+    } else {
+      const bomb = {
+        x: Math.floor(Math.random() * rows),
+        y: Math.floor(Math.random() * columns),
+      };
+      tree[bomb.x][bomb.y].isBomb = true;
+      setTree(tree);
+      setCoordinates({
+        ...coordinates,
+        bomb,
+      });
+    }
+  };
   const handleReset = () => {
     clearTimeouts.forEach((timeout: any) => {
       clearTimeout(timeout);
     });
     setTree(constructNodes(rows, columns, coordinates));
-    resetAllNodes(tree);
+    resetAllNodes(tree, true);
     setVisualized(false);
     setIsSearching(false);
   };
@@ -113,48 +129,64 @@ export default function Pathfinding(props: Props) {
 
     const selectedAlgorithm: any = allAlgorithms[algorithm];
     const direction = directions[qsDirection];
+    const isBomb = !!coordinates.bomb;
 
-    const { visitedInOrder, pathArr }: any = direction(
-      coordinates,
-      tree,
-      selectedAlgorithm,
-      heuristics
-    );
+    const {
+      visitedInOrder,
+      pathArr,
+      bombedPath = [],
+      bombedInOrder = [],
+    }: any = direction(coordinates, tree, selectedAlgorithm, heuristics);
     if (!visitedInOrder) return;
     if (speed != "0") setIsSearching(true);
-    resetAllNodes(tree);
-    visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart);
+    setTimeout(() => resetAllNodes(tree), 0);
+    if (isBomb) {
+      const deelay =
+        speeds[speed] * bombedInOrder.length +
+        speeds[speed] * pathArr.length;
+      let t1: any = setTimeout(
+        () =>
+         bombedPath.length >1 && visualize(visitedInOrder, speeds[speed], pathArr, onFinish,onStart ),
+         deelay
+      );
+      visualize(
+        bombedInOrder,
+        speeds[speed],
+        bombedPath,
+        ()=> {},
+        (t2) => onStart([...t2, t1]),
+        isBomb
+      );
+    } else {
+      visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart);
+    }
   };
 
   const handlePattern = () => {
     if (isSearching) return;
     isVisualized && setVisualized(false);
-    resetAllNodes(tree);
+    resetAllNodes(tree, true);
     setIsSearching(true);
     const newTree = constructNodes(rows, columns, coordinates);
-    drawPattern(allPatterns[pattern], 80, newTree, setTree, onFinish, onStart);
+    const walls = allPatterns[pattern](newTree);
+    drawPattern(walls, speeds[qsSpeed], newTree, setTree, onFinish, onStart);
   };
 
   useEffect(() => {
     if (!isVisualized) return;
     resetAllNodes(tree);
     handleStart("0");
-  }, [tree, heuristics]);
+  }, [tree, heuristics, coordinates]);
 
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
 
   const queryFeilds: any = {
     speed: ["medium", "slow", "fast"],
-    algorithm: ["Greedy-Best FS", "aStar", "djikstra", "DFS", "BFS"],
+    algorithm: ["aStar", "Greedy-Best FS", "djikstra", "DFS", "BFS"],
     direction: ["double", "single"],
     pattern: [
-      "zigzag",
-      "Recursive",
-      "infinity",
-      "maze",
-      "Recursive-Y",
-      "Recursive-X",
-      "evenOdd",
+      "RecursiveDivision",
+      
     ],
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
@@ -170,6 +202,8 @@ export default function Pathfinding(props: Props) {
             onStart={() => handleStart(qsSpeed)}
             onDrawPattern={handlePattern}
             onReset={handleReset}
+            onToggleBomb={toggleBomb}
+            isBomb={!!coordinates.bomb}
             isSearching={isSearching}
             isChanged={isSearching || !!isWalls || isVisualized}
           />
