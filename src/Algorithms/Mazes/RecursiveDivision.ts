@@ -1,52 +1,46 @@
+import { NodeType } from "../../Types";
 
-let grid;
-export default function RecursiveDivision(tree) {
-  grid = tree.map((row) => row.map(({ x, y }) => ({ x, y })));
-  const wallsInOrder = []
-
- recursiveDivisionMaze(
-    grid,
+export default function RecursiveDivision(tree: NodeType[][]) {
+  const wallsInOrder: { x: number; y: number }[] = [];
+  recursiveDivisionMaze(
+    tree,
     2,
-     grid.length - 3,
+    tree.length - 3,
     2,
-    grid[0].length - 3,
-    'horizontal',
+    tree[0].length - 3,
+    "vertical",
     false,
-    wallsInOrder,
-  )
-
-
-  return wallsInOrder
+    wallsInOrder
+  );
+  return wallsInOrder;
 }
 
-
 function recursiveDivisionMaze(
-  tree,
-  rowStart,
-  rowEnd,
-  colStart,
-  colEnd,
-  orientation,
-  surroundingWalls,
-  wallsInOrder
+  tree: NodeType[][],
+  rowStart: number,
+  rowEnd: number,
+  colStart: number,
+  colEnd: number,
+  orientation: "vertical" | "horizontal",
+  surroundingWalls: boolean,
+  wallsInOrder: { x: number; y: number }[]
 ) {
-
   if (rowEnd < rowStart || colEnd < colStart) {
     return;
   }
   if (!surroundingWalls) {
-   tree.forEach((row) => row.forEach(({x, y})=> {
-     
-       if (
-         x === 0 ||
-         y === 0 ||
-         x === tree.length - 1 ||
-         y === tree[0].length - 1
-       ) {
-         wallsInOrder.push({ x, y });
-    
-       }
-   }));
+    tree.forEach((row) =>
+      row.forEach(({ x, y }) => {
+        if (
+          x === 0 ||
+          y === 0 ||
+          x === tree.length - 1 ||
+          y === tree[0].length - 1
+        ) {
+          wallsInOrder.push({ x, y });
+        }
+      })
+    );
 
     surroundingWalls = true;
   }
@@ -63,19 +57,12 @@ function recursiveDivisionMaze(
     let randomColIndex = Math.floor(Math.random() * possibleCols.length);
     let currentRow = possibleRows[randomRowIndex];
     let colRandom = possibleCols[randomColIndex];
-   tree.forEach(row=> row.forEach(({x,y}) => {
-   
-      if (
-        x === currentRow &&
-        y !== colRandom &&
-       y >= colStart - 1 &&
-        y <= colEnd + 1
-      ) {
-     console.log({orientation, x, y})
-          wallsInOrder.push({ x, y });
-         
+
+    for (let i = colStart - 1; i <= colEnd + 1; i++) {
+      if (i !== colRandom && i >= colStart - 1 && i <= colEnd + 1) {
+        wallsInOrder.push({ x: currentRow, y: i });
       }
-    }));
+    }
     if (currentRow - 2 - rowStart > colEnd - colStart) {
       recursiveDivisionMaze(
         tree,
@@ -135,18 +122,12 @@ function recursiveDivisionMaze(
     let randomRowIndex = Math.floor(Math.random() * possibleRows.length);
     let currentCol = possibleCols[randomColIndex];
     let rowRandom = possibleRows[randomRowIndex];
-    tree.forEach((row)=> row.forEach(({x, y}) => {
 
-      if (
-        y === currentCol &&
-        x !== rowRandom &&
-        x >= rowStart - 1 &&
-        x <= rowEnd + 1
-      ) {
-      console.log({orientation, x, y})
-       wallsInOrder.push({ x, y });
+    for (let i = rowStart - 1; i <= rowEnd + 1; i++) {
+      if (i !== rowRandom && i >= rowStart - 1 && i <= rowEnd + 1) {
+        wallsInOrder.push({ x: i, y: currentCol });
       }
-    }));
+    }
 
     if (rowEnd - rowStart > currentCol - 2 - colStart) {
       recursiveDivisionMaze(
@@ -196,5 +177,3 @@ function recursiveDivisionMaze(
     }
   }
 }
-
-
