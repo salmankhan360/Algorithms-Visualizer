@@ -8,7 +8,7 @@ export default function RecursiveDivision(tree: NodeType[][]) {
     tree.length - 3,
     2,
     tree[0].length - 3,
-    "vertical",
+    "horizontal",
     false,
     wallsInOrder
   );
