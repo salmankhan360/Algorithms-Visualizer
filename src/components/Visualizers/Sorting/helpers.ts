@@ -90,7 +90,6 @@ export function addUniqueClass(className: string, id: string = "") {
   const allClasses = document.querySelectorAll(`.${className}`);
   allClasses.forEach((node: any) => {
     node.classList.remove(className);
-    node.classList.add(className);
   });
   if (id) document.getElementById(id)?.classList.add(className);
 }
