@@ -15,10 +15,15 @@ function ParticlesBG() {
           interactivity: {
             events: {
               resize: true,
+              onHover: {
+                enable: true,
+                mode: ["grab"],
+              },
             },
+
             modes: {
               bubble: {
-                distance: 400,
+                distance: 200,
                 duration: 3,
                 opacity: 0.8,
                 size: 90,
@@ -29,6 +34,17 @@ function ParticlesBG() {
               repulse: {
                 distance: 200,
                 duration: 0.9,
+              },
+              connect: {
+                distance: 100,
+                lineLinked: {
+                  opacity: 0.1,
+                },
+              },
+              grab: {
+                lineLinked: {
+                  opacity: 0.4,
+                },
               },
             },
           },
@@ -53,11 +69,12 @@ function ParticlesBG() {
               random: false,
               speed: 1,
               straight: false,
+              warp: true,
             },
             number: {
               density: {
                 enable: true,
-                area: 800,
+                area: 600,
               },
               value: 30,
             },
