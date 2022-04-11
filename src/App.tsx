@@ -6,25 +6,19 @@ function App() {
   const [pathfinding, setPathfinding] = React.useState<any>(null);
 
   React.useEffect(() => {
-    const maxRows = 20;
-    const maxCols = 55;
+    const maxWidth = window.innerWidth - 60;
+    const maxHeight = window.innerHeight - 250;
 
-    const maxWidth = window.innerWidth - 200;
-    const maxHeight = window.innerHeight - 300;
+    const columns = maxWidth / 28.94;
+    const rows = maxHeight / 28.94;
 
-    // const columns = maxWidth / 31 > maxCols ? maxCols : maxWidth / 31;
-    // const rows = maxHeight / 31 > maxRows ? maxRows : maxHeight / 31;
-    const columns = maxWidth/ 26
-    const rows = maxHeight/ 26
-
-    console.log({ columns, rows });
     setPathfinding({
       ...pathfinding,
       columns,
       rows,
     });
     const body: any = document.querySelector("body");
-    body.style.minWidth = `${columns * 26 + 200}px`;
+    body.style.minWidth = `${columns * 28.94 + 60}px`;
   }, []);
 
   return (
