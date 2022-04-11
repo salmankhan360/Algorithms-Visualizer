@@ -81,8 +81,8 @@ export default function Tree(props: Props) {
   return (
     <div
       className="tree"
-      onMouseDown={() => setIsClicked(true)}
-      onMouseUp={() => setIsClicked(false)}
+      onMouseDown={() => !isSearching && setIsClicked(true)}
+      onMouseUp={() => !isSearching && setIsClicked(false)}
     >
       <div className={"nodesWrapper"}>
         {tree.map((row, y) => (

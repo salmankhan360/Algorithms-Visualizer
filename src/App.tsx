@@ -12,6 +12,7 @@ function App() {
     const columns = maxWidth / 28.94;
     const rows = maxHeight / 28.94;
 
+
     setPathfinding({
       ...pathfinding,
       columns,
@@ -23,15 +24,31 @@ function App() {
 
   return (
     <div className="App">
-      <Particles />
       <Header />
       <Routes>
-        <Route path={"/"} element={<Home />} />
+        <Route
+          path={"/"}
+          element={
+            <>
+              {" "}
+              <Particles />
+              <Home />
+            </>
+          }
+        />
         <Route
           path={"/Pathfinding"}
           element={pathfinding && <Pathfinding {...pathfinding} />}
         />
-        <Route path={"/sorting"} element={<Sorting />} />
+        <Route
+          path={"/sorting"}
+          element={
+            <>
+              <Particles />
+              <Sorting />
+            </>
+          }
+        />
       </Routes>
     </div>
   );
