@@ -34,6 +34,7 @@ import RecursiveDivision from "../../../Algorithms/Mazes/RecursiveDivision";
 import ZigZag from "../../../Algorithms/Pathfinding/ZigZag";
 import Actions from "./Actions";
 import { stringify } from "query-string";
+import { kruskalsMaze } from "../../../Algorithms/Mazes/KruskalMaze";
 
 const allAlgorithms = {
   aStar,
@@ -81,8 +82,8 @@ export default function Pathfinding(props: Props) {
     heuristics = "chebyshev",
   } = qs;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
-    start: { x: Math.floor(rows / 2) - 5, y: 5},
-    finish: { x: Math.floor(rows / 2) + 5, y: Math.floor(columns)-5 },
+    start: { x: Math.floor(rows / 2) - 5, y: 5 },
+    finish: { x: Math.floor(rows / 2) + 5, y: Math.floor(columns) - 5 },
     bomb: { x: Math.floor(rows / 2), y: Math.floor(columns / 2) },
   });
   const [tree, setTree] = useState<NodeType[][]>(
@@ -146,14 +147,14 @@ export default function Pathfinding(props: Props) {
         speeds[speed] * pathArr.length;
       let t1: any = setTimeout(
         () =>
-         bombedPath.length >1 && visualize(visitedInOrder, speeds[speed], pathArr, onFinish,onStart ),
-         deelay
+          bombedPath.length > 1 && visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart),
+        deelay
       );
       visualize(
         bombedInOrder,
         speeds[speed],
         bombedPath,
-        ()=> {},
+        () => { },
         (t2) => onStart([...t2, t1]),
         isBomb
       );
@@ -168,7 +169,7 @@ export default function Pathfinding(props: Props) {
     resetAllNodes(tree, true);
     setIsSearching(true);
     const newTree = constructNodes(rows, columns, coordinates);
-    const walls = allPatterns[pattern](newTree);
+    const walls = kruskalsMaze(newTree);
     drawPattern(walls, speeds[qsSpeed], newTree, setTree, onFinish, onStart);
   };
 
@@ -186,7 +187,7 @@ export default function Pathfinding(props: Props) {
     direction: ["double", "single"],
     pattern: [
       "RecursiveDivision",
-      
+
     ],
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
