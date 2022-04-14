@@ -55,8 +55,13 @@ const speeds = {
 };
 const allPatterns: any = {
   ZigZag,
-  RecursiveDivision
+  RecursiveDivision,
+  "Kruskal spanning": kruskalsMaze,
+  "Kruskal expanding": kruskalsMaze,
 };
+const spanningPatterns: { [key: string]: boolean } = {
+  "Kruskal spanning": true,
+}
 interface QueryProps {
   algorithm?: "aStar" | "djikstra" | "DFS" | "BFS" | "Greedy-Best FS";
   speed?: "fast" | "slow" | "medium" | "0";
@@ -170,7 +175,8 @@ export default function Pathfinding(props: Props) {
     setIsSearching(true);
     const newTree = constructNodes(rows, columns, coordinates);
     const walls = kruskalsMaze(newTree);
-    drawPattern(walls, speeds[qsSpeed], newTree, setTree, onFinish, onStart);
+    const isSpanning = spanningPatterns[pattern];
+    drawPattern(walls, isSpanning, speeds[qsSpeed], newTree, setTree, onFinish, onStart);
   };
 
   useEffect(() => {
@@ -187,7 +193,8 @@ export default function Pathfinding(props: Props) {
     direction: ["double", "single"],
     pattern: [
       "RecursiveDivision",
-
+      "Kruskal Spanning",
+      "Kruskal expanding"
     ],
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
