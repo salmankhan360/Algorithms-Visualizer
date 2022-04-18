@@ -3,6 +3,7 @@ import { NodeType } from "../../Types";
 interface SetNode extends NodeType {
   setId: number;
   weight: number;
+  isCell: boolean;
 }
 
 interface Sets {
@@ -10,7 +11,7 @@ interface Sets {
 }
 
 export function kruskalsMaze(tree: SetNode[][]) {
-  const wallsInOrder = [];
+  const wallsInOrder: any = [];
   const rows = tree.length;
   const columns = tree[0].length;
 
@@ -18,50 +19,65 @@ export function kruskalsMaze(tree: SetNode[][]) {
   const cells = [];
   const sets: Sets = {};
 
-  let id = 0;
+  let id = 1;
 
-  let isCell = false;
-  for (let i = 1; i < rows - 1; i++) {
-    for (let j = 1; j < columns - 1; j++) {
-      if (isCell) {
-        if (i % 2 == 0 || j % 2 == 0) {
-          isCell = false;
-          id++;
-          tree[i][j].setId = id;
-          sets[id] = [tree[i][j]];
-          wallsInOrder.push(tree[i][j]);
-        }
+  let ei = 0;
+  let ej = 0;
+  let oi = 0;
+  let oj = 0;
+  let i = 0;
+  let j = 0;
+  let cellHash: any = {};
+  let cellHash2: any = {};
+  for (i = 0, ei = 1, oi = 1; i < rows - 1; i++, oi += 2, ei += 2) {
+    for (j = 0, ej = 1, oj = 1; j < columns - 1; j++, ej += 2, oj += 2) {
+      let hashId = `${i}-${j}`;
+      let hashid2 = `${ei}-${ej}`;
+      cellHash[hashid2] = 1;
+      let isBorder = i == 0 || j == 0 || i == rows || j == columns;
+      if (cellHash[hashId]) {
+        id++;
+        tree[i][j].setId = id;
+        tree[i][j].isCell = true;
+        sets[id] = [tree[i][j]];
+      } else if (isBorder) {
+        tree[i][j].setId = 0;
+        tree[i][j].isCell = true;
+        sets[0] = [tree[i][j]];
       } else {
-        isCell = true;
         tree[i][j].weight = Math.random();
         edges.push(tree[i][j]);
       }
     }
   }
 
+  const isVertical = rows > columns ? true : false;
   edges.sort((a, b) => a.weight - b.weight);
-
   while (edges.length) {
     const node = edges.pop();
     if (node) {
       const { x, y } = node;
-      const isVertical = Math.random() > 0.5;
 
-      const top = tree[x - 1][y];
-      const bottom = tree[x + 1][y];
-      const left = tree[x][y - 1];
-      const right = tree[x][y + 1];
+      const top = tree[x - 1]?.[y];
+      const bottom = tree[x + 1]?.[y];
+      const left = tree[x]?.[y - 1];
+      const right = tree[x]?.[y + 1];
       if (isVertical) {
         if (!isConnect(top, bottom)) {
           connect(node, top, bottom, sets, wallsInOrder);
+          if (!isConnect(left, right))
+            connect(node, left, right, sets, wallsInOrder);
         }
       } else {
-        if (!isConnect(left, right))
+        if (!isConnect(left, right)) {
           connect(node, left, right, sets, wallsInOrder);
+        }
+        if (!isConnect(top, bottom)) {
+          connect(node, top, bottom, sets, wallsInOrder);
+        }
       }
     }
   }
-
   return wallsInOrder;
 }
 
@@ -79,16 +95,21 @@ function connect(
 ) {
   const { setId: idA } = nodeA;
   const { setId: idB } = nodeB;
-
+  console.log("connect", { node, nodeA, nodeB, sets, wallsInOrder });
+  if (!idA || !idB) {
+    return;
+  }
   const setA = sets[idA];
   const setB = sets[idB];
-
-  for (let i = 0; i < setB.length; i++) {
+  nodeB.setId = idA;
+  node.setId = idA;
+  for (let i = 0; i < setB?.length; i++) {
     setB[i].setId = idA;
   }
-  setA.push(...setB);
+  setA.push(...setB, node);
 
   delete sets[idB]; // Not sure about deleting the setB'
 
   wallsInOrder.push(node, nodeA, nodeB);
+  return false;
 }
