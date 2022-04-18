@@ -154,7 +154,7 @@ export function resetAllNodes(tree: NodeType[][], isWalls: boolean = false) {
         "path",
         "searchAnim",
         "pathAnim",
-isWalls ?"wall-node" : "shutah"
+        isWalls ? "wall-node" : "shutah"
       );
     })
   );
@@ -180,35 +180,59 @@ export function getRandomIndices(
 
 export const drawPattern = (
   pattern: { x: number; y: number }[],
+  isSpanning: boolean,
   speed: number,
   tree: NodeType[][],
   setTree: (tree: NodeType[][]) => void,
   onFinish: () => void,
-  onStart: (timeouts: any) => void,
+  onStart: (timeouts: any) => void
 ) => {
   const allTimeouts: any = [];
-  const treeCopy = tree.map(row=> row.map(node=> ({...node})));
-  pattern.forEach((node, i) => {
-    const { x, y } = node;
-    const nodeTag: any = document.getElementById(`${x}-${y}`);
-    let time = setTimeout(() => {
-      const node = treeCopy[x][y];
-      if (!node.isStart && !node.isFinish && !node.isBomb) {
-      nodeTag.classList.add("wall-node");
-      treeCopy[x][y].isWall = true
-      }
-    }, speed * i);
-    allTimeouts.push(time)
-  })
+  const treeCopy = tree.map((row) => row.map((node) => ({ ...node })));
 
-  let time = setTimeout(()=> {
-onFinish();
+  if (isSpanning) {
+    treeCopy.flat().forEach((node) => {
+      const { x, y } = node;
+      const nodeTag: any = document.getElementById(`${x}-${y}`);
+      if (!node.isStart && !node.isFinish && !node.isBomb) {
+        nodeTag.classList.add("wall-spanning");
+        treeCopy[x][y].isWall = true;
+      }
+    });
+    pattern.forEach((node, i) => {
+      const { x, y } = node;
+      const nodeTag: any = document.getElementById(`${x}-${y}`);
+      let time = setTimeout(() => {
+        const node = treeCopy[x][y];
+        if (!node.isStart && !node.isFinish && !node.isBomb) {
+          nodeTag.classList.remove("wall-spanning");
+          treeCopy[x][y].isWall = false;
+        }
+      }, speed * i);
+      allTimeouts.push(time);
+    });
+  } else {
+    pattern.forEach((node, i) => {
+      const { x, y } = node;
+      const nodeTag: any = document.getElementById(`${x}-${y}`);
+      let time = setTimeout(() => {
+        const node = treeCopy[x][y];
+        if (!node.isStart && !node.isFinish && !node.isBomb) {
+          nodeTag.classList.add("wall-node");
+          treeCopy[x][y].isWall = true;
+        }
+      }, speed * i);
+      allTimeouts.push(time);
+    });
+  }
+
+  let time = setTimeout(() => {
+    onFinish();
+    setTree(treeCopy);
   }, speed * pattern.length);
-  allTimeouts.push(time)
-  setTree(treeCopy)
+  allTimeouts.push(time);
   onStart(allTimeouts);
 };
-
 
 // Below code is for Directions of the search
 const bothDirections = (
@@ -220,7 +244,7 @@ const bothDirections = (
     finish: NodeType,
     heuristics: string
   ) => NodeType[],
-  heuristics: string = "manhattan",
+  heuristics: string = "manhattan"
 ) => {
   const finalVisited: NodeType[] = [];
   const {
@@ -322,7 +346,7 @@ export function getBidirectionalNodes(
       coordinates,
       tree,
       selectedAlgorithm,
-      heuristics,
+      heuristics
     );
     return {
       visitedInOrder,
