@@ -56,12 +56,12 @@ const speeds = {
 const allPatterns: any = {
   ZigZag,
   RecursiveDivision,
-  "Kruskal spanning": kruskalsMaze,
-  "Kruskal expanding": kruskalsMaze,
+  "Kruskal Spanning": kruskalsMaze,
+  "Kruskal Expanding": kruskalsMaze,
 };
 const spanningPatterns: { [key: string]: boolean } = {
-  "Kruskal spanning": true,
-}
+  "Kruskal Spanning": true,
+};
 interface QueryProps {
   algorithm?: "aStar" | "djikstra" | "DFS" | "BFS" | "Greedy-Best FS";
   speed?: "fast" | "slow" | "medium" | "0";
@@ -148,18 +148,18 @@ export default function Pathfinding(props: Props) {
     setTimeout(() => resetAllNodes(tree), 0);
     if (isBomb) {
       const deelay =
-        speeds[speed] * bombedInOrder.length +
-        speeds[speed] * pathArr.length;
+        speeds[speed] * bombedInOrder.length + speeds[speed] * pathArr.length;
       let t1: any = setTimeout(
         () =>
-          bombedPath.length > 1 && visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart),
+          bombedPath.length > 1 &&
+          visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart),
         deelay
       );
       visualize(
         bombedInOrder,
         speeds[speed],
         bombedPath,
-        () => { },
+        () => {},
         (t2) => onStart([...t2, t1]),
         isBomb
       );
@@ -174,9 +174,17 @@ export default function Pathfinding(props: Props) {
     resetAllNodes(tree, true);
     setIsSearching(true);
     const newTree = constructNodes(rows, columns, coordinates);
-    const walls = kruskalsMaze(newTree);
+    const walls = allPatterns[pattern](newTree);
     const isSpanning = spanningPatterns[pattern];
-    drawPattern(walls, isSpanning, speeds[qsSpeed], newTree, setTree, onFinish, onStart);
+    drawPattern(
+      walls,
+      isSpanning,
+      speeds[qsSpeed],
+      newTree,
+      setTree,
+      onFinish,
+      onStart
+    );
   };
 
   useEffect(() => {
@@ -191,11 +199,7 @@ export default function Pathfinding(props: Props) {
     speed: ["medium", "slow", "fast"],
     algorithm: ["aStar", "Greedy-Best FS", "djikstra", "DFS", "BFS"],
     direction: ["double", "single"],
-    pattern: [
-      "RecursiveDivision",
-      "Kruskal Spanning",
-      "Kruskal expanding"
-    ],
+    pattern: ["RecursiveDivision", "Kruskal Spanning", "Kruskal Expanding"],
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
     queryFeilds.heuristics = ["chebyshev", "euclidean", "octile", "manhattan"];

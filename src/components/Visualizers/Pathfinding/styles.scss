@@ -137,7 +137,12 @@
   z-index: -1;
   animation: wallAnimation 200ms;
 }
-
+.wall-spanning {
+  background-color: #313131;
+  pointer-events: none;
+  position: relative;
+  z-index: -1;
+}
 @keyframes wallAnimation {
   0% {
     border-radius: 50%;

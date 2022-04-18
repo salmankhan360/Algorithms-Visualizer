@@ -194,6 +194,22 @@ export const drawPattern = (
     treeCopy.flat().forEach((node) => {
       const { x, y } = node;
       const nodeTag: any = document.getElementById(`${x}-${y}`);
+      if (!node.isStart && !node.isFinish && !node.isBomb) {
+        nodeTag.classList.add("wall-spanning");
+        treeCopy[x][y].isWall = true;
+      }
+    });
+    pattern.forEach((node, i) => {
+      const { x, y } = node;
+      const nodeTag: any = document.getElementById(`${x}-${y}`);
+      let time = setTimeout(() => {
+        const node = treeCopy[x][y];
+        if (!node.isStart && !node.isFinish && !node.isBomb) {
+          nodeTag.classList.remove("wall-spanning");
+          treeCopy[x][y].isWall = false;
+        }
+      }, speed * i);
+      allTimeouts.push(time);
     });
   } else {
     pattern.forEach((node, i) => {
