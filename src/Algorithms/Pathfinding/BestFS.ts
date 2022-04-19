@@ -8,7 +8,8 @@ export default function BestFS(
   tree: NodeType[][],
   start: NodeType,
   finish: NodeType,
-  heuristics = "manhattan"
+  heuristics = "manhattan",
+  diagonal: boolean
 ) {
   start.distance = 0;
   start.heuristics = 0;
@@ -25,7 +26,7 @@ export default function BestFS(
     if (curr.isWall) continue;
     curr.isVisited = true;
     visitedInOrder.push(curr);
-    updateNeighbourNodes(tree, queue, curr, finish, heuristics);
+    updateNeighbourNodes(tree, queue, curr, finish, heuristics, diagonal);
   }
 
   return visitedInOrder;
@@ -36,9 +37,10 @@ function updateNeighbourNodes(
   queue: NodeType[],
   curr: NodeType,
   finish: NodeType,
-  heuristics: string
+  heuristics: string,
+  diagonal: boolean
 ) {
-  const neighbours = getNeighbours(tree, curr);
+  const neighbours = getNeighbours(tree, curr, diagonal);
   neighbours.forEach((n) => {
     if (!n.isVisited) {
       const isAdjacent = checkAdjacent(curr, n);
