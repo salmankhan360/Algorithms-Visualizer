@@ -53,21 +53,22 @@ const speeds = {
   medium: 20,
   "0": 0,
 };
-const allPatterns: any = {
-  ZigZag,
-  RecursiveDivision,
+const allPatterns = {
+  "Recursive Division": RecursiveDivision,
   "Kruskal Spanning": kruskalsMaze,
-  "Kruskal Expanding": kruskalsMaze,
+  "Kruskal Set-Spanning": (tree: NodeType[][]) => kruskalsMaze(tree, "set-spanning"),
 };
 const spanningPatterns: { [key: string]: boolean } = {
   "Kruskal Spanning": true,
+  "Kruskal Set-Spanning": true,
 };
 interface QueryProps {
   algorithm?: "aStar" | "djikstra" | "DFS" | "BFS" | "Greedy-Best FS";
   speed?: "fast" | "slow" | "medium" | "0";
-  pattern?: "ZigZag" | "infinity";
+  maze?: "Recursive Division" | "Kruskal Spanning" | "Kruskal Set-Spanning";
   direction?: "single" | "double";
   heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
+  diagonal?: "Diagonal" | "No Diagonal";
 }
 interface Props {
   columns: number;
@@ -82,9 +83,10 @@ export default function Pathfinding(props: Props) {
   const {
     algorithm = "aStar",
     speed: qsSpeed = "medium",
-    pattern = "RecursiveDivision",
+    maze = "Recursive Division",
     direction: qsDirection = "double",
     heuristics = "chebyshev",
+    diagonal = "Diagnol",
   } = qs;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
     start: { x: Math.floor(rows / 2) - 5, y: 5 },
@@ -142,7 +144,7 @@ export default function Pathfinding(props: Props) {
       pathArr,
       bombedPath = [],
       bombedInOrder = [],
-    }: any = direction(coordinates, tree, selectedAlgorithm, heuristics);
+    }: any = direction(coordinates, tree, selectedAlgorithm, heuristics, diagonal == "Diagnol");
     if (!visitedInOrder) return;
     if (speed != "0") setIsSearching(true);
     setTimeout(() => resetAllNodes(tree), 0);
@@ -159,7 +161,7 @@ export default function Pathfinding(props: Props) {
         bombedInOrder,
         speeds[speed],
         bombedPath,
-        () => {},
+        () => { },
         (t2) => onStart([...t2, t1]),
         isBomb
       );
@@ -174,8 +176,10 @@ export default function Pathfinding(props: Props) {
     resetAllNodes(tree, true);
     setIsSearching(true);
     const newTree = constructNodes(rows, columns, coordinates);
-    const walls = allPatterns[pattern](newTree);
-    const isSpanning = spanningPatterns[pattern];
+    console.log({ allPatterns, maze });
+    const walls = allPatterns[maze](newTree);
+
+    const isSpanning = spanningPatterns[maze];
     drawPattern(
       walls,
       isSpanning,
@@ -198,8 +202,9 @@ export default function Pathfinding(props: Props) {
   const queryFeilds: any = {
     speed: ["medium", "slow", "fast"],
     algorithm: ["aStar", "Greedy-Best FS", "djikstra", "DFS", "BFS"],
+    maze: ["Recursive Division", "Kruskal Spanning", "Kruskal Set-Spanning"],
     direction: ["double", "single"],
-    pattern: ["RecursiveDivision", "Kruskal Spanning", "Kruskal Expanding"],
+    diagonal: ["Diagnol", "No Diagnol"]
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
     queryFeilds.heuristics = ["chebyshev", "euclidean", "octile", "manhattan"];

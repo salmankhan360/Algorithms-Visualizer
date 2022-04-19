@@ -9,7 +9,8 @@ export default function AStar(
   tree: NodeType[][],
   start: NodeType,
   finish: NodeType,
-  heuristics = "manhattan"
+  heuristics = "manhattan",
+  diagonal: boolean
 ) {
   start.distance = 0;
   start.heuristics = 0;
@@ -27,7 +28,7 @@ export default function AStar(
       return visitedInOrder;
     curr.isVisited = true;
     visitedInOrder.push(curr);
-    updateNeighbourNodes(tree, curr, finish, heuristics);
+    updateNeighbourNodes(tree, curr, finish, heuristics, diagonal);
   }
   return visitedInOrder;
 }
@@ -36,9 +37,10 @@ function updateNeighbourNodes(
   tree: NodeType[][],
   curr: NodeType,
   finish: NodeType,
-  heuristics: string
+  heuristics: string,
+  diagonal: boolean
 ) {
-  const neighbours = getNeighbours(tree, curr);
+  const neighbours = getNeighbours(tree, curr, diagonal);
   neighbours.forEach((n) => {
     if (!n.isVisited && !n.previousNode) {
       const isAdjacent = checkAdjacent(curr, n);

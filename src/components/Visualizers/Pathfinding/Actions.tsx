@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@mui/material";
+import { Button, Switch, FormControlLabel } from "@mui/material";
 
 interface PropsType {
   isChanged: boolean;
@@ -23,6 +23,7 @@ export default function Actions(props: PropsType) {
 
   return (
     <div style={{ minWidth: "max-content" }}>
+
       <Button
         onClick={onStart}
         variant="contained"
