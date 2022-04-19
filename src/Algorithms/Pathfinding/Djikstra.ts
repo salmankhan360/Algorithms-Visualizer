@@ -8,7 +8,9 @@ import {
 export default function djikstra(
   tree: NodeType[][],
   start: NodeType,
-  finish: NodeType
+  finish: NodeType,
+  heuristics = "manhattan", // We dont need that in here
+  diagonal: boolean
 ) {
   start.distance = 1;
   const unvisited = getAllNodes(tree);
@@ -27,16 +29,17 @@ export default function djikstra(
     if (closest.distance == Infinity) return visitedInOrder;
     closest.isVisited = true;
     visitedInOrder.push(closest);
-    updateUnvisitedNodes(closest, tree);
+    updateUnvisitedNodes(closest, tree, diagonal);
   }
 }
 
 function updateUnvisitedNodes(
   closest: NodeType | undefined,
-  tree: NodeType[][]
+  tree: NodeType[][],
+  diagonal: boolean
 ) {
   if (!closest) return;
-  const neighbours = getNeighbours(tree, closest);
+  const neighbours = getNeighbours(tree, closest, diagonal);
   neighbours.forEach((n) => {
     if (!n.isVisited && !n.previousNode) {
       const isAdjacent = checkAdjacent(closest, n);

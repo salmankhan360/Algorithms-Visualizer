@@ -5,7 +5,6 @@ export function getNeighbours(
   node: NodeType,
   allowDiagonal = false
 ) {
-  console.log({ allowDiagonal });
   const { x, y } = node;
   const neighbours = [];
   tree[x + 1]?.[y] && neighbours.push(tree[x + 1][y]);

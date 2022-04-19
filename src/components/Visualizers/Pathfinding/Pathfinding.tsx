@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
   constructNodes,
   visualize,
@@ -22,18 +22,9 @@ import "./styles.scss";
 import Tree from "./Tree";
 import NodeInfo from "./NodeInfo";
 import SelectSettings from "../../../shared_components/SelectSettings";
-import {
-  infinityPattern,
-  mazePattern,
-  evenOddPattern,
-  recursiveDivision,
-  recursiveVertical,
-  recursiveHorizontal,
-} from "../../../Algorithms/Pathfinding/WallPatterns";
+
 import RecursiveDivision from "../../../Algorithms/Mazes/RecursiveDivision";
-import ZigZag from "../../../Algorithms/Pathfinding/ZigZag";
 import Actions from "./Actions";
-import { stringify } from "query-string";
 import { kruskalsMaze } from "../../../Algorithms/Mazes/KruskalMaze";
 
 const allAlgorithms = {

@@ -4,7 +4,9 @@ import { getNeighbours } from "../../Utils/Pathfinding";
 export default function DFS(
   tree: NodeType[][],
   start: NodeType,
-  finish: NodeType
+  finish: NodeType,
+  heuristics = "manhattan", // We dont need that in here
+  diagonal: boolean
 ) {
   const visitedInOrder = [];
   start.distance = 0;
@@ -12,7 +14,7 @@ export default function DFS(
   let unvisited = [];
   unvisited.push(start);
   while (unvisited.length) {
-    const curr = unvisited.shift();
+    const curr: any = unvisited.shift();
     if (!curr || curr.isWall) continue;
     if (curr == finish) {
       visitedInOrder.push(finish);
@@ -20,13 +22,17 @@ export default function DFS(
     }
     curr.isVisited = true;
     visitedInOrder.push(curr);
-    unvisited = [...unvisited, ...updateNeighbourNodes(tree, curr)];
+    unvisited = [...unvisited, ...updateNeighbourNodes(tree, curr, diagonal)];
   }
   return visitedInOrder;
 }
 
-function updateNeighbourNodes(tree: NodeType[][], curr: NodeType) {
-  const neighbours = getNeighbours(tree, curr);
+function updateNeighbourNodes(
+  tree: NodeType[][],
+  curr: NodeType,
+  diagonal: boolean
+) {
+  const neighbours = getNeighbours(tree, curr, diagonal);
   const reN: NodeType[] = [];
   neighbours.forEach((n) => {
     if (!n.isVisited && !n.previousNode) {
