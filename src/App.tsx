@@ -22,7 +22,7 @@ function App() {
     });
     const body: any = document.querySelector("body");
     body.style.minWidth = `${columns * 28.94 + 60}px`;
-  }, [pathfinding]);
+  }, []);
 
   return (
     <div className="App">

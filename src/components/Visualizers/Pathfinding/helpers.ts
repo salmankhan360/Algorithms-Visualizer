@@ -242,9 +242,11 @@ const bothDirections = (
     tree: NodeType[][],
     start: NodeType,
     finish: NodeType,
-    heuristics: string
+    heuristics: string,
+    diagonal: boolean
   ) => NodeType[],
-  heuristics: string = "manhattan"
+  heuristics: string = "manhattan",
+  diagonal: boolean
 ) => {
   const finalVisited: NodeType[] = [];
   const {
@@ -261,13 +263,15 @@ const bothDirections = (
     copyTree,
     start,
     finish,
-    heuristics
+    heuristics,
+    diagonal
   );
   const visitedInOrder2: NodeType[] = selectedAlgorithm(
     copyTree2,
     finish2,
     start2,
-    heuristics
+    heuristics,
+    diagonal
   );
   const visited1Hash: any = {};
   const visited2Hash: any = {};
@@ -324,21 +328,29 @@ export function getBidirectionalNodes(
     finish: NodeType,
     heuristics: string
   ) => NodeType[],
-  heuristics: string = "manhattan"
+  heuristics: string = "manhattan",
+  diagonal: boolean
 ) {
   coordinates = clone(coordinates);
   if (coordinates.bomb) {
     const coordinatesCopy = clone(coordinates);
     coordinates.finish = clone(coordinatesCopy.bomb);
     const { visitedInOrder: bombedInOrder, pathArr: bombedPath } =
-      bothDirections(coordinates, tree, selectedAlgorithm, heuristics);
+      bothDirections(
+        coordinates,
+        tree,
+        selectedAlgorithm,
+        heuristics,
+        diagonal
+      );
     coordinates.start = clone(coordinatesCopy.bomb);
     coordinates.finish = clone(coordinatesCopy.finish);
     const { visitedInOrder, pathArr } = bothDirections(
       coordinates,
       tree,
       selectedAlgorithm,
-      heuristics
+      heuristics,
+      diagonal
     );
     return { visitedInOrder, pathArr, bombedPath, bombedInOrder };
   } else {
@@ -346,7 +358,8 @@ export function getBidirectionalNodes(
       coordinates,
       tree,
       selectedAlgorithm,
-      heuristics
+      heuristics,
+      diagonal
     );
     return {
       visitedInOrder,
@@ -371,9 +384,11 @@ export function getSingleDirectionalNodes(
     tree: NodeType[][],
     start: NodeType,
     finish: NodeType,
-    heuristics: string
+    heuristics: string,
+    diagonal: boolean
   ) => NodeType[] | undefined,
-  heuristics: string
+  heuristics: string,
+  diagonal: boolean
 ) {
   const {
     start: { x: sX, y: sY },
@@ -396,13 +411,20 @@ export function getSingleDirectionalNodes(
     const finish2 = copyTree2[bX][bY];
     start = copyTree[bX][bY];
     bombedFinish = finish2;
-    bombedInOrder = selectedAlgorithm(copyTree2, start2, finish2, heuristics);
+    bombedInOrder = selectedAlgorithm(
+      copyTree2,
+      start2,
+      finish2,
+      heuristics,
+      diagonal
+    );
   }
   const visitedInOrder: NodeType[] | undefined = selectedAlgorithm(
     copyTree,
     start,
     finish,
-    heuristics
+    heuristics,
+    diagonal
   );
   let pathArr = getAllPrevNodes(finish);
   let bombedPath = bombedFinish ? getAllPrevNodes(bombedFinish) : [];

@@ -18,4 +18,6 @@ export interface NodeType {
   searching: boolean;
   previousNode?: NodeType;
   isBomb?: boolean;
+  weight?: number;
+  setId?: number;
 }
