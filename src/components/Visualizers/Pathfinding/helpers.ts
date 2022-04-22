@@ -105,7 +105,6 @@ export function visualize(
 function getAllPrevNodes(node: NodeType, prevNodes: NodeType[] = []) {
   const { previousNode } = node;
   if (previousNode) {
-    console.log(prevNodes);
     prevNodes.unshift(previousNode);
     getAllPrevNodes(previousNode, prevNodes);
   }
@@ -125,7 +124,7 @@ function visualizePath(
       const timeout = setTimeout(() => {
         addUniqueClass("pathAnim", id);
         addUniqueClass("path", id);
-        // addUltraUniqueClass('path-head');
+        addUltraUniqueClass("head", `${x}-${y}`);
       }, i * 1.2 * speed);
       allTimeouts.push(timeout);
     } else {
@@ -153,9 +152,11 @@ export function resetAllNodes(tree: NodeType[][], isWalls: boolean = false) {
         "bombedAnim",
         "path",
         "searchAnim",
-        "pathAnim",
-        isWalls ? "wall-node" : "shutah"
+        "pathAnim"
       );
+      if (isWalls) {
+        nodeTag?.classList?.remove("wall-node", "wall-anim", "wall-spanning");
+      }
     })
   );
 }
@@ -195,7 +196,7 @@ export const drawPattern = (
       const { x, y } = node;
       const nodeTag: any = document.getElementById(`${x}-${y}`);
       if (!node.isStart && !node.isFinish && !node.isBomb) {
-        nodeTag.classList.add("wall-spanning");
+        nodeTag.classList.add("wall-node");
         treeCopy[x][y].isWall = true;
       }
     });
@@ -203,11 +204,9 @@ export const drawPattern = (
       const { x, y } = node;
       const nodeTag: any = document.getElementById(`${x}-${y}`);
       let time = setTimeout(() => {
-        const node = treeCopy[x][y];
-        if (!node.isStart && !node.isFinish && !node.isBomb) {
-          nodeTag.classList.remove("wall-spanning");
-          treeCopy[x][y].isWall = false;
-        }
+        nodeTag.classList.remove("wall-node");
+        addUltraUniqueClass("head", `${x}-${y}`);
+        treeCopy[x][y].isWall = false;
       }, speed * i);
       allTimeouts.push(time);
     });
@@ -219,6 +218,9 @@ export const drawPattern = (
         const node = treeCopy[x][y];
         if (!node.isStart && !node.isFinish && !node.isBomb) {
           nodeTag.classList.add("wall-node");
+          nodeTag.classList.add("wall-anim");
+          addUltraUniqueClass("head", `${x}-${y}`);
+
           treeCopy[x][y].isWall = true;
         }
       }, speed * i);
@@ -229,6 +231,8 @@ export const drawPattern = (
   let time = setTimeout(() => {
     onFinish();
     setTree(treeCopy);
+
+    document.querySelector(".head")?.classList.remove("head");
   }, speed * pattern.length);
   allTimeouts.push(time);
   onStart(allTimeouts);
@@ -430,4 +434,13 @@ export function getSingleDirectionalNodes(
   let bombedPath = bombedFinish ? getAllPrevNodes(bombedFinish) : [];
 
   return { visitedInOrder, pathArr, bombedInOrder, bombedPath };
+}
+
+export function makeWall(x: number, y: number) {
+  const nodeTag = document.getElementById(`${x}-${y}`);
+  nodeTag?.classList.add("wall-anim", "wall-node");
+}
+export function removeWall(x: number, y: number) {
+  const nodeTag = document.getElementById(`${x}-${y}`);
+  nodeTag?.classList.remove("wall-anim", "wall-node");
 }

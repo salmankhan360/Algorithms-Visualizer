@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Node from "./Node";
 import { CoordinatesType, NodeType } from "../../../Types";
-
+import { makeWall, removeWall } from "./helpers";
 interface Props {
   tree: NodeType[][];
   setTree: (tree: NodeType[][]) => void;
@@ -21,7 +21,7 @@ export default function Tree(props: Props) {
     useState<CoordinatesClickType | null>();
 
   // This component is a little bit dirty because of the advance event listners
-  // I'm not sure if it's the best way to do it, but it works for me
+  // I'm not sure if it's the best way to do it, but it works for me :)
 
   const handleCoordinates = (node: NodeType) => {
     const { x, y } = node;
@@ -72,7 +72,12 @@ export default function Tree(props: Props) {
       coordinatesClick
     )
       return;
+
+    if (!node.isWall) makeWall(x, y);
+    else removeWall(x, y);
+
     const changedNode = { ...node, isWall: !node.isWall };
+
     const changedTree = tree.slice();
     changedTree[x][y] = changedNode;
     setTree(changedTree);
@@ -97,6 +102,7 @@ export default function Tree(props: Props) {
           </div>
         ))}
       </div>
+      <div id="mover"></div>
     </div>
   );
 }
