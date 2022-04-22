@@ -1,4 +1,4 @@
-import { NodeType } from "../../Types";
+import { NodeType, WallsInOrder } from "../../Types";
 
 interface Sets {
   [key: string]: NodeType[];
@@ -11,7 +11,7 @@ export function kruskalsMaze(
   tree: NodeType[][],
   type: "set-spanning" | "normal" = "normal"
 ) {
-  const wallsInOrder: any = [];
+  const wallsInOrder: WallsInOrder = [];
   const rows = tree.length;
   const columns = tree[0].length;
 
@@ -90,7 +90,7 @@ function connect(
   nodeA: NodeType,
   nodeB: NodeType,
   sets: Sets,
-  wallsInOrder: NodeType[]
+  wallsInOrder: WallsInOrder
 ) {
   const { setId: idA } = nodeA;
   const { setId: idB } = nodeB;

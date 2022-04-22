@@ -12,6 +12,7 @@ const Icons = {
 };
 
 interface Props extends NodeType {
+  dissableAnimation?: boolean;
   handleNodeClick: (x: number, y: number, eventType?: string) => void;
 }
 
@@ -25,6 +26,7 @@ export default function Node(props: Props) {
     : isFinish
     ? "finish"
     : "";
+
   return (
     <div
       className="boxWrapper"
@@ -33,7 +35,7 @@ export default function Node(props: Props) {
       onMouseOver={() => handleNodeClick(x, y, "onMouseOver")}
     >
       <div
-        className={`box ${isWall ? "wall-node" : ""}`}
+        className={`box ${isWall ? "" : ""}`}
         id={`${x}-${y}`}
         style={{
           pointerEvents: "none",

@@ -20,4 +20,17 @@ export interface NodeType {
   isBomb?: boolean;
   weight?: number;
   setId?: number;
+
+  // For Mazes
+  isCell?: boolean;
+  isEdge?: boolean;
+  isChecked?: boolean;
 }
+
+interface WallInOrder {
+  x: number;
+  y: number;
+  [key: string]: any;
+}
+
+export type WallsInOrder = WallInOrder[];
