@@ -103,3 +103,56 @@ export function getHeuristics(
   const { x: fX, y: fY } = finish;
   return allHeuristics[heuristics](cX, cY, fX, fY);
 }
+
+let windowC: any = window; // had to do it to remove TS error
+var ctx: any = new (windowC.AudioContext || windowC.webkitAudioContext)();
+var osc = ctx.createOscillator();
+var volume = ctx.createGain();
+osc.type = "sine";
+osc.connect(volume);
+volume.connect(ctx.destination);
+volume.gain.value = 0;
+osc.start();
+
+let pausedByFunc = false;
+function playNote(
+  frequency: number,
+  noteType: "sine" | "square" | "sawtooth" | "triangle"
+) {
+  const tag: any = document.getElementById("currSound");
+  const pauser = document.getElementById("audio-pauser");
+  if (!tag.paused) {
+    pauser?.click();
+    tag.pause();
+    pausedByFunc = true;
+  }
+  osc.type = noteType;
+  volume.gain.value = tag.volume;
+  osc.frequency.setValueAtTime(frequency, ctx.currentTime);
+  osc.resume();
+}
+
+export function playNodeSound(
+  x: number,
+  y: number,
+  maxRow: number,
+  maxCol: number,
+  noteType: "sine" | "square" | "sawtooth" | "triangle"
+) {
+  const total = maxRow + maxCol;
+  const percent = (x + y) / total;
+  const maxFreq = 1000;
+  const perc = percent * maxFreq;
+  playNote(perc, noteType);
+}
+
+export function stopNote() {
+  volume.gain.value = 0;
+  if (pausedByFunc) {
+    const tag: any = document.getElementById("currSound");
+    const player: any = document.getElementById("audio-player");
+    tag.play();
+    player.click();
+    pausedByFunc = false;
+  }
+}

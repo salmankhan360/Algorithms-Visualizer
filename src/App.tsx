@@ -7,7 +7,7 @@ function App() {
 
   React.useEffect(() => {
     const maxWidth = window.innerWidth - 60;
-    const maxHeight = window.innerHeight - 250;
+    const maxHeight = window.innerHeight - 100;
 
     let columns = Math.floor(maxWidth / 28.94);
     let rows = Math.floor(maxHeight / 28.94);
