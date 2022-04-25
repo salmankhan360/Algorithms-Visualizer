@@ -56,6 +56,16 @@ export default function AudioPlayer() {
   return (
     <>
       <audio src={swapEffect} style={{ display: "none" }} id="swap"></audio>
+      <div
+        id="audio-pauser"
+        style={{ display: "none" }}
+        onClick={() => setPlaying(false)}
+      ></div>
+      <div
+        id="audio-player"
+        style={{ display: "none" }}
+        onClick={() => setPlaying(true)}
+      ></div>
       <audio
         id="currSound"
         src={songs[song]}

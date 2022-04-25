@@ -1,5 +1,10 @@
 import { CoordinatesType, NodeType } from "../../../Types";
-import { changePrevNodes, sortByProp } from "../../../Utils/Pathfinding";
+import {
+  changePrevNodes,
+  sortByProp,
+  playNodeSound,
+  stopNote,
+} from "../../../Utils/Pathfinding";
 import { addUniqueClass as addUltraUniqueClass } from "../Sorting/helpers";
 export function locateCoordinates(
   table: NodeType[][],
@@ -152,7 +157,8 @@ export function resetAllNodes(tree: NodeType[][], isWalls: boolean = false) {
         "bombedAnim",
         "path",
         "searchAnim",
-        "pathAnim"
+        "pathAnim",
+        "head"
       );
       if (isWalls) {
         nodeTag?.classList?.remove("wall-node", "wall-anim", "wall-spanning");
@@ -184,6 +190,7 @@ export const drawPattern = (
   isSpanning: boolean,
   speed: number,
   tree: NodeType[][],
+  noteType: "sine" | "square" | "triangle" | "sawtooth",
   setTree: (tree: NodeType[][]) => void,
   onFinish: () => void,
   onStart: (timeouts: any) => void
@@ -207,6 +214,7 @@ export const drawPattern = (
         nodeTag.classList.remove("wall-node");
         addUltraUniqueClass("head", `${x}-${y}`);
         treeCopy[x][y].isWall = false;
+        playNodeSound(x, y, tree.length, tree[0].length, noteType);
       }, speed * i);
       allTimeouts.push(time);
     });
@@ -220,6 +228,7 @@ export const drawPattern = (
           nodeTag.classList.add("wall-node");
           nodeTag.classList.add("wall-anim");
           addUltraUniqueClass("head", `${x}-${y}`);
+          playNodeSound(x, y, tree.length, tree[0].length, noteType);
 
           treeCopy[x][y].isWall = true;
         }
@@ -231,7 +240,7 @@ export const drawPattern = (
   let time = setTimeout(() => {
     onFinish();
     setTree(treeCopy);
-
+    stopNote();
     document.querySelector(".head")?.classList.remove("head");
   }, speed * pattern.length);
   allTimeouts.push(time);

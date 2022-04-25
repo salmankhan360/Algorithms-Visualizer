@@ -8,6 +8,7 @@ import {
   getBidirectionalNodes,
   getSingleDirectionalNodes,
 } from "./helpers";
+import { stopNote } from "../../../Utils/Pathfinding";
 import { parse } from "query-string";
 import { Box } from "@mui/system";
 import {
@@ -68,6 +69,7 @@ interface QueryProps {
   direction?: "single" | "double";
   heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
   diagonal?: "Diagonal" | "No Diagonal";
+  audioNote?: "sine" | "square" | "sawtooth" | "triangle";
 }
 interface Props {
   columns: number;
@@ -86,6 +88,7 @@ export default function Pathfinding(props: Props) {
     direction: qsDirection = "double",
     heuristics = "chebyshev",
     diagonal = "Diagnol",
+    audioNote = "sine",
   } = qs;
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
     start: { x: Math.floor(rows / 2) - 5, y: 5 },
@@ -125,6 +128,7 @@ export default function Pathfinding(props: Props) {
     resetAllNodes(tree, true);
     setVisualized(false);
     setIsSearching(false);
+    stopNote();
   };
 
   const onFinish = () => {
@@ -156,25 +160,28 @@ export default function Pathfinding(props: Props) {
     if (!visitedInOrder) return;
     if (speed != "0") setIsSearching(true);
     setTimeout(() => resetAllNodes(tree), 0);
+    const currSpeed =
+      qsDirection == "single" ? speeds[speed] : speeds[speed] / 2;
     if (isBomb) {
       const deelay =
-        speeds[speed] * bombedInOrder.length + speeds[speed] * pathArr.length;
+        currSpeed * bombedInOrder.length + currSpeed * pathArr.length;
       let t1: any = setTimeout(
         () =>
           bombedPath.length > 1 &&
-          visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart),
+          visualize(visitedInOrder, currSpeed, pathArr, onFinish, onStart),
         deelay
       );
       visualize(
         bombedInOrder,
-        speeds[speed],
+        currSpeed,
         bombedPath,
-        onFinish,
+
+        () => {},
         (t2) => onStart([...t2, t1]),
         isBomb
       );
     } else {
-      visualize(visitedInOrder, speeds[speed], pathArr, onFinish, onStart);
+      visualize(visitedInOrder, currSpeed, pathArr, onFinish, onStart);
     }
   };
 
@@ -192,6 +199,7 @@ export default function Pathfinding(props: Props) {
       isSpanning,
       speeds[qsSpeed],
       newTree,
+      audioNote,
       setTree,
       onFinish,
       onStart
@@ -207,6 +215,7 @@ export default function Pathfinding(props: Props) {
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
 
   const queryFeilds: any = {
+    audioNote: ["sine", "square", "sawtooth", "triangle"],
     speed: ["medium", "slow", "fast"],
     algorithm: ["aStar", "Greedy-Best FS", "djikstra", "DFS", "BFS"],
     maze: [
