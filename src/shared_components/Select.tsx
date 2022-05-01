@@ -35,8 +35,8 @@ export default function Select(props: Props) {
       onOpen={onOpen}
       onClose={onClose}
       sx={{
-        minWidth: "220px",
-        fontSize: "18px",
+        minWidth: "190px",
+        fontSize: "16px",
         textTransform: "capitalize",
         backgroundColor: active ? "#6c757d" : "transparent",
         color: active ? "white" : "#000",

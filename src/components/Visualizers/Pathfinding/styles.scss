@@ -73,36 +73,28 @@
   }
 }
 .boxWrapper {
-  border: 1px solid rgba(37, 37, 37, 0.438);
-
-  height: fit-content;
-  width: fit-content;
-  height: 25px;
-  transform: scale(1.01);
-  width: 25px;
+ 
   display: inline-block;
 }
 .box {
-  transform: scale(1.1);
-  height: 25px;
-  width: 25px;
+  border-bottom: 1px solid rgba(37, 37, 37, 0.438);
+  border-right:  1px solid rgba(37, 37, 37, 0.438);
   display: inline-block;
   overflow: hidden;
-  & img {
-    min-height: 25px !important;
-  }
+min-height: 100%;
+min-width: 100%;
+max-width: 100%;
+max-height: 100%;
 }
 .row {
-  max-height: 25.6px;
+display: flex
 }
 .bombed {
   background-color: rgba(20, 206, 144, 0.774);
 }
 .bombedAnim {
   animation-name: bombAnimation;
-  animation-duration: 2s;
   animation-timing-function: ease-out;
-  animation-delay: 0;
   animation-direction: alternate;
   animation-iteration-count: 1;
   animation-play-state: running;
@@ -113,9 +105,7 @@
 }
 .searchAnim {
   animation-name: visitedAnimation;
-  animation-duration: 2s;
   animation-timing-function: ease-out;
-  animation-delay: 0;
   animation-direction: alternate;
   animation-iteration-count: 1;
   animation-play-state: running;
@@ -127,7 +117,7 @@
   background-color: rgb(0, 0, 0) !important;
 }
 .pathAnim {
-  animation: shortestPath 1500ms;
+  animation: shortestPath;
   animation-play-state: running;
 }
 .wall-node {
@@ -139,6 +129,7 @@
 .wall-anim {
   @extend .wall-node;
   animation: wallAnimation 200ms;
+  animation-duration: 200ms !important;
 }
 
 .head {
@@ -256,6 +247,8 @@
   width: fit-content;
   margin: 0 auto;
   background-color: #fff;
+  border-top:  1px solid rgba(37, 37, 37, 0.438);
+  border-left:  1px solid rgba(37, 37, 37, 0.438);;
 }
 
 .growAnim {

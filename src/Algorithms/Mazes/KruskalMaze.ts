@@ -7,7 +7,7 @@ interface CellHash {
   [key: string]: boolean;
 }
 
-export function kruskalsMaze(
+export default function kruskalsMaze(
   tree: NodeType[][],
   type: "set-spanning" | "normal" = "normal"
 ) {

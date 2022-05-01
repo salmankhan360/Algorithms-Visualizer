@@ -16,6 +16,7 @@ interface CoordinatesClickType {
 }
 export default function Tree(props: Props) {
   const { tree, setTree, coordinates, setCoordinates, isSearching } = props;
+
   const [isClicked, setIsClicked] = useState(false);
   const [coordinatesClick, setCoordinatesClick] =
     useState<CoordinatesClickType | null>();
