@@ -107,18 +107,25 @@ export function getHeuristics(
 let windowC: any = window; // had to do it to remove TS error
 var ctx: any = new (windowC.AudioContext || windowC.webkitAudioContext)();
 var osc = ctx.createOscillator();
+osc.frequency.value = 0;
 var volume = ctx.createGain();
 osc.type = "sine";
 osc.connect(volume);
 volume.connect(ctx.destination);
 volume.gain.value = 0;
-osc.start();
+
+let isStarted = false
 
 let pausedByFunc = false;
-function playNote(
+export function playNote(
   frequency: number,
-  noteType: "sine" | "square" | "sawtooth" | "triangle"
+  noteType: "sine" | "square" | "sawtooth" | "triangle",
+  transition: number
 ) {
+  if(!isStarted){
+    osc.start();
+    isStarted = true
+  }
   const tag: any = document.getElementById("currSound");
   const pauser = document.getElementById("audio-pauser");
   if (!tag.paused) {
@@ -127,9 +134,11 @@ function playNote(
     pausedByFunc = true;
   }
   osc.type = noteType;
-  volume.gain.value = tag.volume;
-  osc.frequency.setValueAtTime(frequency, ctx.currentTime);
-  osc.resume();
+  volume.gain.linearRampToValueAtTime(tag.volume, ctx.currentTime + 0.1);
+  osc.frequency.linearRampToValueAtTime(
+    frequency,
+    ctx.currentTime + transition
+  );
 }
 
 export function playNodeSound(
@@ -137,22 +146,29 @@ export function playNodeSound(
   y: number,
   maxRow: number,
   maxCol: number,
-  noteType: "sine" | "square" | "sawtooth" | "triangle"
+  noteType: "sine" | "square" | "sawtooth" | "triangle" | "off",
+  speed: number
 ) {
+  if (noteType == "off") return;
   const total = maxRow + maxCol;
   const percent = (x + y) / total;
   const maxFreq = 1000;
   const perc = percent * maxFreq;
-  playNote(perc, noteType);
+  const transition = 0.1;
+  playNote(perc, noteType, transition);
 }
 
 export function stopNote() {
-  volume.gain.value = 0;
-  if (pausedByFunc) {
-    const tag: any = document.getElementById("currSound");
-    const player: any = document.getElementById("audio-player");
-    tag.play();
-    player.click();
-    pausedByFunc = false;
-  }
+  setTimeout(() => {
+    volume.gain.linearRampToValueAtTime(0, ctx.currentTime + 0.3);
+    osc.frequency.linearRampToValueAtTime(0, ctx.currentTime + 0.2);
+
+    if (pausedByFunc) {
+      const tag: any = document.getElementById("currSound");
+      const player: any = document.getElementById("audio-player");
+      tag.play();
+      player.click();
+      pausedByFunc = false;
+    }
+  }, 100);
 }

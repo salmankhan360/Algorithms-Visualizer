@@ -7,7 +7,9 @@ import {
   drawPattern,
   getBidirectionalNodes,
   getSingleDirectionalNodes,
+  getRandomCoordinates
 } from "./helpers";
+
 import { stopNote } from "../../../Utils/Pathfinding";
 import { parse } from "query-string";
 import { Box } from "@mui/system";
@@ -18,16 +20,21 @@ import {
   BFS,
   BestFS,
 } from "../../../Algorithms/Pathfinding";
+import {
+  PrimzMaze,
+  RecursiveDivision,
+  kruskalsMaze,
+  RecursiveBacktracking,
+  sideWinder,
+  huntAndKill,
+} from "../../../Algorithms/Mazes";
 import { NodeType, CoordinatesType } from "../../../Types";
 import "./styles.scss";
 import Tree from "./Tree";
 import NodeInfo from "./NodeInfo";
 import SelectSettings from "../../../shared_components/SelectSettings";
 
-import RecursiveDivision from "../../../Algorithms/Mazes/RecursiveDivision";
 import Actions from "./Actions";
-import { kruskalsMaze } from "../../../Algorithms/Mazes/KruskalMaze";
-import PrimzMaze from "../../../Algorithms/Mazes/PrimzMaze";
 
 const allAlgorithms = {
   aStar,
@@ -40,66 +47,104 @@ const directions = {
   single: getSingleDirectionalNodes,
   double: getBidirectionalNodes,
 };
-const speeds = {
-  fast: 10,
-  slow: 40,
-  medium: 20,
-  "0": 0,
-};
+
 const allPatterns = {
   "Prim's Spanning": PrimzMaze,
   "Recursive Division": RecursiveDivision,
   "Kruskal Spanning": kruskalsMaze,
   "Kruskal Set-Spanning": (tree: NodeType[][]) =>
     kruskalsMaze(tree, "set-spanning"),
+  BackTracking: RecursiveBacktracking,
+  "side-winder": sideWinder,
+  "Hunt and Kill": huntAndKill,
 };
 const spanningPatterns: { [key: string]: boolean } = {
   "Kruskal Spanning": true,
   "Kruskal Set-Spanning": true,
   "Prim's Spanning": true,
+  BackTracking: true,
+  "side-winder": true,
+  "Hunt and Kill": true,
 };
 interface QueryProps {
   algorithm?: "aStar" | "djikstra" | "DFS" | "BFS" | "Greedy-Best FS";
-  speed?: "fast" | "slow" | "medium" | "0";
+  speed?: number;
   maze?:
-    | "Prim's Spanning"
-    | "Recursive Division"
-    | "Kruskal Spanning"
-    | "Kruskal Set-Spanning";
+  | "Prim's Spanning"
+  | "Recursive Division"
+  | "Kruskal Spanning"
+  | "Kruskal Set-Spanning"
+  | "BackTracking"
+  | "Hunt and Kill"
+  | "side-winder";
   direction?: "single" | "double";
   heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
   diagonal?: "Diagonal" | "No Diagonal";
-  audioNote?: "sine" | "square" | "sawtooth" | "triangle";
-}
-interface Props {
-  columns: number;
-  rows: number;
+  audioNote?: "sine" | "square" | "sawtooth" | "triangle" | "off";
+  size?: number;
 }
 
-export default function Pathfinding(props: Props) {
+export default function Pathfinding() {
   const [isVisualized, setVisualized] = useState(false);
-  const { columns, rows } = props;
+
   const { search } = useLocation();
   const qs: QueryProps = parse(search);
   const {
     algorithm = "aStar",
-    speed: qsSpeed = "medium",
-    maze = "Prim's Spanning",
-    direction: qsDirection = "double",
+    speed: qsSpeedRaw = 20,
+    maze = "BackTracking",
+    direction: qsDirection = "single",
     heuristics = "chebyshev",
     diagonal = "Diagnol",
-    audioNote = "sine",
+    audioNote = "triangle",
+    size = 30,
   } = qs;
+  const qsSpeed = Math.abs(qsSpeedRaw);
   const [coordinates, setCoordinates] = useState<CoordinatesType>({
-    start: { x: Math.floor(rows / 2) - 5, y: 5 },
-    finish: { x: Math.floor(rows / 2) + 5, y: Math.floor(columns) - 5 },
-    bomb: { x: Math.floor(rows / 2), y: Math.floor(columns / 2) },
+    start: { x: 0, y: 0 },
+    finish: { x: 1, y: 1 },
   });
-  const [tree, setTree] = useState<NodeType[][]>(
-    constructNodes(rows, columns, coordinates)
-  );
+  const [tree, setTree] = useState<NodeType[][]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [clearTimeouts, setClearTimeouts] = useState<any>([]);
+
+  const boxSize = size > 16 ? size : 16;
+  useEffect(() => buildTree(), [boxSize]);
+
+  useEffect(() => {
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  function handleResize() {
+    const resizeBtn = document.getElementById("resize-btn");
+    resizeBtn?.click();
+  }
+  function buildTree() {
+    if (isSearching) return;
+    const { columns, rows } = calculateDimensions(boxSize);
+    const newCoordinates = {
+      start: { x: Math.floor(rows / 2) - 5, y: 5 },
+      finish: { x: Math.floor(rows / 2) + 5, y: Math.floor(columns) - 5 },
+      // bomb: { x: Math.floor(rows / 2), y: Math.floor(columns / 2) },
+    };
+    resetAllNodes(tree, true);
+    setCoordinates(newCoordinates);
+    setTree(constructNodes(rows, columns, newCoordinates));
+  }
+
+  const calculateDimensions = (size: number) => {
+    const maxWidth = window.innerWidth - 70;
+    const maxHeight = window.innerHeight - 250;
+
+    let columns = Math.floor(maxWidth / size);
+    let rows = Math.floor(maxHeight / size);
+
+    columns = columns % 2 == 0 ? columns + 1 : columns;
+    rows = rows % 2 == 0 ? rows + 1 : rows;
+
+    return { columns, rows };
+  };
 
   const toggleBomb = () => {
     const { bomb, ...rest } = coordinates;
@@ -108,10 +153,12 @@ export default function Pathfinding(props: Props) {
       setTree(tree);
       setCoordinates(rest);
     } else {
+      const { x, y } = getRandomCoordinates(tree)
       const bomb = {
-        x: Math.floor(Math.random() * rows),
-        y: Math.floor(Math.random() * columns),
+        x,
+        y
       };
+
       tree[bomb.x][bomb.y].isBomb = true;
       setTree(tree);
       setCoordinates({
@@ -124,7 +171,8 @@ export default function Pathfinding(props: Props) {
     clearTimeouts.forEach((timeout: any) => {
       clearTimeout(timeout);
     });
-    setTree(constructNodes(rows, columns, coordinates));
+
+    setTree(constructNodes(tree.length, tree[0].length, coordinates));
     resetAllNodes(tree, true);
     setVisualized(false);
     setIsSearching(false);
@@ -133,11 +181,12 @@ export default function Pathfinding(props: Props) {
 
   const onFinish = () => {
     document.querySelector(".head")?.classList.remove("head");
+    stopNote();
     setIsSearching(false);
   };
   const onStart = (timeouts: any) => setClearTimeouts(timeouts);
 
-  const handleStart = (speed: QueryProps["speed"] = "0") => {
+  const handleStart = (speed = 0) => {
     if (!algorithm || isSearching) return;
     setVisualized(true);
 
@@ -158,30 +207,53 @@ export default function Pathfinding(props: Props) {
       diagonal == "Diagnol"
     );
     if (!visitedInOrder) return;
-    if (speed != "0") setIsSearching(true);
-    setTimeout(() => resetAllNodes(tree), 0);
-    const currSpeed =
-      qsDirection == "single" ? speeds[speed] : speeds[speed] / 2;
+    if (speed != 0) setIsSearching(true);
+    resetAllNodes(tree);
+    const currSpeed = speed;
     if (isBomb) {
       const deelay =
         currSpeed * bombedInOrder.length + currSpeed * pathArr.length;
       let t1: any = setTimeout(
         () =>
           bombedPath.length > 1 &&
-          visualize(visitedInOrder, currSpeed, pathArr, onFinish, onStart),
+          visualize(
+            visitedInOrder,
+            currSpeed,
+            pathArr,
+            tree.length,
+            tree[0].length,
+            audioNote,
+            onFinish,
+            onStart
+          ),
         deelay
       );
       visualize(
         bombedInOrder,
         currSpeed,
         bombedPath,
-
-        () => {},
+        tree.length,
+        tree[0].length,
+        audioNote,
+        () => {
+          stopNote();
+          document.querySelector(".head")?.classList.remove("head");
+        },
         (t2) => onStart([...t2, t1]),
         isBomb
       );
     } else {
-      visualize(visitedInOrder, currSpeed, pathArr, onFinish, onStart);
+      visualize(
+        visitedInOrder,
+        currSpeed,
+        pathArr,
+        tree.length,
+        tree[0].length,
+        audioNote,
+
+        onFinish,
+        onStart
+      );
     }
   };
 
@@ -190,14 +262,14 @@ export default function Pathfinding(props: Props) {
     isVisualized && setVisualized(false);
     resetAllNodes(tree, true);
     setIsSearching(true);
-    const newTree = constructNodes(rows, columns, coordinates);
+    const newTree = constructNodes(tree.length, tree[0].length, coordinates);
     const walls = allPatterns[maze](newTree);
 
     const isSpanning = spanningPatterns[maze];
     drawPattern(
       walls,
       isSpanning,
-      speeds[qsSpeed],
+      qsSpeed,
       newTree,
       audioNote,
       setTree,
@@ -209,28 +281,34 @@ export default function Pathfinding(props: Props) {
   useEffect(() => {
     if (!isVisualized) return;
     resetAllNodes(tree);
-    handleStart("0");
+    handleStart(0);
   }, [tree, heuristics, coordinates]);
 
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
 
   const queryFeilds: any = {
-    audioNote: ["sine", "square", "sawtooth", "triangle"],
-    speed: ["medium", "slow", "fast"],
+    audioNote: ["triangle", "sine", "square", "sawtooth", "off"],
     algorithm: ["aStar", "Greedy-Best FS", "djikstra", "DFS", "BFS"],
     maze: [
+      "BackTracking",
       "Prim's Spanning",
-      "Kruskal Spanning",
       "Recursive Division",
+      "Kruskal Spanning",
       "Kruskal Set-Spanning",
+      "Hunt and Kill",
     ],
-    direction: ["double", "single"],
+    direction: ["single", "double"],
     diagonal: ["Diagnol", "No Diagnol"],
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
     queryFeilds.heuristics = ["chebyshev", "euclidean", "octile", "manhattan"];
   return (
     <div className="pathfindingWrapper">
+      <button
+        style={{ display: "none" }}
+        onClick={() => buildTree()}
+        id={"resize-btn"}
+      ></button>
       <NodeInfo />
       <div onClick={() => handleStart(qsSpeed)} id="visualize" />
       <div className="pathfindingContainer">

@@ -14,6 +14,7 @@ export default function Actions(props: PropsType) {
     <Box className="flexCenter" marginTop="30px" minWidth="max-content">
       <SelectSettings
         feilds={{
+          audioNote: ["sine", "square", "triangle", "sawtooth", "off"],
           speed: ["slow", "medium", "fast"],
           algorithm: [
             "quick sort",
@@ -22,7 +23,7 @@ export default function Actions(props: PropsType) {
             "insertion sort",
             "selection sort",
           ],
-          size: ["25", "30", "15"],
+          size: ["49","35","25", "15"],
         }}
         disabled={visualizing}
       />

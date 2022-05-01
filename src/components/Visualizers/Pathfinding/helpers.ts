@@ -73,6 +73,9 @@ export function visualize(
   visitedInOrder: NodeType[],
   speed: number,
   pathArr: NodeType[],
+  maxRows: number,
+  maxCols: number,
+  noteType: "sine" | "square" | "sawtooth" | "triangle" | "off",
   onFinish: () => void,
   onStart: (timeouts: any) => void,
   isBomb: boolean = false
@@ -93,13 +96,23 @@ export function visualize(
           nodeTag.classList.add("searching");
           nodeTag.classList.add("searchAnim");
         }
+        playNodeSound(x, y, maxRows, maxCols, noteType, speed);
       }, speed * i);
       allTimeouts.push(timeout);
     }
   });
 
   const timeout = setTimeout(
-    () => visualizePath(pathArr, speed, onFinish, allTimeouts),
+    () =>
+      visualizePath(
+        pathArr,
+        speed,
+        maxRows,
+        maxCols,
+        noteType,
+        onFinish,
+        allTimeouts
+      ),
     speed * visitedInOrder.length
   );
   allTimeouts.push(timeout);
@@ -118,6 +131,9 @@ function getAllPrevNodes(node: NodeType, prevNodes: NodeType[] = []) {
 function visualizePath(
   pathArr: NodeType[],
   speed: number,
+  maxRows: number,
+  maxCols: number,
+  noteType: "sine" | "square" | "triangle" | "sawtooth" | "off",
   onFinish: () => void,
   allTimeouts: any[]
 ) {
@@ -130,6 +146,7 @@ function visualizePath(
         addUniqueClass("pathAnim", id);
         addUniqueClass("path", id);
         addUltraUniqueClass("head", `${x}-${y}`);
+        playNodeSound(x, y, maxRows, maxCols, noteType, speed);
       }, i * 1.2 * speed);
       allTimeouts.push(timeout);
     } else {
@@ -146,6 +163,7 @@ function visualizePath(
 }
 
 export function resetAllNodes(tree: NodeType[][], isWalls: boolean = false) {
+    
   tree.forEach((col) =>
     col.forEach((node) => {
       const { x, y } = node;
@@ -165,6 +183,7 @@ export function resetAllNodes(tree: NodeType[][], isWalls: boolean = false) {
       }
     })
   );
+
 }
 
 export function getRandomIndices(
@@ -190,11 +209,12 @@ export const drawPattern = (
   isSpanning: boolean,
   speed: number,
   tree: NodeType[][],
-  noteType: "sine" | "square" | "triangle" | "sawtooth",
+  noteType: "sine" | "square" | "triangle" | "sawtooth" | "off",
   setTree: (tree: NodeType[][]) => void,
   onFinish: () => void,
   onStart: (timeouts: any) => void
 ) => {
+ 
   const allTimeouts: any = [];
   const treeCopy = tree.map((row) => row.map((node) => ({ ...node })));
 
@@ -214,7 +234,7 @@ export const drawPattern = (
         nodeTag.classList.remove("wall-node");
         addUltraUniqueClass("head", `${x}-${y}`);
         treeCopy[x][y].isWall = false;
-        playNodeSound(x, y, tree.length, tree[0].length, noteType);
+        playNodeSound(x, y, tree.length, tree[0].length, noteType, speed);
       }, speed * i);
       allTimeouts.push(time);
     });
@@ -228,9 +248,8 @@ export const drawPattern = (
           nodeTag.classList.add("wall-node");
           nodeTag.classList.add("wall-anim");
           addUltraUniqueClass("head", `${x}-${y}`);
-          playNodeSound(x, y, tree.length, tree[0].length, noteType);
-
           treeCopy[x][y].isWall = true;
+          playNodeSound(x, y, tree.length, tree[0].length, noteType, speed);
         }
       }, speed * i);
       allTimeouts.push(time);
@@ -445,6 +464,17 @@ export function getSingleDirectionalNodes(
   return { visitedInOrder, pathArr, bombedInOrder, bombedPath };
 }
 
+export const getRandomCoordinates = (tree: NodeType[][]): NodeType => {
+  const rX = Math.floor(Math.random() * tree.length);
+  const rY = Math.floor(Math.random() * tree[0].length);
+
+  const node = tree[rX]?.[rY];
+
+  if (node && !node.isWall && !node.isStart && !node.isFinish) return node;
+
+  return getRandomCoordinates(tree);
+}
+
 export function makeWall(x: number, y: number) {
   const nodeTag = document.getElementById(`${x}-${y}`);
   nodeTag?.classList.add("wall-anim", "wall-node");
@@ -452,4 +482,7 @@ export function makeWall(x: number, y: number) {
 export function removeWall(x: number, y: number) {
   const nodeTag = document.getElementById(`${x}-${y}`);
   nodeTag?.classList.remove("wall-anim", "wall-node");
+}
+function noteType(x: number, y: number, maxCols: any, noteType: any) {
+  throw new Error("Function not implemented.");
 }

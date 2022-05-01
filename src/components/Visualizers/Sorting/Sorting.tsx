@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { getHeight, genRandomArray } from "./helpers";
 import { useLocation, useNavigate } from "react-router-dom";
 import { parse, stringify } from "query-string";
+import { stopNote } from "../../../Utils/Pathfinding";
 import { visualize, resetAllClasses, resetBars } from "./helpers";
 import {
   bubbleSort,
@@ -25,15 +26,16 @@ const algorithms: any = {
   "selection sort": selectionSort,
 };
 export default function Sorting() {
-  const [array, setArray] = React.useState(genRandomArray(30, 100));
+  const [array, setArray] = React.useState(genRandomArray(35, 100));
   const [visualizing, setVisualizing] = React.useState(false);
   const { search } = useLocation();
   const [clearTimeouts, setClearTimeouts] = React.useState<any>(null);
 
   const {
-    size = "30",
-    speed = "slow",
+    size = "35",
+    speed = "fast",
     algorithm: qsAlgorithm = "quick sort",
+    audioNote = "triangle",
   }: any = parse(search);
   const max = Math.max(...array);
 
@@ -49,13 +51,14 @@ export default function Sorting() {
   }, [array]);
 
   useEffect(() => {
-    if (size > 30) return;
+    if (size > 50) return;
     handleNewArr();
   }, [size]);
 
   const onFinish = (finishPile: number[] = []) => {
     setVisualizing(false);
     if (finishPile.length) setArray(finishPile);
+    stopNote()
   };
 
   const onStart = (timeouts: any) => {
@@ -67,7 +70,7 @@ export default function Sorting() {
     const loopSpeed = speeds[speed];
     const algorithm = algorithms[qsAlgorithm];
     const inOrder = algorithm(array.slice());
-    visualize(inOrder, loopSpeed, setArray, onFinish, onStart);
+    visualize(inOrder, loopSpeed,audioNote, setArray, onFinish, onStart);
   };
   const handleClearTimeouts = () => {
     if (clearTimeouts) {

@@ -1,3 +1,6 @@
+
+import { playNote } from "../../../Utils/Pathfinding";
+
 export function genRandomArray(
   size: number,
   max: number,
@@ -19,6 +22,7 @@ export const getHeight = (value: number, max: number) => (value / max) * 100;
 export const visualize = (
   inOrder: any,
   speed: number,
+  audioNote: "sine" | "square" | "triangle" | "sawtooth" | "off",
   setArr: (arr: number[]) => void,
   onFinish: (finishPile: number[]) => void,
   onStart: (timeouts: any) => void
@@ -41,12 +45,17 @@ export const visualize = (
         addUniqueClass("sortSearch1", String(j));
         addUniqueClass("sortSearch2", String(k));
         addUniqueClass("sortSearch3", String(z));
+        playSound(j, pile.length, audioNote);
+        playSound(k, pile.length, audioNote);
+        playSound(z, pile.length, audioNote);
         setArr(pile);
       } else if (pivote) {
-        performSwap(j, k, speed);
+        performSwap(j, k, speed, audioNote == "off");
         performPivote(String(pivote));
+        playSound(j, pile.length, audioNote);
       } else {
-        performSwap(j, k, speed);
+        playSound(j, pile.length, audioNote);
+        performSwap(j, k, speed, audioNote == "off");
       }
     }, i * speed);
     allTimeouts.push(timeoutBar);
@@ -68,8 +77,8 @@ function performPivote(id: string) {
   tweekNode.style.height = getComputedStyle(node).height;
 }
 
-function performSwap(i: number, j: number, speed: number) {
-  if (i !== j) {
+function performSwap(i: number, j: number, speed: number, playSwap: boolean = true) {
+  if (i !== j && playSwap)  {
     const speedPlay = (speed / 500) * 7;
     const audio: any = document.getElementById("swap");
     audio.playbackRate = 10 - speedPlay;
@@ -116,4 +125,14 @@ export function resetBars(array: number[]) {
       node.style.left = left;
     });
   });
+}
+
+
+function playSound(val: number, total:number, noteType: "sine" | "square" | "triangle" | "sawtooth" | "off") {
+  if (noteType == "off") return;
+  const percent = val / total;
+  const maxFreq = 1000;
+  const perc = percent * maxFreq;
+  const transition = 0.1;
+  playNote(perc, noteType, transition);
 }
