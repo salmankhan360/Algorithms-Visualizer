@@ -134,7 +134,9 @@ export function playNote(
     pausedByFunc = true;
   }
   osc.type = noteType;
-  volume.gain.linearRampToValueAtTime(tag.volume, ctx.currentTime + 0.1);
+  volume.gain.linearRampToValueAtTime(tag.volume/2, ctx.currentTime + 0.1);
+  console.log({osc
+  })
   osc.frequency.linearRampToValueAtTime(
     frequency,
     ctx.currentTime + transition
@@ -152,7 +154,7 @@ export function playNodeSound(
   if (noteType == "off") return;
   const total = maxRow + maxCol;
   const percent = (x + y) / total;
-  const maxFreq = 1000;
+  const maxFreq = 500;
   const perc = percent * maxFreq;
   const transition = 0.1;
   playNote(perc, noteType, transition);
