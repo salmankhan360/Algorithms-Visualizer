@@ -147,7 +147,7 @@ function visualizePath(
         addUniqueClass("path", id);
         addUltraUniqueClass("head", `${x}-${y}`);
         playNodeSound(x, y, maxRows, maxCols, noteType, speed);
-      }, i * 1.2 * speed);
+      }, i * 2 * speed);
       allTimeouts.push(timeout);
     } else {
       nodeTag.classList.add("path");
@@ -156,7 +156,7 @@ function visualizePath(
 
   const timeout = setTimeout(
     () => onFinish(),
-    (pathArr.length - 1) * 1.2 * speed
+    (pathArr.length - 1) * 2 * speed
   );
   allTimeouts.push(timeout);
   return;
