@@ -79,7 +79,7 @@ interface QueryProps {
   | "side-winder";
   direction?: "single" | "double";
   heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
-  diagonal?: "Diagonal" | "No Diagonal";
+  diagonal?: "Diagnol" | "No Diagnol";
   audioNote?: "sine" | "square" | "sawtooth" | "triangle" | "off";
   size?: number;
 }
@@ -95,8 +95,8 @@ export default function Pathfinding() {
     maze = "BackTracking",
     direction: qsDirection = "single",
     heuristics = "chebyshev",
-    diagonal = "Diagnol",
-    audioNote = "triangle",
+    diagonal = "No Diagnol",
+    audioNote = "off",
     size = 30,
   } = qs;
   const qsSpeed = Math.abs(qsSpeedRaw);
@@ -287,18 +287,18 @@ export default function Pathfinding() {
   const isWalls = tree.find((row) => row.find((node) => node.isWall));
 
   const queryFeilds: any = {
-    audioNote: ["triangle", "sine", "square", "sawtooth", "off"],
-    algorithm: ["aStar", "Greedy-Best FS", "djikstra", "DFS", "BFS"],
+    audioNote: ["off", "sine", "square", "sawtooth", "triangle"],
+    algorithm: ["aStar", "Greedy-Best FS", "djikstra", "BFS", "DFS"],
     maze: [
       "BackTracking",
       "Prim's Spanning",
       "Recursive Division",
       "Kruskal Spanning",
       "Kruskal Set-Spanning",
-      "Hunt and Kill",
+      "side-winder",
     ],
     direction: ["single", "double"],
-    diagonal: ["Diagnol", "No Diagnol"],
+    diagonal: [ "No Diagnol", "Diagnol"],
   };
   if (algorithm === "aStar" || algorithm == "Greedy-Best FS")
     queryFeilds.heuristics = ["chebyshev", "euclidean", "octile", "manhattan"];
