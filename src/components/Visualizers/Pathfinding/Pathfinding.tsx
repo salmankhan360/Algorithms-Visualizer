@@ -79,7 +79,7 @@ interface QueryProps {
   | "side-winder";
   direction?: "single" | "double";
   heuristics?: "manhattan" | "euclidean" | "chebyshev" | "octile";
-  diagonal?: any;
+  diagonal?: "Diagnol" | "No Diagnol";
   audioNote?: "sine" | "square" | "sawtooth" | "triangle" | "off";
   size?: number;
 }
@@ -95,7 +95,7 @@ export default function Pathfinding() {
     maze = "BackTracking",
     direction: qsDirection = "single",
     heuristics = "chebyshev",
-    diagonal = "no Diagnol",
+    diagonal = "No Diagnol",
     audioNote = "off",
     size = 30,
   } = qs;
